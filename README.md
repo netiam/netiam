@@ -37,7 +37,8 @@ the [ORM](http://en.wikipedia.org/wiki/Object-relational_mapping)
 
 ## Today
 
-There is nothing to try, cause I have to figure out, how I
+There is nothing to try for you, cause I am currently figuring out how I should
+prepare the work I have done in the past and how I can provide it in a usable way.
 
 ## How it works
 
