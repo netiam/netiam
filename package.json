@@ -1,0 +1,42 @@
+{
+  "name": "netiam",
+  "version": "0.0.1",
+  "description": "REST API library",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.10.2",
+    "mongoose": "^3.8.19",
+    "passport": "^0.2.1",
+    "q": "^1.1.2"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "^0.10.0",
+    "load-grunt-tasks": "^1.0.0",
+    "mocha": "^2.0.1",
+    "should": "^4.3.0",
+    "time-grunt": "^1.0.0"
+  },
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eliias/netiam.git"
+  },
+  "keywords": [
+    "REST",
+    "API",
+    "OData",
+    "framework",
+    "library",
+    "profiles",
+    "documentation"
+  ],
+  "author": "Hannes Moser <hannes@impossiblearts.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eliias/netiam/issues"
+  },
+  "homepage": "https://github.com/eliias/netiam"
+}

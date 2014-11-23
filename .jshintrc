@@ -1,0 +1,29 @@
+{
+    "bitwise": true,
+    "camelcase": true,
+    "freeze": true,
+    "curly": true,
+    "eqeqeq": true,
+    "forin": true,
+    "immed": true,
+    "latedef": true,
+    "newcap": true,
+    "noarg": true,
+    "noempty": true,
+    "undef": true,
+    "strict": true,
+    "nonbsp": true,
+    "nonew": true,
+    "quotmark": true,
+    "unused": true,
+    "node": true,
+    "maxparams": 3,
+    "maxdepth": 2,
+    "maxlen": 120,
+    "indent": 4,
+    "predef": [
+        "describe",
+        "it",
+        "should"
+    ]
+}
