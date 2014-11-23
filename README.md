@@ -2,6 +2,42 @@
 
 REST API library
 
+## How it works
+
+The core idea of this library is to give you a bunch of middleware modules,
+which should be used to accept, validate, transform request and/or response
+objects.
+
+In comparison to the well known [middleware](http://stephensugden.com/middleware_guide/)
+concept of [Node.js](http://nodejs.org/), these modules are applied on a per route base.
+
+We are using [Express](http://expressjs.com/) as core infrastructure layer for
+routing requests and serving data.
+
+### Basic example
+
+```js
+function f() {…}
+
+module.exports = function( req, res, q ) {
+    return q.then( f );
+}
+```
+
+As someone might guess correctly, this all looks familiar. The library uses the
+[Promise/A+](https://promisesaplus.com/) standard for promises and in fact the
+middleware modules returning promises as well.
+
+### Full example
+
+```js
+app
+    .get( '/resource' )
+    .json( {…} )
+    .catch( function( err ) {…} )
+    .done()
+```
+
 ## Samples
 
 ### gets a collection
@@ -11,7 +47,7 @@ app
     .get( '/resource' )
     .rest( {…} )
     .acl( {…} )
-    .json( {…} );
+    .json( {…} )
 ```
 
 ### gets a resource
@@ -21,7 +57,7 @@ app
     .get( '/resource/:id' )
     .rest( {…} )
     .acl( {…} )
-    .json( {…} );
+    .json( {…} )
 ```
 
 ### creates a resource
@@ -32,7 +68,7 @@ app
     .acl( {…} )
     .rest( {…} )
     .acl( {…} )
-    .json( {…} );
+    .json( {…} )
 ```
 
 ### updates a resource
@@ -43,7 +79,7 @@ app
     .acl( {…} )
     .rest( {…} )
     .acl( {…} )
-    .json( {…} );
+    .json( {…} )
 ```
 
 ### deletes a resource
@@ -53,7 +89,7 @@ app
     .delete( '/resource/:id' )
     .acl( {…} )
     .rest( {…} )
-    .send( {…} );
+    .send( {…} )
 ```
 
 ### error handling
@@ -69,8 +105,7 @@ error message and a stacktrace.
 
 ```js
 app
-    .on( 'error', function(err, req, res) {…} )
-    .on( 'end', function(req, res) {…} )
+    .catch( function(err) {…} )
 ```
 
 ### files
