@@ -4,41 +4,146 @@ REST API library
 
 ## Samples
 
+### gets a collection
+
 ```js
-// gets a collection
 app
     .get( '/resource' )
-    .rest( req )
-    .acl( res )
-    .json( res );
+    .rest( {…} )
+    .acl( {…} )
+    .json( {…} );
+```
 
-// gets a resource
+### gets a resource
+
+```js
 app
     .get( '/resource/:id' )
-    .rest( req )
-    .acl( res )
-    .json( res );
+    .rest( {…} )
+    .acl( {…} )
+    .json( {…} );
+```
 
-// creates a resource
+### creates a resource
+
+```js
 app
     .put( '/resource/:id' )
-    .acl( req )
+    .acl( {…} )
     .rest( {…} )
-    .acl( res )
-    .json( res );
+    .acl( {…} )
+    .json( {…} );
+```
 
-// updates a resource
+### updates a resource
+
+```js
 app
     .put( '/resource/:id' )
-    .acl( req )
+    .acl( {…} )
     .rest( {…} )
-    .acl( res )
-    .json( res );
+    .acl( {…} )
+    .json( {…} );
+```
 
-// deletes a resource
+### deletes a resource
+
+```js
 app
     .delete( '/resource/:id' )
-    .acl( req )
+    .acl( {…} )
     .rest( {…} )
-    .send( res );
+    .send( {…} );
+```
+
+### error handling
+
+You do not need to handle common API errors on your own. The library responds
+to the client at leasat with a proper HTTP status code
+(e.g. 404 for document not found) automatically. You might want to intercept
+the error middleware and return a custom message. In general you should avoid
+sending specific error details from your API in production mode.
+
+If NODE_ENV=development you will also get a error object with the original
+error message and a stacktrace.
+
+```js
+app
+    .on( 'error', function(err, req, res) {…} )
+    .on( 'end', function(req, res) {…} )
+```
+
+### files
+
+The library takes care of different API tasks. Most people want to use this lib
+as their core API framework for classic JSON coast-to-coast applications.
+Anyway, a lot of APIs need to accomplish more than that.
+
+A good example is how to handle files. This library takes care of file uploads
+and delivery with the help of [GridFS](http://docs.mongodb.org/manual/core/gridfs/).
+
+We also provide extensions for common media related file tasks. For this purpose
+you can extend your API with media extensions.
+
+#### get a single file
+
+```bash
+app
+    .get( '/files/:id' )
+    .file( {…} )
+```
+
+The library also takes care of file ownerships and privileges. We are using the
+[metadata](http://docs.mongodb.org/manual/reference/gridfs/#gridfs-files-collection) property for this.
+
+The file handler is a special case. We do not follow REST principals 100% here.
+Someone might expect file metadata instead of the binary representation of the
+file when fetching for a specific resource ID. We have chosen to not do so as
+we have learned from experience, that this tradeoff should be made.
+
+Though, you still can get the metadata if you want.
+
+```HTTP
+GET /files/1/metadata'
+```
+
+```js
+app
+    .get( '/files/:id/metadata' )
+    .file( {metadata: true} )
+```
+
+There is another option you might consider useful. Forcing a download. It simply
+adds a Content-Disposition header.
+
+```HTTP
+GET /files/1/download'
+```
+
+```HTTP
+Content-Disposition: attachment; filename="downloaded.pdf"
+```
+
+```js
+app
+    .get( '/files/:id/download' )
+    .file( {download: true} )
+```
+
+You can also set a query parameter that is used to override the filename which
+is sent to the client.
+
+```HTTP
+GET /files/1?name='filename.pdf'
+```
+
+```js
+app
+    .get( '/files/:id' )
+    .file(
+        {
+            download: true,
+            filename: 'name'
+        }
+    )
 ```
