@@ -104,7 +104,7 @@ we have learned from experience, that this tradeoff should be made.
 Though, you still can get the metadata if you want.
 
 ```HTTP
-GET /files/1/metadata'
+GET /files/1/metadata
 ```
 
 ```js
@@ -117,7 +117,7 @@ There is another option you might consider useful. Forcing a download. It simply
 adds a Content-Disposition header.
 
 ```HTTP
-GET /files/1/download'
+GET /files/1/download
 ```
 
 ```HTTP
@@ -134,7 +134,7 @@ You can also set a query parameter that is used to override the filename which
 is sent to the client.
 
 ```HTTP
-GET /files/1?name='filename.pdf'
+GET /files/1?name=filename.pdf
 ```
 
 ```js
