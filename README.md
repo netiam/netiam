@@ -1,6 +1,43 @@
 # netiam
 
-REST API library
+This REST API library addresses some issues I had with API designs over the
+last years. It does not claim to provide a full featured solution and to be
+honest it might never will. Nevertheless, someone might find this library
+useful.
+
+## What can it do for you
+
+* Authentication (all the sugar is provided by [passportjs](http://passportjs.org/))
+* Authorization (with ACLs, inheritance support for roles, assertions and wildcards)
+* Query language (effective and powerful filters)
+* File Handling (uploads, media extensions, metadata)
+* Completly stateless (cookie based sessions)
+* Profiles (e.g. mobile-friendly API responses)
+* Arbitrary environments (configs with inheritance support)
+* CLI (generate code, scaffolding)
+* Documentation generator
+
+## Tech Stack
+
+* Express
+* MongoDB + Mongoose
+
+## Future
+
+Upcoming releases might provide a better abstraction and allows you to choose
+your own database, filesystem and so on. There is also a plan to cut loose the
+Express dependency as you might want to use this library with any other Node.js
+web framework out there.
+
+I personally think GridFS is great, but might not be the perfect solution for
+everyone. Also, there are valid reasons to use a relational database instead of
+a document based database. There are some great solutions out there. Especially
+the [ORM](http://en.wikipedia.org/wiki/Object-relational_mapping)
+[sequelizejs](http://sequelizejs.com/) library.
+
+## Today
+
+There is nothing to try, cause I have to figure out, how I
 
 ## How it works
 
