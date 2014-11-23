@@ -3,7 +3,7 @@
 var q      = require( 'q' ),
     should = require( 'should' );
 
-describe( 'Q', function() {
+describe( 'Promise', function() {
     describe( 'chain', function() {
         it( 'should sequentially process data', function( done ) {
             var result = q( 0 );
@@ -34,7 +34,8 @@ describe( 'Q', function() {
                 .catch( function( err ) {
                     should.exist( err );
                 } )
-                .done( function() {
+                .done( function( val ) {
+                    should.not.exist( val );
                     done();
                 }, function( err ) {
                     done( err );
