@@ -1,7 +1,5 @@
 'use strict';
 
-var should = require( 'should' );
-
 describe( 'netiam', function() {
     describe( 'version', function() {
         it( 'should return current library version', function() {

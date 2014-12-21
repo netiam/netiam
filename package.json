@@ -15,7 +15,7 @@
     "time-grunt": "^1.0.0"
   },
   "scripts": {
-    "test": "npm test"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
