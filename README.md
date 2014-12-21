@@ -42,7 +42,7 @@ prepare the work I have done in the past and how I can provide it in a usable wa
 
 ## How it works
 
-The core idea of this library is to give you a bunch of middleware modules,
+The core idea of this library is to give you a bunch of plugins,
 which should be used to accept, validate, transform request and/or response
 objects.
 
@@ -55,16 +55,19 @@ routing requests and serving data.
 ### Basic example
 
 ```js
-function f() {…}
+function f( resource, opts, req, res ) {…}
 
-module.exports = function( req, res, q ) {
-    return q.then( f );
-}
+module.exports = f;
 ```
 
-As someone might guess correctly, this all looks familiar. The library uses the
-[Promise/A+](https://promisesaplus.com/) standard for promises and in fact the
-middleware modules returning promises as well.
+Every plugin must be implemented as a function with the given signature. In order
+to register a plugin written by yourself, use the following command.
+
+```js
+var Resource = require( 'resource' );
+
+Resource.plugin( 'myplugin', require( './plugin' ) );
+```
 
 ### Full example
 
