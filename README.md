@@ -33,9 +33,11 @@ var express = require( 'express' ),
 netiam
     .get( '/' )
     .custom( function( resource, req, res ) {
-        resource.data = {
-            'Hello': 'World!'
-        };
+        resource.body(
+            {
+                'Hello': 'World!'
+            }
+        );
     } )
     .json();
 
