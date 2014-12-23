@@ -10,7 +10,11 @@ module.exports = function( grunt ) {
 
         changelog: {
             sample: {
-                options: {}
+                options: {
+                    dest:         'CHANGELOG',
+                    featureRegex: /^(.*)feature:?(.*)$/gim,
+                    fixRegex:     /^(.*)fix:?(.*)$/gim
+                }
             }
         },
 
@@ -25,7 +29,7 @@ module.exports = function( grunt ) {
                 tagName:            'v%VERSION%',
                 tagMessage:         'Version %VERSION%',
                 push:               true,
-                pushTo:             'upstream',
+                pushTo:             'origin master',
                 gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
                 globalReplace:      false
             }
@@ -41,5 +45,6 @@ module.exports = function( grunt ) {
     } );
 
     grunt.registerTask( 'default', ['jshint'] );
+    grunt.registerTask( 'release', ['jshint', 'changelog', 'bump'] );
 
 };
