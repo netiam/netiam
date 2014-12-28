@@ -32,13 +32,7 @@ var express = require( 'express' ),
 
 netiam
     .get( '/' )
-    .custom( function( resource, req, res ) {
-        resource.body(
-            {
-                'Hello': 'World!'
-            }
-        );
-    } )
+    .data( {'Hello': 'World!'} )
     .json();
 
 server.listen( 3000 );
