@@ -40,5 +40,9 @@
   "bugs": {
     "url": "https://github.com/eliias/netiam/issues"
   },
-  "homepage": "https://github.com/eliias/netiam"
+  "homepage": "https://github.com/eliias/netiam",
+  "engines": {
+    "node": ">=v0.10.33",
+    "npm": ">=2.1.12"
+  }
 }
