@@ -17,7 +17,7 @@
     "quotmark": true,
     "unused": true,
     "node": true,
-    "maxparams": 4,
+    "maxparams": 5,
     "maxdepth": 2,
     "maxlen": 120,
     "indent": 4,

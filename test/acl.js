@@ -1,13 +1,31 @@
 'use strict';
 
-var schema = require( './fixtures/acl.json' ),
-    user   = require( './fixtures/user.json' ),
-    filter = require( '../lib/filter' );
+var schema  = require( './fixtures/acl.json' ),
+    user    = require( './fixtures/user.json' ),
+    Acl     = require( '../lib/rest/acl' ),
+    filter  = require( '../lib/filter' ),
+    roles   = require( '../lib/rest/roles' ),
+    asserts = require( '../lib/rest/asserts' ),
+    acl;
+
+acl = new Acl( schema );
 
 describe( 'netiam', function() {
-    describe( 'acl', function() {
+
+    describe( 'asserts', function() {
+        it( 'should check if user owns resource', function() {
+            var assert = asserts.owner( 'email', 'hannes@impossiblearts.com' );
+            assert( acl, user, roles.get( 'USER' ) ).should.eql( [
+                'password',
+                'created',
+                'modified'
+            ] );
+        } );
+    } );
+
+    describe( 'ACL - READ', function() {
         it( 'should filter properties for role GUEST', function() {
-            var props = filter.filter( schema, user, 'GUEST', 'R' );
+            var props = filter.filter( acl, user, roles.get( 'GUEST' ), 'R' );
             props.should.have.properties( {
                 '_id':         '542c7591e9905400008188eb',
                 'name':        'eliias',
@@ -16,7 +34,7 @@ describe( 'netiam', function() {
         } );
 
         it( 'should filter properties for role USER', function() {
-            var props = filter.filter( schema, user, 'USER', 'R' );
+            var props = filter.filter( acl, user, roles.get( 'USER' ), 'R' );
             props.should.have.properties( {
                 '_id':         '542c7591e9905400008188eb',
                 'name':        'eliias',
@@ -31,8 +49,10 @@ describe( 'netiam', function() {
             } );
         } );
 
-        it( 'should filter properties for role OWNER', function() {
-            var props = filter.filter( schema, user, 'OWNER', 'R' );
+        it( 'should filter properties for role USER who is also resource OWNER', function() {
+            var assert = asserts.owner( 'email', 'hannes@impossiblearts.com' ),
+                props;
+            props = filter.filter( acl, user, roles.get( 'USER' ), 'R', assert );
             props.should.have.properties( {
                 '_id':         '542c7591e9905400008188eb',
                 'name':        'eliias',
@@ -51,7 +71,7 @@ describe( 'netiam', function() {
         } );
 
         it( 'should filter properties for role MANAGER', function() {
-            var props = filter.filter( schema, user, 'MANAGER', 'R' );
+            var props = filter.filter( acl, user, 'MANAGER', 'R' );
             props.should.have.properties( {
                 '_id':         '542c7591e9905400008188eb',
                 'name':        'eliias',
@@ -67,9 +87,84 @@ describe( 'netiam', function() {
         } );
 
         it( 'should filter properties for role ADMIN', function() {
-            var props = filter.filter( schema, user, 'ADMIN', 'R' );
+            var props = filter.filter( acl, user, 'ADMIN', 'R' );
             props.should.have.properties( {
                 '_id':         '542c7591e9905400008188eb',
+                'name':        'eliias',
+                'description': 'Hey, ich bin der Hansen.',
+                'email':       'hannes@impossiblearts.com',
+                'firstname':   'Hannes',
+                'lastname':    'Moser',
+                'location':    [
+                    13.0406998,
+                    47.822352
+                ],
+                'created':     '2014-10-01T21:43:45.705Z',
+                'modified':    '2014-11-12T12:39:22.615Z'
+            } );
+        } );
+    } );
+
+    describe( 'ACL - UPDATE', function() {
+        it( 'should filter properties for role GUEST', function() {
+            var props = filter.filter( acl, user, roles.get( 'GUEST' ), 'U' );
+            props.should.have.properties( {
+                'name':        'eliias',
+                'description': 'Hey, ich bin der Hansen.'
+            } );
+        } );
+
+        it( 'should filter properties for role USER', function() {
+            var props = filter.filter( acl, user, roles.get( 'USER' ), 'U' );
+            props.should.have.properties( {
+                'name':        'eliias',
+                'description': 'Hey, ich bin der Hansen.',
+                'email':       'hannes@impossiblearts.com',
+                'firstname':   'Hannes',
+                'lastname':    'Moser',
+                'location':    [
+                    13.0406998,
+                    47.822352
+                ]
+            } );
+        } );
+
+        it( 'should filter properties for role USER who is also resource OWNER', function() {
+            var assert = asserts.owner( 'email', 'hannes@impossiblearts.com' ),
+                props;
+            props = filter.filter( acl, user, roles.get( 'USER' ), 'U', assert );
+            props.should.have.properties( {
+                'name':        'eliias',
+                'description': 'Hey, ich bin der Hansen.',
+                'email':       'hannes@impossiblearts.com',
+                'password':    '[&dXN%cGZ#pP3&j',
+                'firstname':   'Hannes',
+                'lastname':    'Moser',
+                'location':    [
+                    13.0406998,
+                    47.822352
+                ]
+            } );
+        } );
+
+        it( 'should filter properties for role MANAGER', function() {
+            var props = filter.filter( acl, user, 'MANAGER', 'U' );
+            props.should.have.properties( {
+                'name':        'eliias',
+                'description': 'Hey, ich bin der Hansen.',
+                'email':       'hannes@impossiblearts.com',
+                'firstname':   'Hannes',
+                'lastname':    'Moser',
+                'location':    [
+                    13.0406998,
+                    47.822352
+                ]
+            } );
+        } );
+
+        it( 'should filter properties for role ADMIN', function() {
+            var props = filter.filter( acl, user, 'ADMIN', 'U' );
+            props.should.have.properties( {
                 'name':        'eliias',
                 'description': 'Hey, ich bin der Hansen.',
                 'email':       'hannes@impossiblearts.com',

@@ -1,8 +1,7 @@
 {
     "*": {
         "ALLOW": {
-            "ADMIN": "CRUD",
-            "OWNER": "CRUD"
+            "ADMIN": "CRUD"
         }
     },
     "_id": {
@@ -13,39 +12,39 @@
     },
     "name": {
         "ALLOW": {
-            "USER": "R",
-            "GUEST": "R"
+            "USER": "RU",
+            "GUEST": "RU"
         }
     },
     "description": {
         "ALLOW": {
-            "USER": "R",
-            "GUEST": "R"
+            "USER": "RU",
+            "GUEST": "RU"
         }
     },
     "email": {
         "ALLOW": {
-            "USER": "R"
+            "USER": "RU"
         }
     },
     "password": {
         "ALLOW": {
-            "OWNER": "R"
+            "OWNER": "RU"
         }
     },
     "firstname": {
         "ALLOW": {
-            "USER": "R"
+            "USER": "RU"
         }
     },
     "lastname": {
         "ALLOW": {
-            "USER": "R"
+            "USER": "RU"
         }
     },
     "location": {
         "ALLOW": {
-            "USER": "R"
+            "USER": "RU"
         }
     },
     "created": {
