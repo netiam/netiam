@@ -10,9 +10,9 @@ var schema  = require( './fixtures/acl.json' ),
 
 acl = new Acl( schema );
 
-describe( 'netiam', function() {
+describe( 'ACL', function() {
 
-    describe( 'ACL - UPDATE', function() {
+    describe( 'UPDATE', function() {
         it( 'should filter properties for role GUEST', function() {
             var props = filter.filter( acl, user, roles.get( 'GUEST' ), 'U' );
             props.should.have.properties( {

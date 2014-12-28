@@ -19,6 +19,11 @@ useful.
 * CLI (generate code, scaffolding)
 * Documentation generator
 
+## ToC
+
+* [Execution flow](docs/flow.md)
+* [Plugin](docs/plugin.md)
+
 ## Getting started
 
 Creates a single route, using a custom plugin to add some data and returns
@@ -96,10 +101,14 @@ Resource.plugin( 'myplugin', require( './plugin' ) );
 
 ```js
 app
-    .get( '/resource' )
+    .authenticate(…)
+    .get( '/resource/:id' )
+    .rest(…)
+    .transform(…)
+    .data(…)
+    .acl(…)
     .json( {…} )
     .catch( function( err ) {…} )
-    .done()
 ```
 
 ## Samples

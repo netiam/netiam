@@ -21,9 +21,13 @@
     "maxdepth": 2,
     "maxlen": 120,
     "indent": 4,
-    "predef": [
+    "globals": [
         "describe",
         "it",
-        "should"
+        "should",
+        "before",
+        "beforeEach",
+        "after",
+        "afterEach"
     ]
 }
