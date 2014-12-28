@@ -1,5 +1,4 @@
 # Plugins
----
 
 Everything this library can do is packed into modules. This modules are named
 plugins. Plugins are chained together and put onto a route stack. After a route

@@ -19,7 +19,7 @@ useful.
 * CLI (generate code, scaffolding)
 * Documentation generator
 
-## ToC
+## Specification
 
 * [Execution flow](docs/flow.md)
 * [Plugin](docs/plugin.md)
