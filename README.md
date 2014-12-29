@@ -13,7 +13,7 @@ useful.
 * Authorization (with ACLs, inheritance support for roles, assertions and wildcards)
 * Query language (effective and powerful filters)
 * File Handling (uploads, media extensions, metadata)
-* Completly stateless (cookie based sessions)
+* Completely stateless (cookie based sessions)
 * Profiles (e.g. mobile-friendly API responses)
 * Arbitrary environments (configs with inheritance support)
 * CLI (generate code, scaffolding)
@@ -22,7 +22,7 @@ useful.
 ## Specification
 
 * [Execution flow](docs/flow.md)
-* [Plugin](docs/plugin.md)
+* [Plugin](docs/plugins.md)
 
 ## Getting started
 
