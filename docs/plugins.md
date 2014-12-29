@@ -13,6 +13,7 @@ All of the following methods, which are chained to the route, are plugins.
 app
     .get( '/resource/:id' )
     .authenticate(…)
+    .multipart(…)
     .rest(…)
     .transform(…)
     .data(…)
@@ -47,3 +48,6 @@ app
     .on( 'fail', function(req, res) { … } )
     .on( 'done', function(req, res) { … } )
     ```
+4. Dispatch
+
+    Every plugin must implement a dispatch routine which must return a promise.
