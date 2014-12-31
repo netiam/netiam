@@ -7,6 +7,22 @@ last years. It does not claim to provide a full featured solution and to be
 honest it might never will. Nevertheless, someone might find this library
 useful.
 
+## Get it
+
+
+
+```bash
+# without npm install
+git clone https://github.com/eliias/netiam.git
+cd netiam
+npm-link
+cd $PROJECT
+npm-link netiam
+
+# The day it has been published, you can do the following
+# npm --save install netiam
+```
+
 ## What can it do for you
 
 * Authentication (all the sugar is provided by [passportjs](http://passportjs.org/))
