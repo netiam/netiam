@@ -2,8 +2,8 @@
 
 var schema  = require( './fixtures/acl.json' ),
     user    = require( './fixtures/user.json' ),
+    filter  = require( './utils/filter' ),
     Acl     = require( '../lib/rest/acl' ),
-    filter  = require( '../lib/filter' ),
     roles   = require( '../lib/rest/roles' ),
     asserts = require( '../lib/rest/asserts' ),
     acl;
