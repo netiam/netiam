@@ -93,7 +93,7 @@ objects.
 In comparison to the well known [middleware](http://stephensugden.com/middleware_guide/)
 concept of [Node.js](http://nodejs.org/), these modules are applied on a per route base.
 
-We are using [Express](http://expressjs.com/) as core infrastructure layer for
+The library is using [Express](http://expressjs.com/) as core infrastructure layer for
 routing requests and serving data.
 
 ### Basic example
