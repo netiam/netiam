@@ -1,6 +1,8 @@
 # netiam
 
 [![Build Status](https://travis-ci.org/eliias/netiam.svg)](https://travis-ci.org/eliias/netiam)
+[![Dependencies](https://david-dm.org/eliias/netiam.svg)](https://david-dm.org/eliias/netiam)
+[![Codacy Badge](https://www.codacy.com/project/badge/2adb441af94d4fa6a9dd06df1b9e9e1d)](https://www.codacy.com/public/hannes/netiam)
 
 This REST API library addresses some issues I had with API designs over the
 last years. It does not claim to provide a full featured solution and to be
@@ -99,9 +101,24 @@ routing requests and serving data.
 ### Basic example
 
 ```js
-function f( resource, opts, req, res ) {…}
-
-module.exports = f;
+/**
+ * Data plugin
+ * @param {Route} route
+ * @param {Object} body
+ * @returns {Function}
+ */
+function data( route, body ) {
+    /**
+     * @scope {Resource}
+     * @param {Object} req
+     * @param {Object} res
+     * @returns {*}
+     */
+    return function( req, res ) {
+        res.body = body;
+    };
+}
+module.exports = data;
 ```
 
 Every plugin must be implemented as a function with the given signature. In order
@@ -109,8 +126,7 @@ to register a plugin written by yourself, use the following command.
 
 ```js
 var Resource = require( 'resource' );
-
-Resource.plugin( 'myplugin', require( './plugin' ) );
+Resource.plugin( 'myplugin', require( './myplugin' ) );
 ```
 
 ### Full example
