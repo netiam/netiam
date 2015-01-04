@@ -105,8 +105,8 @@ e
         { $$ = new yy.Expression($2, $1, $3) }
     | e 'Or' e
         { $$ = new yy.Expression($2, $1, $3) }
-    | 'Not' e
-        { $$ = new yy.Expression($1, null, $2) }
+    | e 'Not' e
+        { $$ = new yy.Expression($2, $1, $3) }
     | e 'Lk' e
         { $$ = new yy.Expression($2, $1, $3) }
     | e 'Add' e
