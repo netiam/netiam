@@ -47,6 +47,9 @@
   "bugs": {
     "url": "https://github.com/eliias/netiam/issues"
   },
+  "bin": {
+    "netiam": "bin/netiam"
+  },
   "homepage": "https://github.com/eliias/netiam",
   "engines": {
     "node": ">=v0.10.33",
