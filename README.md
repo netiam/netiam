@@ -41,6 +41,7 @@ npm-link netiam
 
 * [Execution flow](docs/flow.md)
 * [Plugin](docs/plugins.md)
+* [Resources](docs/resources.md)
 
 ## Getting started
 
