@@ -113,7 +113,6 @@ function data( route, body ) {
      * @scope {Resource}
      * @param {Object} req
      * @param {Object} res
-     * @returns {*}
      */
     return function( req, res ) {
         res.body = body;
@@ -126,8 +125,8 @@ Every plugin must be implemented as a function with the given signature. In orde
 to register a plugin written by yourself, use the following command.
 
 ```js
-var Resource = require( 'resource' );
-Resource.plugin( 'myplugin', require( './myplugin' ) );
+var Route = require( 'netiam' ).Route;
+Route.plugin( 'myplugin', require( './myplugin' ) );
 ```
 
 ### Full example
