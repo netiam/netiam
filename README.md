@@ -31,7 +31,7 @@ npm-link netiam
 * Authorization (with ACLs, inheritance support for roles, assertions and wildcards)
 * Query language (effective and powerful filters)
 * File Handling (uploads, media extensions, metadata)
-* Completely stateless (cookie based sessions)
+* Completely stateless (except cookie based sessions for authentication in browser apps)
 * Profiles (e.g. mobile-friendly API responses)
 * Arbitrary environments (configs with inheritance support)
 * CLI (generate code, scaffolding)
