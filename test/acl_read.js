@@ -16,7 +16,6 @@ describe( 'ACL', function() {
         it( 'should filter properties for role GUEST', function() {
             var props = filter.filter( acl, user, roles.get( 'GUEST' ), 'R' );
             props.should.have.properties( {
-                '_id':         '542c7591e9905400008188eb',
                 'name':        'eliias',
                 'description': 'Hey, ich bin der Hansen.'
             } );
@@ -25,7 +24,6 @@ describe( 'ACL', function() {
         it( 'should filter properties for role USER', function() {
             var props = filter.filter( acl, user, roles.get( 'USER' ), 'R' );
             props.should.have.properties( {
-                '_id':         '542c7591e9905400008188eb',
                 'name':        'eliias',
                 'description': 'Hey, ich bin der Hansen.',
                 'email':       'hannes@impossiblearts.com',
@@ -43,7 +41,6 @@ describe( 'ACL', function() {
                 props;
             props = filter.filter( acl, user, roles.get( 'USER' ), 'R', assert );
             props.should.have.properties( {
-                '_id':         '542c7591e9905400008188eb',
                 'name':        'eliias',
                 'description': 'Hey, ich bin der Hansen.',
                 'email':       'hannes@impossiblearts.com',
@@ -62,7 +59,6 @@ describe( 'ACL', function() {
         it( 'should filter properties for role MANAGER', function() {
             var props = filter.filter( acl, user, 'MANAGER', 'R' );
             props.should.have.properties( {
-                '_id':         '542c7591e9905400008188eb',
                 'name':        'eliias',
                 'description': 'Hey, ich bin der Hansen.',
                 'email':       'hannes@impossiblearts.com',
@@ -78,7 +74,6 @@ describe( 'ACL', function() {
         it( 'should filter properties for role ADMIN', function() {
             var props = filter.filter( acl, user, 'ADMIN', 'R' );
             props.should.have.properties( {
-                '_id':         '542c7591e9905400008188eb',
                 'name':        'eliias',
                 'description': 'Hey, ich bin der Hansen.',
                 'email':       'hannes@impossiblearts.com',
