@@ -91,18 +91,7 @@ This describes the execution flow of the library.
     }
     ```
 
-4. Response
-
-    After all the execution you usually want to return something to the client.
-    At the moment only JSON is supported.
-
-    ```js
-    netiam
-        .get( '/resource/:id' )
-        .json( … );
-    ```
-
-5. Transform
+4. Transform
 
     The library tries to keep as much tasks from you as possible but it is
     natural that there is always something special.
@@ -111,4 +100,15 @@ This describes the execution flow of the library.
     netiam
         .get( '/resource/:id' )
         .transform( function( resource ) { … } );
+    ```
+
+5. Response
+
+    After all the execution you usually want to return something to the client.
+    At the moment only JSON is supported.
+
+    ```js
+    netiam
+        .get( '/resource/:id' )
+        .json( … );
     ```
