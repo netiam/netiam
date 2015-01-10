@@ -12,6 +12,7 @@ module.exports = function( grunt ) {
             sample: {
                 options: {
                     dest:         'CHANGELOG.md',
+                    template:     '{{date}}\n\n{{> features}}{{> fixes}}',
                     featureRegex: /^(.*)feature:?(.*)$/gim,
                     fixRegex:     /^(.*)fix:?(.*)$/gim
                 }
