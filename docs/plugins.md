@@ -5,6 +5,28 @@ plugins. Plugins are chained together and put onto a route stack. After a route
 has been dispatched the stack will be executed (based on plugin priority and
 chain order).
 
+## Anatomy
+
+```js
+/**
+ * Data plugin
+ * @param {Route} route
+ * @param {Object} data
+ * @returns {Function}
+ */
+function data( route, body ) {
+    /**
+     * @scope {Resource}
+     * @param {Object} req
+     * @param {Object} res
+     */
+    return function( req, res ) {
+        res.body = body;
+    };
+}
+module.exports = data;
+```
+
 ## Example
 
 All of the following methods, which are chained to the route, are plugins.
@@ -13,7 +35,6 @@ All of the following methods, which are chained to the route, are plugins.
 app
     .get( '/resource/:id' )
     .authenticate(…)
-    .multipart(…)
     .rest(…)
     .transform(…)
     .data(…)
@@ -44,9 +65,7 @@ app
     Several hooks are available.
 
     ```js
-    .on( 'route', function(req, res) { … } )
-    .on( 'fail', function(req, res) { … } )
-    .on( 'done', function(req, res) { … } )
+    .pre( 'dispatch', function(req, res) { … } )
     ```
 4. Dispatch
 
