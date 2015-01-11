@@ -94,7 +94,16 @@ which should be used to accept, validate, transform request and/or response
 objects.
 
 In comparison to the well known [middleware](http://stephensugden.com/middleware_guide/)
-concept of [Node.js](http://nodejs.org/), these modules are applied on a per route base.
+concept of [sencha connect](https://github.com/senchalabs/connect#middleware),
+these modules are applied as standalone plugins on every route. This
+implementation might change in the future. The idea is to have a fully
+compatible middleware layer.
+
+**Future:**
+
+```js
+app.get( '/foo', netiam );
+```
 
 The library is using [Express](http://expressjs.com/) as core infrastructure layer for
 routing requests and serving data.
