@@ -102,8 +102,22 @@ compatible middleware layer.
 **Future:**
 
 ```js
+// now
+netiam
+    .get( '/foo' )
+    .rest({…})
+    .json();
+
+// then
+netiam
+    .rest({…})
+    .json();
+
 app.get( '/foo', netiam );
 ```
+
+Then the responsibility of handling requests goes back to your favorite
+server framework (e.g. Express, Sencha Connect )
 
 The library is using [Express](http://expressjs.com/) as core infrastructure layer for
 routing requests and serving data.
