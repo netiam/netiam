@@ -19,6 +19,22 @@ module.exports = function( grunt ) {
             }
         },
 
+        clean: {
+            docs: ['docs/gen']
+        },
+
+        doxx: {
+            all: {
+                src:     './',
+                target:  'docs/gen',
+                options: {
+                    title:    '<%= pkg.name %>',
+                    ignore:   'Gruntfile.js,bin,docs,test,public,static,views,templates,node_modules',
+                    template: 'docs/template.jade'
+                }
+            }
+        },
+
         bump: {
             options: {
                 files:              ['package.json'],
@@ -45,7 +61,14 @@ module.exports = function( grunt ) {
         }
     } );
 
+    grunt.registerTask( 'docs', ['clean:docs', 'doxx'] );
     grunt.registerTask( 'default', ['jshint'] );
-    grunt.registerTask( 'release', ['jshint', 'changelog', 'bump'] );
+    grunt.registerTask( 'release', [
+        'clean',
+        'jshint',
+        'docs',
+        'changelog',
+        'bump'
+    ] );
 
 };

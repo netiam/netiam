@@ -10,3 +10,7 @@ logs
 # node.js
 node_modules
 npm-debug.log
+
+# APP
+docs/gen
+
