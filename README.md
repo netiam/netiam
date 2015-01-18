@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/eliias/netiam.svg)](https://travis-ci.org/eliias/netiam)
 [![Dependencies](https://david-dm.org/eliias/netiam.svg)](https://david-dm.org/eliias/netiam)
 [![Codacy Badge](https://www.codacy.com/project/badge/2adb441af94d4fa6a9dd06df1b9e9e1d)](https://www.codacy.com/public/hannes/netiam)
+[![Coverage Status](https://coveralls.io/repos/eliias/netiam/badge.svg?branch=master)](https://coveralls.io/r/eliias/netiam?branch=master)
 
 This REST API library addresses some issues I had with API designs over the
 last years. It does not claim to provide a full featured solution and to be
