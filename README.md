@@ -36,6 +36,15 @@ npm link netiam
 node app.js
 ```
 
+## Tests
+
+Using [mocha](http://mochajs.org) with [should](http://shouldjs.github.io/) for
+tests and [istanbul](https://github.com/gotwarlost/istanbul) to check coverage.
+
+```bash
+npm test
+```
+
 ## What can it do for you
 
 * Authentication (all the sugar is provided by [passportjs](http://passportjs.org/))
