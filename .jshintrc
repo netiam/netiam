@@ -16,6 +16,7 @@
     "nonew": true,
     "quotmark": true,
     "unused": true,
+    "proto": true,
     "node": true,
     "maxparams": 5,
     "maxdepth": 2,
