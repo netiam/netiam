@@ -11,8 +11,6 @@ useful.
 
 ## Get it
 
-
-
 ```bash
 # without npm install
 git clone https://github.com/eliias/netiam.git
@@ -23,6 +21,18 @@ npm-link netiam
 
 # The day it has been published, you can do the following
 # npm --save install netiam
+```
+
+## Demo
+
+Please checkout the demo application to get a up to date example of library
+usage.
+
+```bash
+git clone https://github.com/eliias/netiam-demo.git
+cd netiam-demo
+npm link netiam
+node app.js
 ```
 
 ## What can it do for you
