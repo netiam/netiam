@@ -3,7 +3,7 @@ node_js:
   - "0.10.33"
 services:
   - mongodb
-before_install: npm install -g grunt-cli
+before_install: npm install -g grunt-cli istanbul
 install: npm install
 before_script: grunt
 script: "npm test"
