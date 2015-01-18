@@ -1,6 +1,6 @@
 'use strict';
 
-describe( 'resource', function() {
+describe( 'resource - standalone', function() {
     var _ = require( 'lodash' ),
         request = require( 'supertest' ),
         User = require( './models/user' ),
@@ -10,7 +10,7 @@ describe( 'resource', function() {
         netiam = require( '../index' )( app ),
         userId;
 
-    this.timeout( 30000 );
+    this.timeout( 10000 );
 
     before( function( done ) {
         netiam
