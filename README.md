@@ -14,14 +14,10 @@ useful.
 
 ```bash
 # without npm install
-git clone https://github.com/eliias/netiam.git
-cd netiam
-npm-link
-cd $PROJECT
-npm-link netiam
+npm i -S eliias/netiam
 
 # The day it has been published, you can do the following
-# npm --save install netiam
+# npm i -S netiam
 ```
 
 ## Demo
