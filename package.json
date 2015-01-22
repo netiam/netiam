@@ -18,14 +18,17 @@
   },
   "devDependencies": {
     "body-parser": "^1.10.1",
+    "codeclimate-test-reporter": "^0.0.4",
     "coveralls": "^2.11.2",
     "express": "^4.10.7",
     "grunt": "^0.4.5",
     "grunt-bump": "0.0.16",
     "grunt-changelog": "^0.2.2",
+    "grunt-cli": "^0.1.13",
     "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-doxx": "^0.1.2",
+    "istanbul": "^0.3.5",
     "load-grunt-tasks": "^1.0.0",
     "mocha": "^2.0.1",
     "should": "^4.3.0",
@@ -33,8 +36,10 @@
     "time-grunt": "^1.0.0"
   },
   "scripts": {
-    "test": "mocha",
-    "test-cov": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+    "test": "grunt jshint && npm run test-cov",
+    "test-unit": "mocha",
+    "test-cov": "istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls",
+    "codeclimate": "codeclimate < ./coverage/lcov.info"
   },
   "repository": {
     "type": "git",
