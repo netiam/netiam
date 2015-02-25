@@ -68,7 +68,7 @@ everything as JSON.
 'use strict';
 
 var express = require( 'express' ),
-    app     = express(),
+    app     = express(  ),
     server  = require( 'http' ).createServer( app ),
     netiam  = require( 'netiam' )( app );
 
