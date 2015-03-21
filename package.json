@@ -3,6 +3,12 @@
   "version": "0.0.1",
   "description": "REST API library",
   "main": "index.js",
+  "scripts": {
+    "test": "grunt jshint && npm run test-cov",
+    "test-unit": "mocha",
+    "test-cov": "istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls",
+    "codeclimate": "codeclimate < ./coverage/lcov.info"
+  },
   "dependencies": {
     "busboy": "^0.2.9",
     "commander": "^2.6.0",
@@ -35,12 +41,6 @@
     "should": "^4.3.0",
     "supertest": "^0.15.0",
     "time-grunt": "^1.0.0"
-  },
-  "scripts": {
-    "test": "grunt jshint && npm run test-cov",
-    "test-unit": "mocha",
-    "test-cov": "istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls",
-    "codeclimate": "codeclimate < ./coverage/lcov.info"
   },
   "repository": {
     "type": "git",
