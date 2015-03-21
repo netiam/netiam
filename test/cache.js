@@ -94,6 +94,7 @@ describe( 'cache', function() {
                 .set( 'Accept', 'application/json' )
                 .expect( 200 )
                 .expect( 'Content-Type', /json/ )
+                .expect( 'Cache', /[a-z0-9]{32}/ )
                 .end( function( err, res ) {
                     if (err) {
                         return done( err );
