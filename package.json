@@ -30,6 +30,7 @@
     "grunt-doxx": "^0.1.2",
     "istanbul": "^0.3.5",
     "load-grunt-tasks": "^1.0.0",
+    "mkdirp": "^0.5.0",
     "mocha": "^2.0.1",
     "should": "^4.3.0",
     "supertest": "^0.15.0",
