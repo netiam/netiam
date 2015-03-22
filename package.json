@@ -10,17 +10,16 @@
     "codeclimate": "codeclimate < ./coverage/lcov.info"
   },
   "dependencies": {
+    "bluebird": "^2.9.14",
     "busboy": "^0.2.9",
     "commander": "^2.6.0",
-    "editorconfig-tools": "0.0.1",
     "lodash": "^3.0.1",
     "mmmagic": "^0.3.12",
     "mongoose": "^3.8.21",
     "passport": "^0.2.1",
     "passport-http": "^0.2.2",
     "passport-http-bearer": "^1.0.1",
-    "passport-local": "^1.0.0",
-    "q": "^1.1.2"
+    "passport-local": "^1.0.0"
   },
   "devDependencies": {
     "body-parser": "^1.10.1",
