@@ -11,6 +11,7 @@ logs
 node_modules
 npm-debug.log
 
-# APP
+# app
+.tmp
 docs/gen
 coverage
