@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Transform plugin
  * @param {Route} route
@@ -7,9 +5,7 @@
  * @returns {Function}
  */
 function transform( route, cb ) {
-
-    return cb;
-
+  return cb
 }
 
-module.exports = transform;
+export default transform

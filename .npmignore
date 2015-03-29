@@ -1,6 +1,15 @@
+# dotiles
+.coveralls.yml
 .editorconfig
 .gitattributes
 .gitignore
+.jshintignore
 .jshintrc
 .npmignore
+.travis.yml
+
+# dirs
+.tmp/
+coverage/
+docs/
 test/

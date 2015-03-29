@@ -1,17 +1,14 @@
 # System
-*.DS_Store
+.DS_Store
 
 # IDE
 .idea
 
-# Logs
-logs
-
 # node.js
-node_modules
 npm-debug.log
+node_modules/
 
-# APP
-docs/gen
-coverage
-.tmp
+# lib
+.tmp/
+coverage/
+lib/
