@@ -123,21 +123,16 @@ class Resource {
    * @returns {B}
    */
   list( req ) {
-    var q,
-        f,
-        query,
-        deferred
-
-    deferred = B.pending()
+    let deferred = Bluebird.pending()
 
     // Normalize
-    query = this._normalize( req.query, this._opts )
+    let query = this._normalize( req.query, this._opts )
 
     // Filter
-    f = filter( query.filter ).where( this._params( req.params, this._opts.map ) )
+    let f = filter( query.filter ).where( this._params( req.params, this._opts.map ) )
 
     // Build query
-    q = this.model.find( f.toObject() )
+    let q = this.model.find( f.toObject() )
 
     // Populate
     query.expand.forEach( function( field ) {
@@ -176,22 +171,17 @@ class Resource {
    * @returns {B}
    */
   read( req ) {
-    var q,
-        qo,
-        query,
-        deferred
-
-    qo = {}
-    deferred = B.pending()
+    let qo = {}
+    let deferred = Bluebird.pending()
 
     // Normalize
-    query = this._normalize( req.query, this._opts )
+    let query = this._normalize( req.query, this._opts )
 
     // Query options
     qo[this._opts.idAttribute] = req.params[this._opts.idParam]
 
     // Build query
-    q = this.model.findOne( qo )
+    let q = this.model.findOne( qo )
 
     // Populate
     query.expand.forEach( function( field ) {
@@ -220,13 +210,10 @@ class Resource {
    * @returns {B}
    */
   create( req ) {
-    var deferred,
-        query
-
-    deferred = B.pending()
+    let deferred = Bluebird.pending()
 
     // Normalize
-    query = this._normalize( req.query, this._opts )
+    let query = this._normalize( req.query, this._opts )
 
     // Create model
     this.model.create( req.body, function( err, documents ) {
@@ -257,22 +244,17 @@ class Resource {
    * @returns {B}
    */
   update( req ) {
-    var q,
-        qo,
-        query,
-        deferred
-
-    qo = {}
-    deferred = B.pending()
+    let qo = {}
+    let deferred = Bluebird.pending()
 
     // Normalize
-    query = this._normalize( req.query, this._opts )
+    let query = this._normalize( req.query, this._opts )
 
     // Query options
     qo[this._opts.idAttribute] = req.params[this._opts.idParam]
 
     // Build query
-    q = this.model.findOne( qo )
+    let q = this.model.findOne( qo )
 
     // Execute query
     q.exec( function( err, document ) {
@@ -315,7 +297,7 @@ class Resource {
         deferred
 
     qo = {}
-    deferred = B.pending()
+    deferred = Bluebird.pending()
 
     // Query Options
     qo[this._opts.idAttribute] = req.params[this._opts.idParam]

@@ -4,8 +4,8 @@
   "description": "REST API library",
   "main": "index.js",
   "scripts": {
-    "test": "grunt jshint && npm run test-cov",
-    "test-unit": "mocha",
+    "test": "npm run test-cov",
+    "test-unit": "mocha --compilers js:babel/register",
     "test-cov": "istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls",
     "codeclimate": "codeclimate < ./coverage/lcov.info",
     "watch": "babel -w -d ./lib ./src",
@@ -36,6 +36,7 @@
     "grunt-cli": "^0.1.13",
     "grunt-contrib-jshint": "^0.11.1",
     "istanbul": "^0.3.5",
+    "jshint": "^2.6.3",
     "load-grunt-tasks": "^3.1.0",
     "mkdirp": "^0.5.0",
     "mocha": "^2.0.1",

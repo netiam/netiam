@@ -1,12 +1,10 @@
-'use strict';
-
 describe( 'netiam', function() {
 
-    describe( 'version', function() {
-        it( 'should return current library version', function() {
-            var pkg = require( '../package.json' );
+  describe( 'version', function() {
+    it( 'should return current library version', function() {
+      let pkg = require( '../package.json' )
 
-            pkg.version.should.be.exactly( '0.0.1' );
-        } );
-    } );
-} );
+      pkg.version.should.be.exactly( '0.0.1' )
+    } )
+  } )
+} )

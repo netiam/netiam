@@ -162,7 +162,7 @@ function has( role ) {
   return false
 }
 
-module.exports = {
+export default {
   add,
   has,
   get
