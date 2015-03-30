@@ -4,11 +4,13 @@
   "description": "REST API library",
   "main": "index.js",
   "scripts": {
+    "pretest": "npm run build",
     "test": "npm run test-cov",
     "test-unit": "mocha --compilers js:babel/register",
     "test-cov": "istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls",
     "codeclimate": "codeclimate < ./coverage/lcov.info",
     "watch": "babel -w -d ./lib ./src",
+    "build": "babel -d ./lib ./src",
     "dev": "mkdir -p ./src && npm run watch"
   },
   "dependencies": {
