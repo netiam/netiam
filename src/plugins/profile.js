@@ -7,11 +7,11 @@ import path from 'path'
  * @param {Object} opts
  * @returns {Function}
  */
-function profile( route, opts ) {
-  opts = _.extend( {
+function profile(route, opts) {
+  opts = _.extend({
     query:   'profile',
     basedir: './models'
-  }, opts )
+  }, opts)
 
   /**
    * @scope {Resource}
@@ -19,7 +19,7 @@ function profile( route, opts ) {
    * @param {Object} res
    * @returns {*}
    */
-  return function( req, res ) {
+  return function(req, res) {
     let file
     let schema
 
@@ -27,7 +27,7 @@ function profile( route, opts ) {
       // TODO Load profiles during start time
       file =
         path.join(
-          path.dirname( require.main.filename ),
+          path.dirname(require.main.filename),
           opts.basedir,
           route.model.modelName.toLowerCase() +
           '.profile.' +
@@ -35,11 +35,11 @@ function profile( route, opts ) {
           '.json'
         )
       try {
-        schema = require( file )
+        schema = require(file)
       } catch (err) {
-        return console.error( err )
+        return console.error(err)
       }
-      res.body = _.pick( res.body, schema )
+      res.body = _.pick(res.body, schema)
     }
   }
 

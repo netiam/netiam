@@ -6,7 +6,7 @@
  * @param {*} [data]
  * @constructor
  */
-function RESTError( message, code, status, data ) {
+function RESTError(message, code, status, data) {
 
   if (message instanceof Error) {
     this.message = message.message

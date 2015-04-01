@@ -7,7 +7,7 @@ import roles from './roles'
  * @constructor
  */
 class Acl {
-  constructor( acl ) {
+  constructor(acl) {
     // Wildcard
     this.wc = acl['*']
 
@@ -30,45 +30,45 @@ class Acl {
    *     "R" -> READ
    * @returns {Array} A list of allowed keys
    */
-  roleAllowed( keys, role, privilege ) {
+  roleAllowed(keys, role, privilege) {
     privilege = privilege || 'R'
 
     // Wildcards
     if (this.wc && this.wc.ALLOW && this.wc.ALLOW[role]) {
-      if (this.wc.ALLOW[role].indexOf( privilege ) !== -1) {
-        keys = keys.concat( _.keys( this.acl ) )
+      if (this.wc.ALLOW[role].indexOf(privilege) !== -1) {
+        keys = keys.concat(_.keys(this.acl))
       }
     }
 
     // Granular privileges
-    _.forEach( this.acl, function( prop, key ) {
+    _.forEach(this.acl, function(prop, key) {
       // Not allowed by default
       let privileges
 
       // ALLOW
       if (prop.ALLOW && prop.ALLOW[role]) {
         privileges = prop.ALLOW[role]
-        if (privileges.indexOf( privilege ) !== -1) {
-          keys.push( key )
+        if (privileges.indexOf(privilege) !== -1) {
+          keys.push(key)
         }
       }
 
       // DENY
       if (prop.DENY && prop.DENY[role]) {
         privileges = prop.DENY[role]
-        if (privileges.indexOf( privilege ) !== -1) {
-          _.remove( keys, function( node ) {
+        if (privileges.indexOf(privilege) !== -1) {
+          _.remove(keys, function(node) {
             return node === key
-          } )
+          })
         }
       }
-    } )
+    })
 
     // Remove wildcard key
     delete keys['*']
 
     // Unique
-    return _.uniq( keys )
+    return _.uniq(keys)
   }
 
   /**
@@ -78,12 +78,12 @@ class Acl {
    * @returns {Array}
    * @private
    */
-  _getRoleHierarchy( role ) {
+  _getRoleHierarchy(role) {
     if (!role.parent) {
-      return [roles.get( role )]
+      return [roles.get(role)]
     }
 
-    return [roles.get( role )].concat( this._getRoleHierarchy( role.parent ) )
+    return [roles.get(role)].concat(this._getRoleHierarchy(role.parent))
   }
 
   /**
@@ -98,7 +98,7 @@ class Acl {
    * @params {Array|Function} [asserts=[]] optional asserts
    * @returns {Array} list of allowed keys
    */
-  allowed( resource, role, privilege, asserts ) {
+  allowed(resource, role, privilege, asserts) {
     let that
     let keys
 
@@ -106,29 +106,29 @@ class Acl {
 
     that = this
     keys = []
-    role = roles.get( role )
+    role = roles.get(role)
 
     // Ger role hierarchy
-    let userRoles = this._getRoleHierarchy( role ).reverse()
+    let userRoles = this._getRoleHierarchy(role).reverse()
 
     // Assertions
-    if (_.isFunction( asserts )) {
+    if (_.isFunction(asserts)) {
       asserts = [asserts]
     }
 
-    if (_.isArray( asserts )) {
-      _.forEach( asserts, function( assert ) {
-        keys = keys.concat( assert( that, resource, role, privilege ) )
-      } )
+    if (_.isArray(asserts)) {
+      _.forEach(asserts, function(assert) {
+        keys = keys.concat(assert(that, resource, role, privilege))
+      })
     }
 
     // Get keys for roles
-    _.forEach( userRoles, function( role ) {
-      keys = keys.concat( that.roleAllowed( keys, role.name, privilege ) )
-    } )
+    _.forEach(userRoles, function(role) {
+      keys = keys.concat(that.roleAllowed(keys, role.name, privilege))
+    })
 
     // Unique
-    return _.uniq( keys )
+    return _.uniq(keys)
   }
 
   /**
@@ -136,9 +136,9 @@ class Acl {
    * @param {Role} role
    * @param {String} [privilege='R']
    */
-  keys( role, privilege ) {
+  keys(role, privilege) {
     privilege = privilege || 'R'
-    return this.roleAllowed( [], role.name, privilege )
+    return this.roleAllowed([], role.name, privilege)
   }
 
 }

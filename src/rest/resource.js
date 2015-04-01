@@ -9,17 +9,17 @@ import filter from './odata/filter'
  * @constructor
  */
 class Resource {
-  constructor( opts ) {
+  constructor(opts) {
     if (!opts.model) {
       throw 'Model is undefined'
     } else {
       this.model = opts.model
     }
 
-    this._opts = _.merge( {
+    this._opts = _.merge({
       idParam:     'id',
       idAttribute: '_id'
-    }, opts || {} )
+    }, opts || {})
   }
 
   /**
@@ -30,9 +30,9 @@ class Resource {
    * @returns {Object} The normalized query object
    * @private
    */
-  _normalize( query, options ) {
+  _normalize(query, options) {
     // Clone query object
-    query = _.clone( query )
+    query = _.clone(query)
 
     // Filter
     if (!query.filter) {
@@ -41,7 +41,7 @@ class Resource {
 
     // Property expansion
     if (query.expand) {
-      query.expand = query.expand.split( ',' )
+      query.expand = query.expand.split(',')
     } else {
       query.expand = []
     }
@@ -55,12 +55,12 @@ class Resource {
     if (!query.offset) {
       query.offset = 0
     } else {
-      query.offset = Number( query.offset )
+      query.offset = Number(query.offset)
     }
     if (!query.limit) {
       query.limit = 10
     } else {
-      query.limit = Number( query.limit )
+      query.limit = Number(query.limit)
     }
 
     return query
@@ -94,20 +94,20 @@ class Resource {
    * @returns {Object}
    * @private
    */
-  _params( params, map ) {
+  _params(params, map) {
     // Clone map
-    map = _.clone( map )
+    map = _.clone(map)
 
-    return _.forOwn( _.clone( map ), function( val, key, obj ) {
+    return _.forOwn(_.clone(map), function(val, key, obj) {
       // Handle route params
-      if (val.charAt( 0 ) === ':') {
-        obj[key] = params[val.substring( 1 )]
+      if (val.charAt(0) === ':') {
+        obj[key] = params[val.substring(1)]
         return
       }
 
       // Static value
       obj[key] = val
-    } )
+    })
   }
 
   /**
@@ -122,44 +122,44 @@ class Resource {
    * @param {Object} req The expressjs request object
    * @returns {B}
    */
-  list( req ) {
+  list(req) {
     let deferred = Bluebird.pending()
 
     // Normalize
-    let query = this._normalize( req.query, this._opts )
+    let query = this._normalize(req.query, this._opts)
 
     // Filter
-    let f = filter( query.filter ).where( this._params( req.params, this._opts.map ) )
+    let f = filter(query.filter).where(this._params(req.params, this._opts.map))
 
     // Build query
-    let q = this.model.find( f.toObject() )
+    let q = this.model.find(f.toObject())
 
     // Populate
-    query.expand.forEach( function( field ) {
-      q = q.populate( field )
-    } )
+    query.expand.forEach(function(field) {
+      q = q.populate(field)
+    })
 
     // Sort
-    q = q.sort( query.sort )
+    q = q.sort(query.sort)
 
     // Pagination
-    q = q.skip( query.offset )
+    q = q.skip(query.offset)
     if (query.limit && query.limit !== -1) {
-      q = q.limit( query.limit )
+      q = q.limit(query.limit)
     }
 
     // Execute query
-    q.exec( function( err, documents ) {
+    q.exec(function(err, documents) {
       if (err) {
-        return deferred.reject( new RESTError( err, 500 ) )
+        return deferred.reject(new RESTError(err, 500))
       }
 
-      if (!_.isArray( documents )) {
-        return deferred.resolve( [] )
+      if (!_.isArray(documents)) {
+        return deferred.resolve([])
       }
 
-      deferred.resolve( documents )
-    } )
+      deferred.resolve(documents)
+    })
 
     return deferred.promise
   }
@@ -170,35 +170,35 @@ class Resource {
    * @param {Object} req The expressjs request object
    * @returns {B}
    */
-  read( req ) {
+  read(req) {
     let qo = {}
     let deferred = Bluebird.pending()
 
     // Normalize
-    let query = this._normalize( req.query, this._opts )
+    let query = this._normalize(req.query, this._opts)
 
     // Query options
     qo[this._opts.idAttribute] = req.params[this._opts.idParam]
 
     // Build query
-    let q = this.model.findOne( qo )
+    let q = this.model.findOne(qo)
 
     // Populate
-    query.expand.forEach( function( field ) {
-      q = q.populate( field )
-    } )
+    query.expand.forEach(function(field) {
+      q = q.populate(field)
+    })
 
     // Execute query
-    q.exec( function( err, document ) {
+    q.exec(function(err, document) {
       if (err) {
-        return deferred.reject( new RESTError( err, 500 ) )
+        return deferred.reject(new RESTError(err, 500))
       }
       if (!document) {
-        return deferred.reject( new RESTError( 'Document not found', 404 ) )
+        return deferred.reject(new RESTError('Document not found', 404))
       }
 
-      deferred.resolve( document )
-    } )
+      deferred.resolve(document)
+    })
 
     return deferred.promise
   }
@@ -209,30 +209,30 @@ class Resource {
    * @param {Object} req The expressjs request object
    * @returns {B}
    */
-  create( req ) {
+  create(req) {
     let deferred = Bluebird.pending()
 
     // Normalize
-    let query = this._normalize( req.query, this._opts )
+    let query = this._normalize(req.query, this._opts)
 
     // Create model
-    this.model.create( req.body, function( err, documents ) {
+    this.model.create(req.body, function(err, documents) {
       if (err) {
-        return deferred.reject( new RESTError( err, 500 ) )
+        return deferred.reject(new RESTError(err, 500))
       }
       if (!documents) {
-        return deferred.reject( new RESTError( 'Document not found', 404 ) )
+        return deferred.reject(new RESTError('Document not found', 404))
       }
 
       // Populate
       if (query.expand.length > 0) {
-        documents.populate( query.expand.join( ' ' ), function() {
-          deferred.resolve( documents )
-        } )
+        documents.populate(query.expand.join(' '), function() {
+          deferred.resolve(documents)
+        })
       } else {
-        deferred.resolve( documents )
+        deferred.resolve(documents)
       }
-    } )
+    })
 
     return deferred.promise
   }
@@ -243,45 +243,45 @@ class Resource {
    * @param {Object} req The expressjs request object
    * @returns {B}
    */
-  update( req ) {
+  update(req) {
     let qo = {}
     let deferred = Bluebird.pending()
 
     // Normalize
-    let query = this._normalize( req.query, this._opts )
+    let query = this._normalize(req.query, this._opts)
 
     // Query options
     qo[this._opts.idAttribute] = req.params[this._opts.idParam]
 
     // Build query
-    let q = this.model.findOne( qo )
+    let q = this.model.findOne(qo)
 
     // Execute query
-    q.exec( function( err, document ) {
+    q.exec(function(err, document) {
       if (err) {
-        return deferred.reject( new RESTError( err, 500 ) )
+        return deferred.reject(new RESTError(err, 500))
       }
       if (!document) {
-        return deferred.reject( new RESTError( 'Document not found', 404 ) )
+        return deferred.reject(new RESTError('Document not found', 404))
       }
 
       document
-        .merge( req.body )
-        .save( function( err ) {
+        .merge(req.body)
+        .save(function(err) {
           if (err) {
-            return deferred.reject( new RESTError( err, 500 ) )
+            return deferred.reject(new RESTError(err, 500))
           }
 
           // Populate
           if (req.query.expand) {
-            document.populate( query.expand.join( ' ' ), function() {
-              deferred.resolve( document )
-            } )
+            document.populate(query.expand.join(' '), function() {
+              deferred.resolve(document)
+            })
           } else {
-            deferred.resolve( document )
+            deferred.resolve(document)
           }
-        } )
-    } )
+        })
+    })
 
     return deferred.promise
   }
@@ -292,7 +292,7 @@ class Resource {
    * @param {Object} req The expressjs request object
    * @returns {B}
    */
-  delete( req ) {
+  delete(req) {
     var qo,
         deferred
 
@@ -301,21 +301,21 @@ class Resource {
 
     // Query Options
     qo[this._opts.idAttribute] = req.params[this._opts.idParam]
-    this.model.findOneAndRemove( qo, function( err, documents ) {
+    this.model.findOneAndRemove(qo, function(err, documents) {
       if (err) {
-        return deferred.reject( new RESTError( err, 500 ) )
+        return deferred.reject(new RESTError(err, 500))
       }
       if (!documents) {
-        return deferred.reject( new RESTError( 'Document not found', 404 ) )
+        return deferred.reject(new RESTError('Document not found', 404))
       }
 
       deferred.resolve()
-    } )
+    })
 
     return deferred.promise
   }
 }
 
-export default function( opts ) {
-  return new Resource( opts )
+export default function(opts) {
+  return new Resource(opts)
 }

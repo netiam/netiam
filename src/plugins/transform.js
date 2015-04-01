@@ -4,7 +4,7 @@
  * @param {Function} cb
  * @returns {Function}
  */
-function transform( route, cb ) {
+function transform(route, cb) {
   return cb
 }
 

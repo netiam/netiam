@@ -11,11 +11,11 @@ parser.yy = ast
  * @param {*} type.id
  * @returns {*}
  */
-let identifier = function( type ) {
+let identifier = function(type) {
   if (type instanceof ast.Expression) {
-    return expression( type )
+    return expression(type)
   } else if (type instanceof ast.Function) {
-    console.warn( 'Functions are not supported at the moment' )
+    console.warn('Functions are not supported at the moment')
     return true
   } else if (type instanceof ast.Identifier) {
     return type.id
@@ -32,9 +32,9 @@ let identifier = function( type ) {
  * @param {String} expr.right
  * @returns {*}
  */
-let expression = function( expr ) {
-  let lft = identifier( expr.left )
-  let rgt = identifier( expr.right )
+let expression = function(expr) {
+  let lft = identifier(expr.left)
+  let rgt = identifier(expr.right)
   let e
 
   switch (expr.operator) {
@@ -72,7 +72,7 @@ let expression = function( expr ) {
     // Search operators
     case 'lk':
       e = {}
-      e[lft] = new RegExp( rgt, 'i' )
+      e[lft] = new RegExp(rgt, 'i')
       return e
   }
 }
@@ -83,7 +83,7 @@ let expression = function( expr ) {
  * @constructor
  */
 class Filter {
-  constructor( query ) {
+  constructor(query) {
     this.q = query || ''
   }
 
@@ -96,7 +96,7 @@ class Filter {
       return {}
     }
 
-    return expression( parser.parse( this.q ) )
+    return expression(parser.parse(this.q))
   }
 
   /**
@@ -105,7 +105,7 @@ class Filter {
    * @param op
    * @return Filter
    */
-  logical( q, op ) {
+  logical(q, op) {
     if (!this.q) {
       this.q = q
       return this
@@ -121,19 +121,19 @@ class Filter {
    * @param {String|Object} q
    * @returns {Filter}
    */
-  where( q ) {
+  where(q) {
     // If no expression available, just apply hash
-    if (!this.q && _.isString( q )) {
+    if (!this.q && _.isString(q)) {
       this.q = q
       return this
     }
 
     // Apply AND operation for each key/value pair
-    if (_.isObject( q )) {
+    if (_.isObject(q)) {
       let ext = ''
-      _.forEach( q, function( val, key ) {
+      _.forEach(q, function(val, key) {
         ext += key + ' EQ \'' + val + '\''
-      } )
+      })
       if (!this.q && ext) {
         this.q = ext
       } else {
@@ -149,8 +149,8 @@ class Filter {
    * @param q
    * @return Filter
    */
-  and( q ) {
-    return this.logical( q, 'and' )
+  and(q) {
+    return this.logical(q, 'and')
   }
 
   /**
@@ -158,8 +158,8 @@ class Filter {
    * @param q
    * @return Filter
    */
-  or( q ) {
-    return this.logical( q, 'or' )
+  or(q) {
+    return this.logical(q, 'or')
   }
 
   /**
@@ -167,8 +167,8 @@ class Filter {
    * @param q
    * @return Filter
    */
-  eq( q ) {
-    return this.logical( q, 'eq' )
+  eq(q) {
+    return this.logical(q, 'eq')
   }
 
   /**
@@ -176,8 +176,8 @@ class Filter {
    * @param q
    * @return Filter
    */
-  ne( q ) {
-    return this.logical( q, 'ne' )
+  ne(q) {
+    return this.logical(q, 'ne')
   }
 
   /**
@@ -185,8 +185,8 @@ class Filter {
    * @param q
    * @return Filter
    */
-  gt( q ) {
-    return this.logical( q, 'gt' )
+  gt(q) {
+    return this.logical(q, 'gt')
   }
 
   /**
@@ -194,8 +194,8 @@ class Filter {
    * @param q
    * @return Filter
    */
-  ge( q ) {
-    return this.logical( q, 'ge' )
+  ge(q) {
+    return this.logical(q, 'ge')
   }
 
   /**
@@ -203,8 +203,8 @@ class Filter {
    * @param q
    * @return Filter
    */
-  lt( q ) {
-    return this.logical( q, 'lt' )
+  lt(q) {
+    return this.logical(q, 'lt')
   }
 
   /**
@@ -212,12 +212,12 @@ class Filter {
    * @param q
    * @return Filter
    */
-  le( q ) {
-    return this.logical( q, 'le' )
+  le(q) {
+    return this.logical(q, 'le')
   }
 }
 
-export default function( query ) {
+export default function(query) {
 
   // If empty string, return early
   if (query.length === 0) {
@@ -225,5 +225,5 @@ export default function( query ) {
   }
 
   // Expressions
-  return new Filter( query )
+  return new Filter(query)
 }

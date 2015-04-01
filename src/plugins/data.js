@@ -4,14 +4,14 @@
  * @param {Object} data
  * @returns {Function}
  */
-function data( route, body ) {
+function data(route, body) {
 
   /**
    * @scope {Resource}
    * @param {Object} req
    * @param {Object} res
    */
-  return function( req, res ) {
+  return function(req, res) {
     res.body = body
   }
 

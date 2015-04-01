@@ -8,7 +8,7 @@ export default {
    * @param right
    * @constructor
    */
-  Expression: function( operator, left, right ) {
+  Expression: function(operator, left, right) {
     this.operator = operator.toLowerCase()
     this.left = left
     this.right = right
@@ -21,7 +21,7 @@ export default {
    * @param args
    * @constructor
    */
-  Function: function( name, args ) {
+  Function: function(name, args) {
     this.name = name
     this.args = args
   },
@@ -32,7 +32,7 @@ export default {
    * @param id
    * @constructor
    */
-  Identifier: function( id ) {
+  Identifier: function(id) {
     this.id = id
   },
 

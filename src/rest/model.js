@@ -1,14 +1,14 @@
 import _ from 'lodash'
 
-function restPlugin( schema ) {
+function restPlugin(schema) {
   // Fields
-  if (!schema.get( 'created' )) {
-    schema.add( {created: Date} )
-    schema.path( 'created' ).index( true )
+  if (!schema.get('created')) {
+    schema.add({created: Date})
+    schema.path('created').index(true)
   }
-  if (!schema.get( 'modified' )) {
-    schema.add( {modified: Date} )
-    schema.path( 'modified' ).index( true )
+  if (!schema.get('modified')) {
+    schema.add({modified: Date})
+    schema.path('modified').index(true)
   }
 
   // Methods
@@ -17,10 +17,10 @@ function restPlugin( schema ) {
    * @param {Schema} schema
    * @return {Object}
    */
-  function dbrefs( schema ) {
+  function dbrefs(schema) {
     let refs = {}
 
-    schema.eachPath( function( name, path ) {
+    schema.eachPath(function(name, path) {
       let caster = path.caster
       let opt = path._opts
 
@@ -29,7 +29,7 @@ function restPlugin( schema ) {
       } else if (opt && opt.ref) {
         refs[name] = name
       }
-    } )
+    })
 
     return refs
   }
@@ -41,17 +41,17 @@ function restPlugin( schema ) {
    * @param {*} val
    * @param {Boolean} isRef
    */
-  function handleValue( o, key, val, isRef ) {
-    if (_.isArray( val ) && isRef) {
-      let copy = _.cloneDeep( val )
-      copy.forEach( function( node, index ) {
-        handleValue( copy, index, node, true )
-      } )
+  function handleValue(o, key, val, isRef) {
+    if (_.isArray(val) && isRef) {
+      let copy = _.cloneDeep(val)
+      copy.forEach(function(node, index) {
+        handleValue(copy, index, node, true)
+      })
       o[key] = copy
-    } else if (_.isObject( val ) && val._id && isRef) {
+    } else if (_.isObject(val) && val._id && isRef) {
       o[key] = val._id
-    } else if (_.isObject( val )) {
-      o[key] = _.cloneDeep( val )
+    } else if (_.isObject(val)) {
+      o[key] = _.cloneDeep(val)
     } else {
       o[key] = val
     }
@@ -62,14 +62,14 @@ function restPlugin( schema ) {
    * @param {Object} data
    * @return {Object} The modified document
    */
-  schema.methods.merge = function( data ) {
+  schema.methods.merge = function(data) {
     let i
-    let refs = dbrefs( schema )
+    let refs = dbrefs(schema)
 
     for (i in data) {
-      if (data.hasOwnProperty( i )) {
+      if (data.hasOwnProperty(i)) {
         // Detect populated fields (ObjectId cannot cast such objects)
-        handleValue( this, i, data[i], refs[i] ? true : false )
+        handleValue(this, i, data[i], refs[i] ? true : false)
       }
     }
 
@@ -79,14 +79,14 @@ function restPlugin( schema ) {
 
   // Hooks
   // http://github.com/LearnBoost/mongoose/issues/964
-  schema.pre( 'save', function( next ) {
+  schema.pre('save', function(next) {
     if (!this.created) {
       this.created = new Date()
     }
     this.modified = new Date()
 
     next()
-  } )
+  })
 
 }
 

@@ -39,7 +39,7 @@ let names = {}
  * @param {String} role
  * @returns {Object} The normalized role
  */
-function normalizeString( role ) {
+function normalizeString(role) {
   // Evaluate as ID
   if (ids[role]) {
     return ids[role]
@@ -58,7 +58,7 @@ function normalizeString( role ) {
  * @param {String} role
  * @returns {Object} The normalized role
  */
-function normalizeObject( role ) {
+function normalizeObject(role) {
   // Evaluate as native MongoDB ObjectID
   if (role.toString && ids[role.toString()]) {
     return ids[role.toString()]
@@ -88,7 +88,7 @@ function normalizeObject( role ) {
  * @param {String|Object} role
  * @returns {Object} The normalized role
  */
-function normalize( role ) {
+function normalize(role) {
   if (!role) {
     throw 'Invalid role: ' + role
   }
@@ -97,12 +97,12 @@ function normalize( role ) {
     throw 'Roles middleware is not ready'
   }
 
-  if (_.isString( role )) {
-    return normalizeString( role )
+  if (_.isString(role)) {
+    return normalizeString(role)
   }
 
-  if (_.isObject( role )) {
-    return normalizeObject( role )
+  if (_.isObject(role)) {
+    return normalizeObject(role)
   }
 
   // Return guest
@@ -115,11 +115,11 @@ function normalize( role ) {
  * @param {String|Object} role
  * @return {Object}
  */
-function get( role ) {
+function get(role) {
   try {
-    return normalize( role )
+    return normalize(role)
   } catch (err) {
-    console.error( err )
+    console.error(err)
   }
   return null
 }
@@ -130,11 +130,11 @@ function get( role ) {
  * @param {String} [parent]
  * @returns {Object}
  */
-function add( role, parent ) {
-  let r = new Role( {
+function add(role, parent) {
+  let r = new Role({
     name:   role,
-    parent: parent ? get( parent ) : null
-  } )
+    parent: parent ? get(parent) : null
+  })
 
   names[role] = r
 
@@ -142,21 +142,21 @@ function add( role, parent ) {
 }
 
 // fetch roles from db
-roles = roles.concat( documents )
+roles = roles.concat(documents)
 
 // Create mappings
-roles.forEach( function( role ) {
+roles.forEach(function(role) {
   ids[role._id] = role
   names[role.name] = role
-} )
+})
 
 /**
  * Is role already registered
  * @param {String|Object} role
  * @returns {Boolean}
  */
-function has( role ) {
-  if (get( role )) {
+function has(role) {
+  if (get(role)) {
     return true
   }
   return false

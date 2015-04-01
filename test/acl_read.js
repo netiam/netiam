@@ -3,24 +3,24 @@ import Acl from '../lib/rest/acl'
 import roles from '../lib/rest/roles'
 import asserts from '../lib/rest/asserts'
 
-let schema = require( './fixtures/acl.json' )
-let user = require( './fixtures/user.json' )
-let acl = new Acl( schema )
+let schema = require('./fixtures/acl.json')
+let user = require('./fixtures/user.json')
+let acl = new Acl(schema)
 
-describe( 'ACL', function() {
+describe('ACL', function() {
 
-  describe( 'READ', function() {
-    it( 'should filter properties for role GUEST', function() {
-      let props = filter.filter( acl, user, roles.get( 'GUEST' ), 'R' )
-      props.should.have.properties( {
+  describe('READ', function() {
+    it('should filter properties for role GUEST', function() {
+      let props = filter.filter(acl, user, roles.get('GUEST'), 'R')
+      props.should.have.properties({
         'name':        'eliias',
         'description': 'Hey, ich bin der Hansen.'
-      } )
-    } )
+      })
+    })
 
-    it( 'should filter properties for role USER', function() {
-      let props = filter.filter( acl, user, roles.get( 'USER' ), 'R' )
-      props.should.have.properties( {
+    it('should filter properties for role USER', function() {
+      let props = filter.filter(acl, user, roles.get('USER'), 'R')
+      props.should.have.properties({
         'name':        'eliias',
         'description': 'Hey, ich bin der Hansen.',
         'email':       'hannes@impossiblearts.com',
@@ -30,14 +30,14 @@ describe( 'ACL', function() {
           13.0406998,
           47.822352
         ]
-      } )
-    } )
+      })
+    })
 
-    it( 'should filter properties for role USER who is also resource OWNER', function() {
-      let assert = asserts.owner( 'email', 'hannes@impossiblearts.com' ),
+    it('should filter properties for role USER who is also resource OWNER', function() {
+      let assert = asserts.owner('email', 'hannes@impossiblearts.com'),
       props
-      props = filter.filter( acl, user, roles.get( 'USER' ), 'R', assert )
-      props.should.have.properties( {
+      props = filter.filter(acl, user, roles.get('USER'), 'R', assert)
+      props.should.have.properties({
         'name':        'eliias',
         'description': 'Hey, ich bin der Hansen.',
         'email':       'hannes@impossiblearts.com',
@@ -50,12 +50,12 @@ describe( 'ACL', function() {
         ],
         'created':     '2014-10-01T21:43:45.705Z',
         'modified':    '2014-11-12T12:39:22.615Z'
-      } )
-    } )
+      })
+    })
 
-    it( 'should filter properties for role MANAGER', function() {
-      let props = filter.filter( acl, user, 'MANAGER', 'R' )
-      props.should.have.properties( {
+    it('should filter properties for role MANAGER', function() {
+      let props = filter.filter(acl, user, 'MANAGER', 'R')
+      props.should.have.properties({
         'name':        'eliias',
         'description': 'Hey, ich bin der Hansen.',
         'email':       'hannes@impossiblearts.com',
@@ -65,12 +65,12 @@ describe( 'ACL', function() {
           13.0406998,
           47.822352
         ]
-      } )
-    } )
+      })
+    })
 
-    it( 'should filter properties for role ADMIN', function() {
-      let props = filter.filter( acl, user, 'ADMIN', 'R' )
-      props.should.have.properties( {
+    it('should filter properties for role ADMIN', function() {
+      let props = filter.filter(acl, user, 'ADMIN', 'R')
+      props.should.have.properties({
         'name':        'eliias',
         'description': 'Hey, ich bin der Hansen.',
         'email':       'hannes@impossiblearts.com',
@@ -82,8 +82,8 @@ describe( 'ACL', function() {
         ],
         'created':     '2014-10-01T21:43:45.705Z',
         'modified':    '2014-11-12T12:39:22.615Z'
-      } )
-    } )
-  } )
+      })
+    })
+  })
 
-} )
+})

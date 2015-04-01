@@ -7,8 +7,8 @@ import crypto from 'crypto'
  * @param {Object} req
  * @returns String
  */
-function hash( req, opts ) {
-  let md5 = crypto.createHash( 'md5' )
+function hash(req, opts) {
+  let md5 = crypto.createHash('md5')
   let str = ''
 
   // Path
@@ -18,29 +18,29 @@ function hash( req, opts ) {
 
   // Query
   if (req.query && opts.query) {
-    str += _.reduce( req.query, function( result, item, key ) {
+    str += _.reduce(req.query, function(result, item, key) {
       return result + ':' + key + '=' + item
-    }, '|' )
+    }, '|')
   }
 
   // Params
   if (req.params && opts.params) {
-    str += _.reduce( req.params, function( result, item, key ) {
+    str += _.reduce(req.params, function(result, item, key) {
       return result + ':' + key + '=' + item
-    }, '|' )
+    }, '|')
   }
 
   // Language
   if (req.acceptsLanguages() && opts.languages) {
     let langs = req.acceptsLanguages()
-    if (_.isArray( langs ) && langs.length > 0) {
+    if (_.isArray(langs) && langs.length > 0) {
       str += '|' + langs[0]
     }
   }
 
-  md5.update( str )
+  md5.update(str)
 
-  return md5.digest( 'hex' )
+  return md5.digest('hex')
 }
 
 /**
@@ -49,11 +49,11 @@ function hash( req, opts ) {
  * @param {Object} opts
  * @returns {Function}
  */
-function cache( route, opts ) {
+function cache(route, opts) {
   let id
   let data
 
-  opts = _.extend( {
+  opts = _.extend({
     storage:     opts.storage,
     passthrough: {
       param:  'nocache',
@@ -65,9 +65,9 @@ function cache( route, opts ) {
     query:       true,
     params:      true,
     languages:   false
-  }, opts )
+  }, opts)
 
-  route.pre( 'dispatch', function( req ) {
+  route.pre('dispatch', function(req) {
     let deferred = B.pending()
 
     // no cache?
@@ -76,39 +76,39 @@ function cache( route, opts ) {
       return
     }
 
-    id = hash( req, opts )
+    id = hash(req, opts)
 
-    opts.storage.load( opts.PREFIX + id, function( err, raw ) {
+    opts.storage.load(opts.PREFIX + id, function(err, raw) {
       if (err) {
         return deferred.resolve()
       }
 
       if (!raw) {
-        opts.storage.save( opts.PREFIX + id, null )
+        opts.storage.save(opts.PREFIX + id, null)
       } else {
         data = raw
       }
 
       deferred.resolve()
-    } )
+    })
 
     return deferred.promise
-  } )
+  })
 
-  route.post( 'dispatch', function( req, res ) {
+  route.post('dispatch', function(req, res) {
     if (res.body) {
       try {
         opts.storage.save(
           opts.PREFIX + id,
-          JSON.stringify( res.body )
+          JSON.stringify(res.body)
         )
       } catch (exc) {
-        console.warn( 'Cannot save cache entry: ' + id )
+        console.warn('Cannot save cache entry: ' + id)
       }
     }
-  } )
+  })
 
-  return function( req, res ) {
+  return function(req, res) {
     let err
 
     // no cache?
@@ -119,10 +119,10 @@ function cache( route, opts ) {
 
     if (id && data) {
       res
-        .set( 'Cache', id )
-        .json( JSON.parse( data ) )
+        .set('Cache', id)
+        .json(JSON.parse(data))
 
-      err = new Error( 'Stop stack execution' )
+      err = new Error('Stop stack execution')
       err.nonce = true
 
       throw err

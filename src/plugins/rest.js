@@ -6,12 +6,12 @@ import restResource from '../rest/resource'
  * @param {Route} route
  * @returns {Function}
  */
-function rest( route, opts ) {
-  opts = _.extend( {
+function rest(route, opts) {
+  opts = _.extend({
     'idParam': 'id'
-  }, opts )
+  }, opts)
 
-  let resource = restResource( opts )
+  let resource = restResource(opts)
   route.model = opts.model
 
   /**
@@ -20,61 +20,61 @@ function rest( route, opts ) {
    * @param {Object} res
    * @returns {*}
    */
-  return function( req, res ) {
+  return function(req, res) {
     let method = req.method
 
     if (method === 'HEAD') {
       return resource
-        .head( req, res )
-        .then( function( document ) {
+        .head(req, res)
+        .then(function(document) {
           res.body = document
-          res.status( 200 )
-        } )
+          res.status(200)
+        })
     }
 
     if (method === 'GET' && !req.params[opts.idParam]) {
       return resource
-        .list( req, res )
-        .then( function( document ) {
+        .list(req, res)
+        .then(function(document) {
           res.body = document
-          res.status( 200 )
-        } )
+          res.status(200)
+        })
     }
 
     if (method === 'POST') {
       return resource
-        .create( req, res )
-        .then( function( document ) {
+        .create(req, res)
+        .then(function(document) {
           res.body = document
-          res.status( 201 )
-        } )
+          res.status(201)
+        })
     }
 
     if (method === 'GET') {
       return resource
-        .read( req, res )
-        .then( function( document ) {
+        .read(req, res)
+        .then(function(document) {
           res.body = document
-          res.status( 200 )
-        } )
+          res.status(200)
+        })
     }
 
     if (method === 'PUT') {
       return resource
-        .update( req, res )
-        .then( function( document ) {
+        .update(req, res)
+        .then(function(document) {
           res.body = document
-          res.status( 200 )
-        } )
+          res.status(200)
+        })
     }
 
     if (method === 'DELETE') {
       return resource
-        .delete( req, res )
-        .then( function( document ) {
+        .delete(req, res)
+        .then(function(document) {
           res.body = document
-          res.status( 204 )
-        } )
+          res.status(204)
+        })
     }
   }
 
