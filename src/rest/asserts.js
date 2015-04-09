@@ -33,6 +33,6 @@ if (!roles.has('OWNER')) {
   roles.add('OWNER')
 }
 
-export default {
+export default Object.freeze({
   owner
-}
+})

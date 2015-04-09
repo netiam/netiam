@@ -2,16 +2,16 @@ import mongoose from 'mongoose'
 
 let Schema = mongoose.Schema
 let schema = new Schema({
-  name:        {
-    type:     String,
-    unique:   true,
+  name: {
+    type: String,
+    unique: true,
     required: true
   },
-  parent:      {
+  parent: {
     type: Schema.Types.ObjectId,
-    ref:  'Role'
+    ref: 'Role'
   },
-  superuser:   Boolean,
+  superuser: Boolean,
   description: String
 })
 

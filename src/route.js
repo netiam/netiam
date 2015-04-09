@@ -11,7 +11,7 @@ let plugins = {}
 function route(app) {
   let stack = []
   let hooks = {
-    pre:  [],
+    pre: [],
     post: []
   }
   let r
@@ -103,7 +103,7 @@ function route(app) {
         res
           .status(500)
           .json({
-            status:  'INTERNAL SERVER ERROR',
+            status: 'INTERNAL SERVER ERROR',
             message: 'Route did not send any response to client'
           })
       }
@@ -117,9 +117,9 @@ function route(app) {
         res
           .status(err.code || 500)
           .json({
-            status:  err.status || 'INTERNAL SERVER ERROR',
+            status: err.status || 'INTERNAL SERVER ERROR',
             message: err.message || 'Server did not send any response to client',
-            data:    err.data || null
+            data: err.data || null
           })
       }
     })
@@ -150,7 +150,7 @@ function route(app) {
   // Plugins
   registerPlugins(r)
   // Return composed route
-  return r
+  return Object.freeze(r)
 }
 
 /**

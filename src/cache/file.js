@@ -75,10 +75,10 @@ export default function(config) {
     fs.writeFile(get(id), data, cb)
   }
 
-  return {
+  return Object.freeze({
     has,
     stat,
     load,
     save
-  }
+  })
 }

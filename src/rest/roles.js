@@ -159,8 +159,8 @@ function has(role) {
   return get(role) ? true : false
 }
 
-export default {
+export default Object.freeze({
   add: add,
   has: has,
   get: get
-}
+})

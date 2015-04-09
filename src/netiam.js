@@ -34,16 +34,16 @@ function netiam(app) {
   }
 
   // Export
-  return {
+  return Object.freeze({
     // Middleware
     middleware: middleware,
     // Requests
-    head:       request('HEAD'),
-    get:        request('GET'),
-    post:       request('POST'),
-    put:        request('PUT'),
-    delete:     request('DELETE')
-  }
+    head: request('HEAD'),
+    get: request('GET'),
+    post: request('POST'),
+    put: request('PUT'),
+    delete: request('DELETE')
+  })
 }
 
 export default netiam
