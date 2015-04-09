@@ -4,6 +4,7 @@
   "description": "REST API library",
   "main": "index.js",
   "scripts": {
+    "postinstall": "make",
     "test": "make test"
   },
   "dependencies": {
