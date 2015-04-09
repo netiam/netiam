@@ -5,40 +5,16 @@
  * @returns {{has: has, load: load, save: save}}
  */
 export default function(config) {
-  let fs = require('fs')
-  let path = require('path')
-  let mkdirp = require('mkdirp')
-  let base = path.resolve(config.path)
-
-  // Create cache dir
-  mkdirp(base, function(err) {
-    if (err) {
-      console.error(err)
-    }
-  })
+  let client = config.client
+  let PREFIX = config.PREFIX || 'cache:'
 
   /**
-   * Get cache path
+   * Get KEY
    * @param {String} id
    * @returns {String}
    */
   function get(id) {
-    return path.resolve(base, id)
-  }
-
-  /**
-   * Get cache stat
-   * @param {String} id
-   * @param {Function} cb
-   */
-  function stat(id, cb) {
-    has(id, function(exists) {
-      if (!exists) {
-        return cb(new Error('Cache entry does not exist: "' + id + '"'))
-      }
-
-      fs.stat(get(id), cb)
-    })
+    return PREFIX + id
   }
 
   /**
@@ -47,7 +23,7 @@ export default function(config) {
    * @param {Function} cb
    */
   function has(id, cb) {
-    fs.exists(get(id), cb)
+    client.get(get(id), cb)
   }
 
   /**
@@ -56,12 +32,12 @@ export default function(config) {
    * @param {Function} cb
    */
   function load(id, cb) {
-    has(id, function(exists) {
-      if (!exists) {
+    client.get(get(id), function(err, data) {
+      if (!data) {
         return cb(new Error(`Cache entry does not exist: "${id}"`))
       }
 
-      fs.readFile(get(id), cb)
+      cb(err, data)
     })
   }
 
@@ -72,7 +48,7 @@ export default function(config) {
    * @param {Function} cb
    */
   function save(id, data, cb) {
-    fs.writeFile(get(id), data, cb)
+    client.set(get(id), data, cb)
   }
 
   return Object.freeze({
