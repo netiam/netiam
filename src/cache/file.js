@@ -27,21 +27,6 @@ export default function(config) {
   }
 
   /**
-   * Get cache stat
-   * @param {String} id
-   * @param {Function} cb
-   */
-  function stat(id, cb) {
-    has(id, function(exists) {
-      if (!exists) {
-        return cb(new Error('Cache entry does not exist: "' + id + '"'))
-      }
-
-      fs.stat(get(id), cb)
-    })
-  }
-
-  /**
    * Has cache entry
    * @param {String} id
    * @param {Function} cb

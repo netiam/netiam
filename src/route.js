@@ -150,7 +150,7 @@ function route(app) {
   // Plugins
   registerPlugins(r)
   // Return composed route
-  return Object.freeze(r)
+  return r
 }
 
 /**
