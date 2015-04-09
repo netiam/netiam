@@ -68,12 +68,12 @@ describe('resource - standalone', function() {
           }
 
           res.body.should.have.properties({
-            'name':        'eliias',
+            'name': 'eliias',
             'description': 'Hey, ich bin der Hansen.',
-            'email':       'hannes@impossiblearts.com',
-            'firstname':   'Hannes',
-            'lastname':    'Moser',
-            'location':    [
+            'email': 'hannes@impossiblearts.com',
+            'firstname': 'Hannes',
+            'lastname': 'Moser',
+            'location': [
               13.0406998,
               47.822352
             ]
@@ -116,12 +116,12 @@ describe('resource - standalone', function() {
           }
 
           res.body.should.have.properties({
-            'name':        'eliias',
+            'name': 'eliias',
             'description': 'Hey, ich bin der Hansen.',
-            'email':       'hannes@impossiblearts.com',
-            'firstname':   'Hannes',
-            'lastname':    'Moser',
-            'location':    [
+            'email': 'hannes@impossiblearts.com',
+            'firstname': 'Hannes',
+            'lastname': 'Moser',
+            'location': [
               13.0406998,
               47.822352
             ]
@@ -147,12 +147,12 @@ describe('resource - standalone', function() {
           }
 
           res.body.should.have.properties({
-            'name':        'modified name',
+            'name': 'modified name',
             'description': 'Hey, ich bin der Hansen.',
-            'email':       'hannes@impossiblearts.com',
-            'firstname':   'Hannes',
-            'lastname':    'Moser',
-            'location':    [
+            'email': 'hannes@impossiblearts.com',
+            'firstname': 'Hannes',
+            'lastname': 'Moser',
+            'location': [
               13.0406998,
               47.822352
             ]
