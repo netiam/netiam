@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "REST API library",
   "main": "index.js",
+  "scripts": {
+    "test": "make test"
+  },
   "dependencies": {
     "bluebird": "^2.9.14",
     "busboy": "^0.2.9",
@@ -58,10 +61,5 @@
   "engines": {
     "node": ">=v0.10.33",
     "npm": ">=2.1.12"
-  },
-  "standard": {
-    "ignore": [
-      "./src/rest/odata/parser.js"
-    ]
   }
 }

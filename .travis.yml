@@ -4,7 +4,7 @@ cache:
   directories:
   - node_modules
 node_js:
-- 'iojs-v1.6.2'
+- 'iojs-v1.6.4'
 services:
 - mongodb
 addons:
