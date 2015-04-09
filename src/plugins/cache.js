@@ -50,58 +50,26 @@ function hash(req, opts) {
  * @returns {Function}
  */
 function cache(route, opts) {
-  let id
-  let data
 
   opts = _.extend({
-    storage:     opts.storage,
+    storage: opts.storage,
     passthrough: {
-      param:  'nocache',
+      param: 'nocache',
       secret: 'secret'
     },
-    PREFIX:      'fs_',
-    ttl:         3600,
-    path:        true,
-    query:       true,
-    params:      true,
-    languages:   false
+    PREFIX: 'fs_',
+    ttl: 3600,
+    path: true,
+    query: true,
+    params: true,
+    languages: false
   }, opts)
-
-  route.pre('dispatch', function(req) {
-    let deferred = B.pending()
-
-    // no cache?
-    if (req.query[opts.passthrough.param] &&
-      req.query[opts.passthrough.param] === opts.passthrough.secret) {
-      return
-    }
-
-    id = hash(req, opts)
-
-    opts.storage.load(opts.PREFIX + id, function(err, raw) {
-      if (err) {
-        return deferred.resolve()
-      }
-
-      if (!raw) {
-        opts.storage.save(opts.PREFIX + id, null)
-      } else {
-        data = raw
-      }
-
-      deferred.resolve()
-    })
-
-    return deferred.promise
-  })
 
   route.post('dispatch', function(req, res) {
     if (res.body) {
+      let id = hash(req, opts)
       try {
-        opts.storage.save(
-          opts.PREFIX + id,
-          JSON.stringify(res.body)
-        )
+        opts.storage.save(opts.PREFIX + id, JSON.stringify(res.body))
       } catch (exc) {
         console.warn('Cannot save cache entry: ' + id)
       }
@@ -109,24 +77,38 @@ function cache(route, opts) {
   })
 
   return function(req, res) {
-    let err
+    let deferred = B.pending()
 
     // no cache?
-    if (req.query[opts.passthrough.param] &&
-      req.query[opts.passthrough.param] === opts.passthrough.secret) {
+    if (req.query[opts.passthrough.param]
+      && req.query[opts.passthrough.param] === opts.passthrough.secret) {
       return
     }
 
-    if (id && data) {
-      res
-        .set('Cache', id)
-        .json(JSON.parse(data))
+    let id = hash(req, opts)
 
-      err = new Error('Stop stack execution')
-      err.nonce = true
+    opts.storage.load(opts.PREFIX + id, function(err, data) {
+      if (err) {
+        return deferred.resolve()
+      }
 
-      throw err
-    }
+      if (data) {
+        res.body = data
+
+        res
+          .set('Cache', id)
+          .json(JSON.parse(data))
+
+        err = new Error('Stop stack execution')
+        err.nonce = true
+
+        return deferred.reject(err)
+      }
+
+      deferred.resolve();
+    })
+
+    return deferred.promise
   }
 
 }

@@ -4,18 +4,18 @@ let Schema = mongoose.Schema
 
 // Define user schema
 let schema = new Schema({
-  name:        String,
+  name: String,
   description: String,
-  email:       {
-    type:   String,
+  email: {
+    type: String,
     unique: true,
     sparse: true
   },
-  password:    String,
-  firstname:   String,
-  lastname:    String,
-  location:    {
-    type:  [Number],
+  password: String,
+  firstname: String,
+  lastname: String,
+  location: {
+    type: [Number],
     index: '2dsphere'
   }
 })

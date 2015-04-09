@@ -3,36 +3,45 @@ import Role from './models/role'
 
 let documents = [
   {
-    '_id':         '53ff92f6dc52d7472e074815',
-    'name':        'GUEST',
+    '_id': '53ff92f6dc52d7472e074815',
+    'name': 'GUEST',
     'description': 'If not logged in, every user is a guest.'
   },
   {
-    '_id':         '53ff92f6dc52d7472e074816',
-    'name':        'USER',
+    '_id': '53ff92f6dc52d7472e074816',
+    'name': 'USER',
     'description': 'Every user inherits from this role.'
   },
   {
-    '_id':         '53ff92f6dc52d7472e074817',
-    'name':        'MANAGER',
+    '_id': '53ff92f6dc52d7472e074817',
+    'name': 'MANAGER',
     'description': 'Petsitters are like regular users, but they have their petsitting tools.',
-    'parent':      '53ff92f6dc52d7472e074816'
+    'parent': '53ff92f6dc52d7472e074816'
   },
   {
-    '_id':         '53ff92f6dc52d7472e074818',
-    'name':        'OWNER',
+    '_id': '53ff92f6dc52d7472e074818',
+    'name': 'OWNER',
     'description': 'SPECIAL: Owner role.'
   },
   {
-    '_id':         '53ff92f6dc52d7472e074819',
-    'name':        'ADMIN',
-    'superuser':   true,
+    '_id': '53ff92f6dc52d7472e074819',
+    'name': 'ADMIN',
+    'superuser': true,
     'description': 'System administrators.'
   }
 ]
 let roles = []
 let ids = {}
 let names = {}
+
+// fetch roles from db
+roles = roles.concat(documents)
+
+// Create mappings
+roles.forEach(function(role) {
+  ids[role._id] = role
+  names[role.name] = role
+})
 
 /**
  * Normalize role input as string
@@ -132,7 +141,7 @@ function get(role) {
  */
 function add(role, parent) {
   let r = new Role({
-    name:   role,
+    name: role,
     parent: parent ? get(parent) : null
   })
 
@@ -141,29 +150,17 @@ function add(role, parent) {
   return r
 }
 
-// fetch roles from db
-roles = roles.concat(documents)
-
-// Create mappings
-roles.forEach(function(role) {
-  ids[role._id] = role
-  names[role.name] = role
-})
-
 /**
  * Is role already registered
  * @param {String|Object} role
  * @returns {Boolean}
  */
 function has(role) {
-  if (get(role)) {
-    return true
-  }
-  return false
+  return get(role) ? true : false
 }
 
 export default {
-  add,
-  has,
-  get
+  add: add,
+  has: has,
+  get: get
 }
