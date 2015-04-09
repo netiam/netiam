@@ -1,6 +1,10 @@
 'use strict';
 
-/*
- * The netiam library
- */
-module.exports = require( './lib/netiam' );
+let netiam = require('./lib/netiam')
+
+netiam.cache = {
+  file: require('./lib/cache/file'),
+  redis: require('./lib/cache/redis')
+}
+
+module.exports = netiam

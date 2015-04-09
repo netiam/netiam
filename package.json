@@ -4,17 +4,16 @@
   "description": "REST API library",
   "main": "index.js",
   "dependencies": {
+    "bluebird": "^2.9.14",
     "busboy": "^0.2.9",
     "commander": "^2.6.0",
-    "editorconfig-tools": "0.0.1",
     "lodash": "^3.0.1",
     "mmmagic": "^0.3.12",
     "mongoose": "^4.0.0",
     "passport": "^0.2.1",
     "passport-http": "^0.2.2",
     "passport-http-bearer": "^1.0.1",
-    "passport-local": "^1.0.0",
-    "q": "^1.1.2"
+    "passport-local": "^1.0.0"
   },
   "devDependencies": {
     "babel": "^4.7.16",
@@ -23,25 +22,19 @@
     "coveralls": "^2.11.2",
     "express": "^4.10.7",
     "grunt": "^0.4.5",
+    "grunt-babel": "^4.0.0",
     "grunt-bump": "0.3.0",
     "grunt-changelog": "^0.3.0",
     "grunt-cli": "^0.1.13",
-    "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-jshint": "^0.11.1",
-    "grunt-contrib-watch": "^0.6.1",
     "istanbul": "^0.3.5",
+    "jshint": "^2.6.3",
     "load-grunt-tasks": "^3.1.0",
     "mkdirp": "^0.5.0",
     "mocha": "^2.0.1",
     "should": "^5.2.0",
     "supertest": "^0.15.0",
     "time-grunt": "^1.0.0"
-  },
-  "scripts": {
-    "test": "grunt jshint && npm run test-cov",
-    "test-unit": "mocha",
-    "test-cov": "istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls",
-    "codeclimate": "codeclimate < ./coverage/lcov.info"
   },
   "repository": {
     "type": "git",
@@ -61,12 +54,14 @@
   "bugs": {
     "url": "https://github.com/eliias/netiam/issues"
   },
-  "bin": {
-    "netiam": "bin/netiam"
-  },
   "homepage": "https://github.com/eliias/netiam",
   "engines": {
     "node": ">=v0.10.33",
     "npm": ">=2.1.12"
+  },
+  "standard": {
+    "ignore": [
+      "./src/rest/odata/parser.js"
+    ]
   }
 }

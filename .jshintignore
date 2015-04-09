@@ -1,2 +1,3 @@
-lib/rest/odata/parser.js
-lib/rest/odata/filter.js
+lib/**
+src/rest/odata/parser.js
+src/rest/odata/filter.js

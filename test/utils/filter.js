@@ -1,6 +1,4 @@
-'use strict';
-
-var _ = require( 'lodash' );
+import _ from 'lodash'
 
 /**
  * Filters an object literal
@@ -12,19 +10,19 @@ var _ = require( 'lodash' );
  * @param {Function|Array} [asserts]
  * @returns {Object}
  */
-function filter( acl, resource, role, privilege, asserts ) {
-    privilege = privilege || 'R';
-    return _.pick(
-        resource,
-        acl.allowed(
-            resource,
-            role,
-            privilege,
-            asserts
-        )
-    );
+function filter(acl, resource, role, privilege, asserts) {
+  privilege = privilege || 'R'
+  return _.pick(
+    resource,
+    acl.allowed(
+      resource,
+      role,
+      privilege,
+      asserts
+    )
+  )
 }
 
-module.exports = {
-    filter: filter
-};
+export default {
+  filter
+}
