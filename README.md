@@ -14,22 +14,7 @@ useful.
 
 ```bash
 # without npm install
-npm i -S eliias/netiam
-
-# The day it has been published, you can do the following
-# npm i -S netiam
-```
-
-## Demo
-
-Please checkout the demo application to get a up to date example of library
-usage.
-
-```bash
-git clone https://github.com/eliias/netiam-demo.git
-cd netiam-demo
-npm link netiam
-node app.js
+npm i -S netiam
 ```
 
 ## Tests
@@ -70,12 +55,14 @@ everything as JSON.
 var express = require( 'express' ),
     app     = express(),
     server  = require( 'http' ).createServer( app ),
-    netiam  = require( 'netiam' )( app );
+    api = require( 'netiam' );
 
-netiam
-    .get( '/' )
-    .data( {'Hello': 'World!'} )
-    .json();
+app.get(
+    '/users'
+    api()
+        .data( {'Hello': 'World!'} )
+        .json()
+)
 
 server.listen( 3000 );
 ```
@@ -109,31 +96,13 @@ The core idea of this library is to give you a bunch of plugins,
 which should be used to accept, validate, transform request and/or response
 objects.
 
-In comparison to the well known [middleware](http://stephensugden.com/middleware_guide/)
-concept of [sencha connect](https://github.com/senchalabs/connect#middleware),
-these modules are applied as standalone plugins on every route. This
-implementation might change in the future. The idea is to have a fully
-compatible middleware layer.
-
-**Future:**
-
 ```js
-// now
-netiam
-    .get( '/foo' )
+const path = api()
     .rest({…})
     .json();
 
-// then
-netiam
-    .rest({…})
-    .json();
-
-app.get( '/foo', netiam );
+app.get( '/foo', path );
 ```
-
-Then the responsibility of handling requests goes back to your favorite
-server framework (e.g. Express, Sencha Connect )
 
 The library is using [Express](http://expressjs.com/) as core infrastructure layer for
 routing requests and serving data.
@@ -147,112 +116,37 @@ routing requests and serving data.
  * @param {Object} body
  * @returns {Function}
  */
-function data( route, body ) {
-    /**
-     * @scope {Resource}
-     * @param {Object} req
-     * @param {Object} res
-     */
+export default function data( route, body ) {
     return function( req, res ) {
         res.body = body;
     };
 }
-module.exports = data;
+
 ```
 
-Every plugin must be implemented as a function with the given signature. In order
-to register a plugin written by yourself, use the following command.
+### Example
 
 ```js
-var Route = require( 'netiam' ).Route;
-Route.plugin( 'myplugin', require( './myplugin' ) );
+app.get(
+    '/users',
+    api()
+        .authenticate(…)
+        .get( '/resource/:id' )
+        .rest(…)
+        .transform(…)
+        .data(…)
+        .acl(…)
+        .json( {…} )
+)
 ```
 
-### Full example
-
-```js
-app
-    .authenticate(…)
-    .get( '/resource/:id' )
-    .rest(…)
-    .transform(…)
-    .data(…)
-    .acl(…)
-    .json( {…} )
-    .catch( function( err ) {…} )
-```
-
-## Samples
-
-### gets a collection
-
-```js
-app
-    .get( '/resource' )
-    .rest( {…} )
-    .acl( {…} )
-    .json( {…} )
-```
-
-### gets a resource
-
-```js
-app
-    .get( '/resource/:id' )
-    .rest( {…} )
-    .acl( {…} )
-    .json( {…} )
-```
-
-### creates a resource
-
-```js
-app
-    .put( '/resource/:id' )
-    .acl( {…} )
-    .rest( {…} )
-    .acl( {…} )
-    .json( {…} )
-```
-
-### updates a resource
-
-```js
-app
-    .put( '/resource/:id' )
-    .acl( {…} )
-    .rest( {…} )
-    .acl( {…} )
-    .json( {…} )
-```
-
-### deletes a resource
-
-```js
-app
-    .delete( '/resource/:id' )
-    .acl( {…} )
-    .rest( {…} )
-    .send( {…} )
-```
-
-### error handling
+### Error handling
 
 You do not need to handle common API errors on your own. The library responds
 to the client at leasat with a proper HTTP status code
-(e.g. 404 for document not found) automatically. You might want to intercept
-the error middleware and return a custom message. In general you should avoid
-sending specific error details from your API in production mode.
+(e.g. 404 for document not found) automatically.
 
-If NODE_ENV=development you will also get a error object with the original
-error message and a stacktrace.
-
-```js
-app
-    .catch( function(err) {…} )
-```
-
-### files
+### Files
 
 The library takes care of different API tasks. Most people want to use this lib
 as their core API framework for classic JSON coast-to-coast applications.
@@ -264,7 +158,7 @@ and delivery with the help of [GridFS](http://docs.mongodb.org/manual/core/gridf
 We also provide extensions for common media related file tasks. For this purpose
 you can extend your API with media extensions.
 
-#### get a single file
+#### Get a single file
 
 ```bash
 app
