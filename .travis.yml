@@ -3,12 +3,24 @@ sudo: false
 cache:
   directories:
   - node_modules
+deploy:
+  provider: npm
+  email: hannes@impossiblearts.com
+  skip_cleanup: true
+  api_key:
+    secure: OyxBma7IJFkTphj8OIP/Dm9Df040EIWyTzmaRzH9p9qEUP1XOUgAoP6MWWM3kvTle47SdEVZxwtum4ePZdE1hqsPQ8JSkLb9yZCcT2RNADGmB6xPGEPSCf4aqvaJ61u1F2lk3p496hf8f/OcRaqbO9Bq29ed8wOXwRJ0/ZleBZw=
+  on:
+    branch: master
+    repo: eliias/netiam
 node_js:
-- 'iojs-v1'
+- iojs-v1
 services:
 - mongodb
 addons:
   code_climate:
     repo_token:
-      secure: "kmN4GIE9O7uFtw4dCcJvrLitZFJmHPF0G8gCiHGEdK0HdK6xT9rTD8TjHXGM07QNB0Teyfwmtc32DKzO6hPgLGSGBjMiJlOUe5GKrz16a2k7QmbDF8t4jsptuwFKB+aKXmNVhJ8Pc7POlGoVxMd0wGfqeZ9lKLfG5pE+WSGkDxQ="
+      secure: kmN4GIE9O7uFtw4dCcJvrLitZFJmHPF0G8gCiHGEdK0HdK6xT9rTD8TjHXGM07QNB0Teyfwmtc32DKzO6hPgLGSGBjMiJlOUe5GKrz16a2k7QmbDF8t4jsptuwFKB+aKXmNVhJ8Pc7POlGoVxMd0wGfqeZ9lKLfG5pE+WSGkDxQ=
 after_success: npm run codeclimate
+env:
+  global:
+    secure: FH/vtdyQWRlL6exOcXtBsohmh8wIOTrGTjXJE/KS4CoLcz6KaIDy3MQwR3bhmMUz9FwfubEkAwqqSrbvniTCIV1/tldcM/OYhYiOeOrVtCRD3iEoL3bykgbYMg7UIYbY7LHl1hUvrgkV1TC5cmVh8rpAk9WKdt2Iut4MHXCItb0=
