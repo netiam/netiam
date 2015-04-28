@@ -107,7 +107,7 @@ app.get( '/foo', path );
 The library is using [Express](http://expressjs.com/) as core infrastructure layer for
 routing requests and serving data.
 
-### Basic example
+### Plugin example
 
 ```js
 /**
