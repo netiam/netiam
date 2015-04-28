@@ -24,7 +24,8 @@
     },
     "email": {
         "ALLOW": {
-            "USER": "RU"
+            "USER": "RU",
+            "MANAGER": "RU"
         }
     },
     "password": {
@@ -34,17 +35,20 @@
     },
     "firstname": {
         "ALLOW": {
-            "USER": "RU"
+            "USER": "RU",
+            "MANAGER": "RU"
         }
     },
     "lastname": {
         "ALLOW": {
-            "USER": "RU"
+            "USER": "RU",
+            "MANAGER": "RU"
         }
     },
     "location": {
         "ALLOW": {
-            "USER": "RU"
+            "USER": "RU",
+            "MANAGER": "RU"
         }
     },
     "created": {

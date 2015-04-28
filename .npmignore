@@ -1,11 +1,12 @@
 # dotiles
 .coveralls.yml
 .editorconfig
+.eslintignore
+.eslintrc
 .gitattributes
 .gitignore
-.jshintignore
-.jshintrc
 .npmignore
+.nvmrc
 .travis.yml
 
 # dirs
@@ -13,4 +14,3 @@
 coverage/
 docs/
 test/
-src/

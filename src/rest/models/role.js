@@ -1,6 +1,5 @@
-import mongoose from 'mongoose'
+import mongoose, {Schema} from 'mongoose'
 
-let Schema = mongoose.Schema
 let schema = new Schema({
   name: {
     type: String,

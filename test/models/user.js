@@ -1,6 +1,5 @@
-import mongoose from 'mongoose'
-import restPlugin from '../../lib/rest/model'
-let Schema = mongoose.Schema
+import mongoose, {Schema} from 'mongoose'
+import model from '../../src/rest/model'
 
 // Define user schema
 let schema = new Schema({
@@ -21,7 +20,7 @@ let schema = new Schema({
 })
 
 // Apply plugin(s)
-schema.plugin(restPlugin, {})
+schema.plugin(model, {})
 
 // Create model class and export
 export default mongoose.model('User', schema)

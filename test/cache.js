@@ -1,27 +1,33 @@
 import request from 'supertest'
 import User from './models/user'
 import db from './utils/db.test'
+import api from '../src/netiam'
 
 describe('cache', function() {
   let user = require('./fixtures/user.json')
   let app = require('./utils/app.test')({port: 3001})
-  let db = require('./utils/db.test')
-  let storage = require('../lib/cache/file')
-  let netiam = require('../index')(app)
+  let storage = require('../src/cache/file')
 
   this.timeout(10000)
 
   before(function(done) {
-    netiam
-      .post('/users')
-      .rest({model: User})
-      .json()
+    app.post(
+      '/users',
+      api()
+        .rest({collection: User})
+        .map.res({_id: 'id'})
+        .json()
+    )
 
-    netiam
-      .get('/users')
-      .cache({storage: storage({path: '.tmp/cache'})})
-      .rest({model: User})
-      .json()
+    app.get(
+      '/users',
+      api()
+        .cache.req({storage: storage({path: '.tmp/cache'})})
+        .rest({collection: User})
+        .map.res({_id: 'id'})
+        .cache.res({storage: storage({path: '.tmp/cache'})})
+        .json()
+    )
 
     db.connection.db.dropDatabase(function(err) {
       if (err) {
@@ -54,12 +60,12 @@ describe('cache', function() {
           }
 
           res.body.should.have.properties({
-            'name':        'eliias',
-            'description': 'Hey, ich bin der Hansen.',
-            'email':       'hannes@impossiblearts.com',
-            'firstname':   'Hannes',
-            'lastname':    'Moser',
-            'location':    [
+            'name': 'eliias',
+            'description': 'Hey, ich bin der Hannes.',
+            'email': 'hannes@impossiblearts.com',
+            'firstname': 'Hannes',
+            'lastname': 'Moser',
+            'location': [
               13.0406998,
               47.822352
             ]

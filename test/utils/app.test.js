@@ -1,13 +1,11 @@
-'use strict'
+import express from 'express'
+import bodyParser from 'body-parser'
 
-let _ = require('lodash')
-let express = require('express')
-let bodyParser = require('body-parser')
-let app = express()
-let server = require('http').createServer(app)
+const app = express()
+const server = require('http').createServer(app)
 
 export default function(opts) {
-  opts = _.extend({
+  opts = Object.assign({
     port: 3001
   }, opts)
 
@@ -21,10 +19,10 @@ export default function(opts) {
     res
       .status(500)
       .json({
-        code:    500,
-        status:  'INTERNAL SERVER ERROR',
+        code: 500,
+        status: 'INTERNAL SERVER ERROR',
         message: err.message,
-        data:    err.stack
+        data: err.stack
       })
   })
 

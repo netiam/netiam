@@ -1,15 +1,10 @@
 import _ from 'lodash'
 import path from 'path'
 
-/**
- * Profile plugin
- * @param {Route} route
- * @param {Object} opts
- * @returns {Function}
- */
-function profile(route, opts) {
-  opts = _.extend({
-    query:   'profile',
+export default function profile(opts) {
+
+  opts = Object.assign({
+    query: 'profile',
     basedir: './models'
   }, opts)
 
@@ -44,5 +39,3 @@ function profile(route, opts) {
   }
 
 }
-
-export default profile

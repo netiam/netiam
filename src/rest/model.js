@@ -14,10 +14,9 @@ function restPlugin(schema) {
   // Methods
   /**
    * Get db references
-   * @param {Schema} schema
    * @return {Object}
    */
-  function dbrefs(schema) {
+  function dbrefs() {
     let refs = {}
 
     schema.eachPath(function(name, path) {
@@ -48,8 +47,8 @@ function restPlugin(schema) {
         handleValue(copy, index, node, true)
       })
       o[key] = copy
-    } else if (_.isObject(val) && val._id && isRef) {
-      o[key] = val._id
+    } else if (_.isObject(val) && val.id && isRef) {
+      o[key] = val.id
     } else if (_.isObject(val)) {
       o[key] = _.cloneDeep(val)
     } else {

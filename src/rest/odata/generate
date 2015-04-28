@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-jison grammar.y -o parser.js
+jison grammar.jison -o parser.js

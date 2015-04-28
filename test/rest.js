@@ -1,12 +1,12 @@
 import _ from 'lodash'
 import request from 'supertest'
+import User from './models/user'
+import db from './utils/db.test'
+import api from '../src/netiam'
 
-describe('resource - middleware', function() {
-  let User = require('./models/user')
-  let user = require('./fixtures/user.json')
+describe('rest', function() {
+  let userFixture = require('./fixtures/user.json')
   let app = require('./utils/app.test')({port: 3001})
-  let db = require('./utils/db.test')
-  let netiam = require('../lib/netiam')(app)
   let userId
 
   this.timeout(10000)
@@ -14,41 +14,41 @@ describe('resource - middleware', function() {
   before(function(done) {
     app.post(
       '/users',
-      netiam
-        .middleware()
-        .rest({model: User})
+      api()
+        .rest({collection: User})
+        .map.res({_id: 'id'})
         .json()
     )
 
     app.get(
       '/users',
-      netiam
-        .middleware()
-        .rest({model: User})
+      api()
+        .rest({collection: User})
+        .map.res({_id: 'id'})
         .json()
     )
 
     app.get(
       '/users/:id',
-      netiam
-        .middleware()
-        .rest({model: User})
+      api()
+        .rest({collection: User})
+        .map.res({_id: 'id'})
         .json()
     )
 
     app.put(
       '/users/:id',
-      netiam
-        .middleware()
-        .rest({model: User})
+      api()
+        .rest({collection: User})
+        .map.res({_id: 'id'})
         .json()
     )
 
     app.delete(
       '/users/:id',
-      netiam
-        .middleware()
-        .rest({model: User})
+      api()
+        .rest({collection: User})
+        .map.res({_id: 'id'})
         .json()
     )
 
@@ -73,7 +73,7 @@ describe('resource - middleware', function() {
     it('should create a user', function(done) {
       request(app)
         .post('/users')
-        .send(user)
+        .send(userFixture)
         .set('Accept', 'application/json')
         .expect(201)
         .expect('Content-Type', /json/)
@@ -84,7 +84,7 @@ describe('resource - middleware', function() {
 
           res.body.should.have.properties({
             'name': 'eliias',
-            'description': 'Hey, ich bin der Hansen.',
+            'description': 'Hey, ich bin der Hannes.',
             'email': 'hannes@impossiblearts.com',
             'firstname': 'Hannes',
             'lastname': 'Moser',
@@ -94,7 +94,7 @@ describe('resource - middleware', function() {
             ]
           })
 
-          userId = res.body._id
+          userId = res.body.id
 
           done()
         })
@@ -132,7 +132,7 @@ describe('resource - middleware', function() {
 
           res.body.should.have.properties({
             'name': 'eliias',
-            'description': 'Hey, ich bin der Hansen.',
+            'description': 'Hey, ich bin der Hannes.',
             'email': 'hannes@impossiblearts.com',
             'firstname': 'Hannes',
             'lastname': 'Moser',
@@ -147,7 +147,7 @@ describe('resource - middleware', function() {
     })
 
     it('should modify a user', function(done) {
-      let modifiedUser = _.clone(user)
+      let modifiedUser = _.clone(userFixture)
       modifiedUser.name = 'modified name'
 
       request(app)
@@ -163,7 +163,7 @@ describe('resource - middleware', function() {
 
           res.body.should.have.properties({
             'name': 'modified name',
-            'description': 'Hey, ich bin der Hansen.',
+            'description': 'Hey, ich bin der Hannes.',
             'email': 'hannes@impossiblearts.com',
             'firstname': 'Hannes',
             'lastname': 'Moser',
@@ -182,7 +182,7 @@ describe('resource - middleware', function() {
         .delete('/users/' + userId)
         .set('Accept', 'application/json')
         .expect(204)
-        .end(function(err, res) {
+        .end(function(err) {
           if (err) {
             return done(err)
           }

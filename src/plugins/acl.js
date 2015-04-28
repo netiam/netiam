@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import path from 'path'
-import Acl from '../rest/acl'
+import acl from '../rest/acl'
 import Roles from '../rest/roles'
 
 /**
@@ -8,7 +8,7 @@ import Roles from '../rest/roles'
  * @param {Object} user
  * @returns {Role}
  */
-function role(user) {
+function getRole(user) {
   let guest = Roles.get('GUEST')
 
   if (!guest) {
@@ -46,17 +46,11 @@ function filter(acl, resource, role, privilege, asserts) {
   )
 }
 
-/**
- * ACL plugin
- * @param {Route} route
- * @param {Object} opts
- * @returns {Function}
- */
-function acl(route, opts) {
+export default function(opts) {
   let routeAcl
   let file
 
-  opts = _.extend({
+  opts = Object.assign({
     basedir: './models'
   }, opts)
 
@@ -67,7 +61,7 @@ function acl(route, opts) {
       opts.model.modelName.toLowerCase() +
       '.acl.json'
     )
-  routeAcl = new Acl(require(file))
+  routeAcl = acl(require(file))
 
   // Input
   route.pre('dispatch', function(req) {
@@ -75,13 +69,13 @@ function acl(route, opts) {
     if (req.method === 'POST' && req.is('json')) {
       if (_.isArray(req.body)) {
         req.body = _.map(function(node) {
-          return filter(routeAcl, node, role(req.user), 'C')
+          return filter(routeAcl, node, getRole(req.user), 'C')
         })
         return
       }
 
       if (_.isObject(req.body)) {
-        req.body = filter(routeAcl, req.body, role(req.user), 'C')
+        req.body = filter(routeAcl, req.body, getRole(req.user), 'C')
         return
       }
     }
@@ -90,13 +84,13 @@ function acl(route, opts) {
     if (req.method === 'PUT' && req.is('json')) {
       if (_.isArray(req.body)) {
         req.body = _.map(function(node) {
-          return filter(routeAcl, node, role(req.user), 'U')
+          return filter(routeAcl, node, getRole(req.user), 'U')
         })
         return
       }
 
       if (_.isObject(req.body)) {
-        req.body = filter(routeAcl, req.body, role(req.user), 'U')
+        req.body = filter(routeAcl, req.body, getRole(req.user), 'U')
         return
       }
     }
@@ -107,17 +101,15 @@ function acl(route, opts) {
     if (_.isArray(res.body)) {
       res.body =
         _.map(res.body, function(node) {
-          return filter(routeAcl, node, role(req.user), 'R')
+          return filter(routeAcl, node, getRole(req.user), 'R')
         })
       return
     }
 
     if (_.isObject(res.body)) {
-      res.body = filter(routeAcl, res.body, role(req.user), 'R')
+      res.body = filter(routeAcl, res.body, getRole(req.user), 'R')
       return
     }
   })
 
 }
-
-export default acl

@@ -1,10 +1,3 @@
-'use strict';
+const netiam = require('./lib/netiam')
 
-let netiam = require('./lib/netiam')
-
-netiam.cache = {
-  file: require('./lib/cache/file'),
-  redis: require('./lib/cache/redis')
-}
-
-module.exports = netiam
+exports = netiam

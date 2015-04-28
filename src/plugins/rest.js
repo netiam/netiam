@@ -1,48 +1,25 @@
-import _ from 'lodash'
-import restResource from '../rest/resource'
+import resource from '../rest/resource'
 
-/**
- * REST plugin
- * @param {Route} route
- * @returns {Function}
- */
-function rest(route, opts) {
-  opts = _.extend({
-    'idParam': 'id'
-  }, opts)
+export default function rest(opts) {
+  let {idParam} = opts
+  let restResource = resource(opts)
 
-  let resource = restResource(opts)
-  route.model = opts.model
+  idParam = idParam || 'id'
 
-  /**
-   * @scope {Resource}
-   * @param {Object} req
-   * @param {Object} res
-   * @returns {*}
-   */
   return function(req, res) {
-    let method = req.method
+    const method = req.method
 
-    if (method === 'HEAD') {
-      return resource
-        .head(req, res)
-        .then(function(document) {
-          res.body = document
-          res.status(200)
-        })
-    }
-
-    if (method === 'GET' && !req.params[opts.idParam]) {
-      return resource
+    if (method === 'GET' && !req.params[idParam]) {
+      return restResource
         .list(req, res)
-        .then(function(document) {
-          res.body = document
+        .then(function(documents) {
+          res.body = documents
           res.status(200)
         })
     }
 
     if (method === 'POST') {
-      return resource
+      return restResource
         .create(req, res)
         .then(function(document) {
           res.body = document
@@ -51,7 +28,7 @@ function rest(route, opts) {
     }
 
     if (method === 'GET') {
-      return resource
+      return restResource
         .read(req, res)
         .then(function(document) {
           res.body = document
@@ -60,7 +37,7 @@ function rest(route, opts) {
     }
 
     if (method === 'PUT') {
-      return resource
+      return restResource
         .update(req, res)
         .then(function(document) {
           res.body = document
@@ -69,8 +46,8 @@ function rest(route, opts) {
     }
 
     if (method === 'DELETE') {
-      return resource
-        .delete(req, res)
+      return restResource
+        .remove(req, res)
         .then(function(document) {
           res.body = document
           res.status(204)
@@ -79,5 +56,3 @@ function rest(route, opts) {
   }
 
 }
-
-export default rest

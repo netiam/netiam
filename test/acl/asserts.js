@@ -1,9 +1,9 @@
-import Acl from '../lib/rest/acl'
-import roles from '../lib/rest/roles'
-import asserts from '../lib/rest/asserts'
+import Acl from '../../src/rest/acl'
+import roles from '../../src/rest/roles'
+import asserts from '../../src/rest/asserts'
 
-let schema = require('./fixtures/acl.json')
-let user = require('./fixtures/user.json')
+let schema = require('./../fixtures/acl.json')
+let user = require('./../fixtures/user.json')
 let acl = new Acl(schema)
 
 describe('ACL', function() {

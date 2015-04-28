@@ -39,7 +39,7 @@ roles = roles.concat(documents)
 
 // Create mappings
 roles.forEach(function(role) {
-  ids[role._id] = role
+  ids[role.id] = role
   names[role.name] = role
 })
 
@@ -74,13 +74,13 @@ function normalizeObject(role) {
   }
 
   // Evaluate as object with id.toString()
-  if (role._id && role._id.toString && ids[role._id.toString()]) {
-    return ids[role._id.toString()]
+  if (role.id && ids[role.id]) {
+    return ids[role.id]
   }
 
   // Evaluate as object with id
-  if (role._id && ids[role._id]) {
-    return ids[role._id]
+  if (role.id && ids[role.id]) {
+    return ids[role.id]
   }
 
   // Evaluate as object with name

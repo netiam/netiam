@@ -1,4 +1,4 @@
-import RESTError from '../lib/rest/error'
+import RESTError from '../src/rest/error'
 
 describe('error', function() {
 

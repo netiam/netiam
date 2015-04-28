@@ -3,7 +3,7 @@ import _ from 'lodash'
 /**
  * Filters an object literal
  *
- * @param {Acl} acl
+ * @param {Object} acl
  * @param {Object} resource
  * @param {Object} role
  * @param {String} [privilege='R']

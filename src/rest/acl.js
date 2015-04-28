@@ -2,18 +2,11 @@ import _ from 'lodash'
 import roles from './roles'
 
 /**
- * Acl
- * @param acl
- * @constructor
+ * acl
+ * @param {Object} opts
  */
-class Acl {
-  constructor(acl) {
-    // Wildcard
-    this.wc = acl['*']
-
-    // Get clean ACL list (no wildcards)
-    this.acl = acl
-  }
+export default function acl(opts) {
+  const wc = opts['*']
 
   /**
    * Get allowed key for a specific role. This method does not traverse up
@@ -24,24 +17,24 @@ class Acl {
    * check nested props too TODO Add support for nested structures (dot
    * notation
    * "a.b.c" : "R") TODO Should be cached?
-   * @param {Object} keys Current list of allowey keys
+   * @param {Object} allowedKeys Current list of allowey keys
    * @param {Role} role The role you want to check for
    * @param {String} [privilege] Privilege that need to be checked, default is
    *     "R" -> READ
    * @returns {Array} A list of allowed keys
    */
-  roleAllowed(keys, role, privilege) {
+  function roleAllowed(allowedKeys, role, privilege) {
     privilege = privilege || 'R'
 
     // Wildcards
-    if (this.wc && this.wc.ALLOW && this.wc.ALLOW[role]) {
-      if (this.wc.ALLOW[role].indexOf(privilege) !== -1) {
-        keys = keys.concat(_.keys(this.acl))
+    if (wc && wc.ALLOW && wc.ALLOW[role]) {
+      if (wc.ALLOW[role].indexOf(privilege) !== -1) {
+        allowedKeys = allowedKeys.concat(_.keys(opts))
       }
     }
 
     // Granular privileges
-    _.forEach(this.acl, function(prop, key) {
+    _.forEach(opts, function(prop, key) {
       // Not allowed by default
       let privileges
 
@@ -49,7 +42,7 @@ class Acl {
       if (prop.ALLOW && prop.ALLOW[role]) {
         privileges = prop.ALLOW[role]
         if (privileges.indexOf(privilege) !== -1) {
-          keys.push(key)
+          allowedKeys.push(key)
         }
       }
 
@@ -57,7 +50,7 @@ class Acl {
       if (prop.DENY && prop.DENY[role]) {
         privileges = prop.DENY[role]
         if (privileges.indexOf(privilege) !== -1) {
-          _.remove(keys, function(node) {
+          _.remove(allowedKeys, function(node) {
             return node === key
           })
         }
@@ -65,10 +58,10 @@ class Acl {
     })
 
     // Remove wildcard key
-    delete keys['*']
+    delete allowedKeys['*']
 
     // Unique
-    return _.uniq(keys)
+    return _.uniq(allowedKeys)
   }
 
   /**
@@ -78,12 +71,12 @@ class Acl {
    * @returns {Array}
    * @private
    */
-  _getRoleHierarchy(role) {
+  function getRoleHierarchy(role) {
     if (!role.parent) {
       return [roles.get(role)]
     }
 
-    return [roles.get(role)].concat(this._getRoleHierarchy(role.parent))
+    return [roles.get(role)].concat(getRoleHierarchy(role.parent))
   }
 
   /**
@@ -98,18 +91,18 @@ class Acl {
    * @params {Array|Function} [asserts=[]] optional asserts
    * @returns {Array} list of allowed keys
    */
-  allowed(resource, role, privilege, asserts) {
+  function allowed(resource, role, privilege, asserts) {
     let that
-    let keys
+    let allowedKeys
 
     privilege = privilege || 'R'
 
     that = this
-    keys = []
+    allowedKeys = []
     role = roles.get(role)
 
     // Ger role hierarchy
-    let userRoles = this._getRoleHierarchy(role).reverse()
+    let userRoles = getRoleHierarchy(role).reverse()
 
     // Assertions
     if (_.isFunction(asserts)) {
@@ -118,17 +111,17 @@ class Acl {
 
     if (_.isArray(asserts)) {
       _.forEach(asserts, function(assert) {
-        keys = keys.concat(assert(that, resource, role, privilege))
+        allowedKeys = allowedKeys.concat(assert(that, resource, role, privilege))
       })
     }
 
     // Get keys for roles
-    _.forEach(userRoles, function(role) {
-      keys = keys.concat(that.roleAllowed(keys, role.name, privilege))
+    _.forEach(userRoles, function(userRole) {
+      allowedKeys = allowedKeys.concat(that.roleAllowed(allowedKeys, userRole.name, privilege))
     })
 
     // Unique
-    return _.uniq(keys)
+    return _.uniq(allowedKeys)
   }
 
   /**
@@ -136,10 +129,15 @@ class Acl {
    * @param {Role} role
    * @param {String} [privilege='R']
    */
-  keys(role, privilege) {
+  function keys(role, privilege) {
     privilege = privilege || 'R'
-    return this.roleAllowed([], role.name, privilege)
+    return roleAllowed([], role.name, privilege)
   }
 
+  return Object.freeze({
+    roleAllowed,
+    allowed,
+    keys
+  })
+
 }
-export default Acl

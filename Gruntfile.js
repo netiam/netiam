@@ -1,57 +1,56 @@
-'use strict';
+module.exports = function(grunt) {
 
-module.exports = function( grunt ) {
+  require('time-grunt')(grunt)
+  require('load-grunt-tasks')(grunt)
 
-  require( 'time-grunt' )( grunt );
-  require( 'load-grunt-tasks' )( grunt );
+  const config = {
+    'dist': './lib',
+    'src': './src'
+  }
 
-  grunt.initConfig( {
-    pkg: grunt.file.readJSON( 'package.json' ),
+  grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'),
+    config: config,
 
-    changelog: {
-      sample: {
-        options: {
-          dest:         'CHANGELOG.md',
-          template:     '{{date}}\n\n{{> features}}{{> fixes}}',
-          featureRegex: /^(.*)feature:?(.*)$/gim,
-          fixRegex:     /^(.*)fix:?(.*)$/gim
-        }
-      }
-    },
-
-    bump: {
+    babel: {
       options: {
-        files:              ['package.json'],
-        updateConfigs:      [],
-        commit:             true,
-        commitMessage:      'Release v%VERSION%',
-        commitFiles:        ['package.json'],
-        createTag:          true,
-        tagName:            'v%VERSION%',
-        tagMessage:         'Version %VERSION%',
-        push:               true,
-        pushTo:             'origin master',
-        gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
-        globalReplace:      false
-      }
-    },
-
-    jshint: {
-      options: {
-        jshintrc: true
+        sourceMap: false,
+        stage: 1
       },
-      all:     [
-        './Gruntfile.js',
-        './lib/**/*.js'
-      ]
+      build: {
+        files: [
+          {
+            expand: true,
+            cwd: '<%= config.src %>',
+            src: ['**/*.js'],
+            dest: '<%= config.dist %>'
+          }
+        ]
+      }
+    },
+
+    clean: {
+      build: ['<%= config.dist %>']
+    },
+
+    eslint: {
+      target: ['<%= config.src %>']
+    },
+
+    watch: {
+      scripts: {
+        files: ['<%= config.src %>/**/*.js'],
+        tasks: ['eslint', 'babel']
+      }
     }
-  } );
 
-  grunt.registerTask( 'default', ['jshint'] );
-  grunt.registerTask( 'release', [
-    'jshint',
-    'changelog',
-    'bump'
-  ] );
+  })
 
-};
+  grunt.registerTask('default', ['build'])
+  grunt.registerTask('build', [
+    'clean',
+    'eslint',
+    'babel'
+  ])
+
+}

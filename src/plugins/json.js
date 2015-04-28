@@ -1,12 +1,14 @@
-/**
- * JSON plugin
- * @param {Route} route
- * @returns {Function}
- */
-function json(route) {
-  route.post('dispatch', function(req, res) {
-    res.json(res.body)
-  })
-}
+export default function json() {
 
-export default json
+  return function(req, res) {
+    if (!res.body) {
+      res
+        .status(204)
+        .end()
+      return
+    }
+
+    res.json(res.body)
+  }
+
+}
