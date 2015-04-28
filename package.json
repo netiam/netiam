@@ -4,7 +4,7 @@
   "description": "REST API library",
   "main": "index.js",
   "scripts": {
-    "postinstall": "build",
+    "postinstall": "npm run build",
     "build": "grunt build",
     "test": "mocha",
     "test-coverage": "istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls",
