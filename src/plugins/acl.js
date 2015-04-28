@@ -6,7 +6,7 @@ import Roles from '../rest/roles'
 /**
  * Get role
  * @param {Object} user
- * @returns {Role}
+ * @returns {Object}
  */
 function getRole(user) {
   let guest = Roles.get('GUEST')
@@ -46,7 +46,7 @@ function filter(acl, resource, role, privilege, asserts) {
   )
 }
 
-export default function(opts) {
+function request(opts) {
   let routeAcl
   let file
 
@@ -63,9 +63,7 @@ export default function(opts) {
     )
   routeAcl = acl(require(file))
 
-  // Input
-  route.pre('dispatch', function(req) {
-    // Create
+  return function(req) {
     if (req.method === 'POST' && req.is('json')) {
       if (_.isArray(req.body)) {
         req.body = _.map(function(node) {
@@ -94,10 +92,27 @@ export default function(opts) {
         return
       }
     }
-  })
+  }
+}
 
-  // Output
-  route.post('dispatch', function(req, res) {
+function response(opts) {
+  let routeAcl
+  let file
+
+  opts = Object.assign({
+    basedir: './models'
+  }, opts)
+
+  file =
+    path.join(
+      path.dirname(require.main.filename),
+      opts.basedir,
+      opts.model.modelName.toLowerCase() +
+      '.acl.json'
+    )
+  routeAcl = acl(require(file))
+
+  return function(req, res) {
     if (_.isArray(res.body)) {
       res.body =
         _.map(res.body, function(node) {
@@ -110,6 +125,11 @@ export default function(opts) {
       res.body = filter(routeAcl, res.body, getRole(req.user), 'R')
       return
     }
-  })
+  }
 
 }
+
+export default Object.freeze({
+  req: request,
+  res: response
+})

@@ -8,6 +8,12 @@ export default function profile(opts) {
     basedir: './models'
   }, opts)
 
+  let {collection} = opts
+
+  if (!collection) {
+    throw new Error('Collection must be defined')
+  }
+
   /**
    * @scope {Resource}
    * @param {Object} req
@@ -24,7 +30,7 @@ export default function profile(opts) {
         path.join(
           path.dirname(require.main.filename),
           opts.basedir,
-          route.model.modelName.toLowerCase() +
+          collection.modelName.toLowerCase() +
           '.profile.' +
           req.query[opts.query] +
           '.json'

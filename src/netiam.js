@@ -25,7 +25,7 @@ export default function netiam() {
     return p
   }
 
-  const o = function(req, res, next) {
+  const o = function(req, res) {
     dispatch(req, res)
       .catch(err => {
         if (err.nonce) {

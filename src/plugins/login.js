@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import passport from 'passport'
 import RESTError from '../rest/error'
 
