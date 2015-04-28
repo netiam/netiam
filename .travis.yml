@@ -20,7 +20,7 @@ addons:
   code_climate:
     repo_token:
       secure: kmN4GIE9O7uFtw4dCcJvrLitZFJmHPF0G8gCiHGEdK0HdK6xT9rTD8TjHXGM07QNB0Teyfwmtc32DKzO6hPgLGSGBjMiJlOUe5GKrz16a2k7QmbDF8t4jsptuwFKB+aKXmNVhJ8Pc7POlGoVxMd0wGfqeZ9lKLfG5pE+WSGkDxQ=
-after_success: npm run codeclimate
+after_success: npm run test-coverage
 env:
   global:
     secure: FH/vtdyQWRlL6exOcXtBsohmh8wIOTrGTjXJE/KS4CoLcz6KaIDy3MQwR3bhmMUz9FwfubEkAwqqSrbvniTCIV1/tldcM/OYhYiOeOrVtCRD3iEoL3bykgbYMg7UIYbY7LHl1hUvrgkV1TC5cmVh8rpAk9WKdt2Iut4MHXCItb0=

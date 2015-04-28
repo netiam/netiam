@@ -52,10 +52,9 @@
     "REST",
     "API",
     "OData",
-    "framework",
-    "library",
-    "profiles",
-    "documentation"
+    "Library",
+    "Profiles",
+    "Documentation"
   ],
   "author": "Hannes Moser <hannes@impossiblearts.com>",
   "license": "MIT",
