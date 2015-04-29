@@ -17,6 +17,8 @@ node_js:
 services:
 - mongodb
 after_success: npm run build
+after_script:
+- codeclimate < coverage/lcov.info
 addons:
   code_climate:
     repo_token:
