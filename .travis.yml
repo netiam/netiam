@@ -16,6 +16,7 @@ node_js:
 - iojs-v1
 services:
 - mongodb
+after_success: npm run build
 addons:
   code_climate:
     repo_token:
