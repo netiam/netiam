@@ -6,6 +6,7 @@
   "scripts": {
     "postinstall": "npm run build",
     "build": "grunt build",
+    "dev": "grunt watch",
     "test": "mocha",
     "test-coverage": "istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls",
     "prepublish": "semantic-release pre",

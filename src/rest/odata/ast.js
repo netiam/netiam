@@ -1,4 +1,4 @@
-export default Object.freeze({
+export default {
 
   /**
    * Expression
@@ -51,4 +51,4 @@ export default Object.freeze({
    */
   FALSE: false
 
-})
+}

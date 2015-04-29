@@ -1,3 +1,1 @@
-const netiam = require('./lib/netiam')
-
-exports = netiam
+module.exports = require('./lib/netiam')

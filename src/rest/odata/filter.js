@@ -1,4 +1,4 @@
-import {parser} from './parser'
+import parser from './parser'
 import ast from './ast'
 import _ from 'lodash'
 
@@ -83,8 +83,8 @@ let expression = function(expr) {
  * @constructor
  */
 class Filter {
-  constructor(query) {
-    this.q = query || ''
+  constructor(query = '') {
+    this.q = query
   }
 
   /**
@@ -219,11 +219,11 @@ class Filter {
 
 export default function(query) {
 
-  // If empty string, return early
+  // if empty string, return early
   if (query.length === 0) {
     return new Filter()
   }
 
-  // Expressions
+  // expressions
   return new Filter(query)
 }

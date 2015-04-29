@@ -4,6 +4,7 @@ import authenticate from './plugins/authenticate'
 import cache from './plugins/cache'
 import data from './plugins/data'
 import json from './plugins/json'
+import jsonapi from './plugins/jsonapi'
 import login from './plugins/login'
 import map from './plugins/map'
 import profile from './plugins/profile'
@@ -70,6 +71,7 @@ export default function netiam() {
   o.cache = registerPlugin(cache)
   o.data = registerPlugin(data)
   o.json = registerPlugin(json)
+  o.jsonapi = registerPlugin(jsonapi)
   o.login = registerPlugin(login)
   o.map = registerPlugin(map)
   o.profile = registerPlugin(profile)
