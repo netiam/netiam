@@ -8,6 +8,7 @@
 .npmignore
 .nvmrc
 .travis.yml
+Gruntfile.js
 
 # dirs
 .tmp/
