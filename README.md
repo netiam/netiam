@@ -13,7 +13,6 @@ useful.
 ## Get it
 
 ```bash
-# without npm install
 npm i -S netiam
 ```
 
@@ -46,25 +45,25 @@ npm test
 
 ## Getting started
 
-Creates a single route, using a custom plugin to add some data and returns
+Creates a single route, using the *data* plugin to add some data and returns
 everything as JSON.
 
 ```js
-'use strict';
+import express from 'express'
+import http from 'http'
+import api from 'netiam'
 
-var express = require( 'express' ),
-    app     = express(),
-    server  = require( 'http' ).createServer( app ),
-    api = require( 'netiam' );
+const app = express()
+const server = http.createServer(app)
 
 app.get(
     '/users'
     api()
-        .data( {'Hello': 'World!'} )
+        .data({'Hello': 'World!'})
         .json()
 )
 
-server.listen( 3000 );
+server.listen(3000)
 ```
 
 ## Tech Stack
