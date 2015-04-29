@@ -8,7 +8,7 @@
     "dev": "grunt watch",
     "test": "npm run test-unit",
     "test-unit": "mocha",
-    "test-coverage": "istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info",
+    "test-coverage": "istanbul cover _mocha --report lcovonly -- -R spec",
     "prepublish": "semantic-release pre",
     "postpublish": "semantic-release post"
   },
