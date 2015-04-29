@@ -7,8 +7,9 @@
 
 This REST API library addresses some issues I had with API designs over the
 last years. It does not claim to provide a full featured solution and to be
-honest it might never will. Nevertheless, someone might find this library
-useful.
+honest, it might never will. Nevertheless, someone might find this library
+useful. It works as *connect* [middleware](https://github.com/senchalabs/connect)
+and you should be able to use it with any compatible infrastructure (e.g. express).
 
 ## Get it
 
