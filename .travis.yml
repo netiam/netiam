@@ -16,9 +16,10 @@ node_js:
 - iojs-v1
 services:
 - mongodb
-after_success: npm run build
-after_script:
-- codeclimate < coverage/lcov.info
+after_success:
+ - npm run build
+ - npm run test-coverage
+ - codeclimate < coverage/lcov.info
 addons:
   code_climate:
     repo_token:
