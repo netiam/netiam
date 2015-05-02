@@ -14,9 +14,9 @@
   },
   "dependencies": {
     "busboy": "^0.2.9",
-    "lodash": "^3.0.1",
+    "lodash": "^3.8.0",
     "mmmagic": "^0.3.12",
-    "mongoose": "^4.0.0",
+    "mongoose": "^4.0.2",
     "passport": "^0.2.1",
     "passport-http": "^0.2.2",
     "passport-http-bearer": "^1.0.1",

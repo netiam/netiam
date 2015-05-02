@@ -7,28 +7,34 @@ import roles from './roles'
  * @returns {Function} assertion function
  */
 function owner(field, value) {
+
   /**
-   * @param {Acl} acl
+   * @param {Object} acl
    * @param {Object} resource
-   * @param {Role} role
+   * @param {Object} role
    * @param {String} privilege
    * @returns {Array} List of allowed keys
    */
-  return function(acl, resource, role, privilege) {
+  return function(acl, resource, role, privilege = 'R') {
     let user
     if (resource.hasOwnProperty(field)) {
       user = resource[field]
     }
 
-    // Return early if user does now own resource
+    // return early if user does not own resource
     if (user !== value) {
       return []
     }
-    return acl.keys(roles.get('OWNER'), privilege)
+
+    return acl.allowed(
+      resource,
+      roles.get('OWNER'),
+      privilege
+    )
   }
 }
 
-// Add role OWNER to allow checks against ACL's with owner assert
+// add role OWNER to allow checks against ACLs with owner assert
 if (!roles.has('OWNER')) {
   roles.add('OWNER')
 }

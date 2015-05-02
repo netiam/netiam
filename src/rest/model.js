@@ -1,7 +1,7 @@
 import _ from 'lodash'
 
-function restPlugin(schema) {
-  // Fields
+export default function restPlugin(schema) {
+
   if (!schema.get('created')) {
     schema.add({created: Date})
     schema.path('created').index(true)
@@ -11,22 +11,17 @@ function restPlugin(schema) {
     schema.path('modified').index(true)
   }
 
-  // Methods
-  /**
-   * Get db references
-   * @return {Object}
-   */
-  function dbrefs() {
-    let refs = {}
+  function refs() {
+    const refs = []
 
     schema.eachPath(function(name, path) {
       let caster = path.caster
-      let opt = path._opts
+      let opt = path.options
 
       if (caster && caster._opts && caster._opts.ref) {
-        refs[name] = name
+        refs.push(name)
       } else if (opt && opt.ref) {
-        refs[name] = name
+        refs.push(name)
       }
     })
 
@@ -63,18 +58,24 @@ function restPlugin(schema) {
    */
   schema.methods.merge = function(data) {
     let i
-    let refs = dbrefs(schema)
+    let collectionRefs = refs(schema)
 
     for (i in data) {
       if (data.hasOwnProperty(i)) {
         // Detect populated fields (ObjectId cannot cast such objects)
-        handleValue(this, i, data[i], refs[i] ? true : false)
+        handleValue(this, i, data[i], collectionRefs[i] ? true : false)
       }
     }
 
     // Make it fluent
     return this
   }
+
+  /**
+   * Get refs from schema
+   * @returns {Object} A list of paths
+   */
+  schema.statics.refs = refs
 
   // Hooks
   // http://github.com/LearnBoost/mongoose/issues/964
@@ -88,5 +89,3 @@ function restPlugin(schema) {
   })
 
 }
-
-export default restPlugin
