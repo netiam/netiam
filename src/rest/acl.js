@@ -2,142 +2,141 @@ import _ from 'lodash'
 import roles from './roles'
 
 /**
- * acl
- * @param {Object} opts
+ * ACL
+ * @param {Object} spec
  */
-export default function acl(opts) {
-  const wc = opts['*']
+export default function acl(spec) {
+  const WILDCARD = '*'
+  const ALLOW = 'ALLOW'
+  const DENY = 'DENY'
+  const {list} = spec
+  const {collection} = spec
+  let o = {}
 
   /**
-   * Get allowed key for a specific role. This method does not traverse up
-   * the inheritance chain of roles. It just matches against the current role.
-   * TODO Add wildcard support
-   * TODO Add support to recognize DENY, ALLOW order. DENY will overrule ALLOW
-   * by default. TODO Populated properties: If a populated property is allowed,
-   * check nested props too TODO Add support for nested structures (dot
-   * notation
-   * "a.b.c" : "R") TODO Should be cached?
-   * @param {Object} allowedKeys Current list of allowey keys
-   * @param {Role} role The role you want to check for
-   * @param {String} [privilege] Privilege that need to be checked, default is
-   *     "R" -> READ
-   * @returns {Array} A list of allowed keys
+   * Get all keys from collection
+   * @returns {[String]}
    */
-  function roleAllowed(allowedKeys, role, privilege) {
-    privilege = privilege || 'R'
-
-    // Wildcards
-    if (wc && wc.ALLOW && wc.ALLOW[role]) {
-      if (wc.ALLOW[role].indexOf(privilege) !== -1) {
-        allowedKeys = allowedKeys.concat(_.keys(opts))
-      }
-    }
-
-    // Granular privileges
-    _.forEach(opts, function(prop, key) {
-      // Not allowed by default
-      let privileges
-
-      // ALLOW
-      if (prop.ALLOW && prop.ALLOW[role]) {
-        privileges = prop.ALLOW[role]
-        if (privileges.indexOf(privilege) !== -1) {
-          allowedKeys.push(key)
-        }
-      }
-
-      // DENY
-      if (prop.DENY && prop.DENY[role]) {
-        privileges = prop.DENY[role]
-        if (privileges.indexOf(privilege) !== -1) {
-          _.remove(allowedKeys, function(node) {
-            return node === key
-          })
-        }
-      }
-    })
-
-    // Remove wildcard key
-    delete allowedKeys['*']
-
-    // Unique
-    return _.uniq(allowedKeys)
+  function keys() {
+    return Object.keys(collection.schema.paths)
   }
 
   /**
-   * Get full hierarchy of role
-   *
-   * @param {Role} role
-   * @returns {Array}
-   * @private
+   * Get all keys which a possible population
+   * @returns {[String]}
    */
-  function getRoleHierarchy(role) {
+  function refs() {
+    return collection.refs()
+  }
+
+  /**
+   * Check path for allowed keys, can also handle wildcard entries
+   * @param {[String]} allKeys
+   * @param {String} path
+   * @param {String} type
+   * @param {Role} role
+   * @param {String} privilege
+   * @returns {[String]}
+   */
+  function path(allKeys, path, type, role, privilege) {
+    if (list.hasOwnProperty(path)) {
+      if (list[path].hasOwnProperty(type)) {
+        if (list[path][type][role.name] && list[path][type][role.name].indexOf(privilege) !== -1) {
+          if (path === WILDCARD) {
+            return allKeys
+          }
+          return [path]
+        }
+      }
+    }
+    return []
+  }
+
+  /**
+   * Get hierarchy for current role
+   * @param {Object} role
+   * @returns {[Object]}
+   */
+  function hierarchy(role) {
     if (!role.parent) {
       return [roles.get(role)]
     }
 
-    return [roles.get(role)].concat(getRoleHierarchy(role.parent))
+    return [roles.get(role)].concat(hierarchy(role.parent))
   }
 
   /**
-   * Returns a list of allowed keys for this resource, role and privilege.
-   * Be aware of the fact that if a property is not defined within the JSON ACL,
-   * it will not be recognized by the system.
-   * This method will traverse up the inheritance chain of a role to find all
-   * properties allowed.
-   * @param {Object} resource
-   * @params {Role} role object
-   * @params {String} [privilege="R"] privilege that need to be checked
-   * @params {Array|Function} [asserts=[]] optional asserts
-   * @returns {Array} list of allowed keys
+   * Get allowed keys for a specific role
+   * @param {String} resource
+   * @param {String|Object} role
+   * @param {String} [privilege='R']
+   * @param {Array} [asserts=[]]
+   * @returns {[String]} A list of allowed keys for given collection
    */
-  function allowed(resource, role, privilege, asserts) {
-    let that
-    let allowedKeys
+  function allowedForRole(resource, role, privilege, asserts) {
+    const role = roles.get(role)
+    const allKeys = keys()
+    const allRefs = refs()
+    let allowedKeys = []
+    let deniedKeys = []
 
-    privilege = privilege || 'R'
+    // return all keys for superuser
+    if (role.superuser === true) {
+      return allKeys
+    }
 
-    that = this
-    allowedKeys = []
+    // ALLOW statements
+    allKeys.forEach(function(key) {
+      allowedKeys = allowedKeys.concat(
+        path(allKeys, key, ALLOW, role, privilege)
+      )
+    })
+
+    // asserts
+    asserts.forEach(function(assert) {
+      allowedKeys = allowedKeys.concat(
+        assert(o, resource, role, privilege)
+      )
+    })
+
+    // DENY statements
+    allKeys.forEach(function(key) {
+      deniedKeys = deniedKeys.concat(
+        path(allKeys, key, DENY, role, privilege)
+      )
+    })
+
+    return _.uniq(
+      _.difference(allowedKeys, deniedKeys)
+    )
+  }
+
+  /**
+   * Get allowed keys for given collection
+   * @param {String} resource
+   * @param {String|Object} role
+   * @param {String} [privilege='R']
+   * @param {Array} [asserts=[]]
+   * @returns {[String]} A list of allowed keys for given collection
+   */
+  function allowed(resource, role, privilege = 'R', asserts = []) {
     role = roles.get(role)
+    const roleHierarchy = hierarchy(role).reverse()
+    let allowedKeys = []
 
-    // Ger role hierarchy
-    let userRoles = getRoleHierarchy(role).reverse()
-
-    // Assertions
     if (_.isFunction(asserts)) {
       asserts = [asserts]
     }
 
-    if (_.isArray(asserts)) {
-      _.forEach(asserts, function(assert) {
-        allowedKeys = allowedKeys.concat(assert(that, resource, role, privilege))
-      })
-    }
-
-    // Get keys for roles
-    _.forEach(userRoles, function(userRole) {
-      allowedKeys = allowedKeys.concat(that.roleAllowed(allowedKeys, userRole.name, privilege))
+    roleHierarchy.forEach(function(r) {
+      allowedKeys = allowedKeys.concat(allowedForRole(resource, r, privilege, asserts))
     })
 
-    // Unique
-    return _.uniq(allowedKeys)
+    return allowedKeys
   }
 
-  /**
-   * Returns a list of keys for a specific role and privilege
-   * @param {Role} role
-   * @param {String} [privilege='R']
-   */
-  function keys(role, privilege) {
-    privilege = privilege || 'R'
-    return roleAllowed([], role.name, privilege)
-  }
+  o.allowed = allowed
 
-  return Object.freeze({
-    roleAllowed,
-    allowed,
-    keys
-  })
+  return Object.freeze(o)
 
 }

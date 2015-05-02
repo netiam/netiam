@@ -2,16 +2,20 @@ import filter from './../utils/filter'
 import acl from '../../src/rest/acl'
 import roles from '../../src/rest/roles'
 import asserts from '../../src/rest/asserts'
+import User from '../models/user'
 
-const schema = require('./../fixtures/acl.json')
-const user = require('./../fixtures/user.json')
-const accessControlList = acl(schema)
+const userAcl = require('./../fixtures/acl.json')
+const userFixture = require('./../fixtures/user.json')
+const testAcl = acl({
+  collection: User,
+  list: userAcl
+})
 
 describe('ACL', function() {
 
   describe('UPDATE', function() {
     it('should filter properties for role GUEST', function() {
-      let props = filter.filter(accessControlList, user, roles.get('GUEST'), 'U')
+      let props = filter(testAcl, userFixture, roles.get('GUEST'), 'U')
       props.should.have.properties({
         'name': 'eliias',
         'description': 'Hey, ich bin der Hannes.'
@@ -19,7 +23,7 @@ describe('ACL', function() {
     })
 
     it('should filter properties for role USER', function() {
-      let props = filter.filter(accessControlList, user, roles.get('USER'), 'U')
+      let props = filter(testAcl, userFixture, roles.get('USER'), 'U')
       props.should.have.properties({
         'name': 'eliias',
         'description': 'Hey, ich bin der Hannes.',
@@ -36,7 +40,7 @@ describe('ACL', function() {
     it('should filter properties for role USER who is also resource OWNER', function() {
       let assert = asserts.owner('email', 'hannes@impossiblearts.com'),
         props
-      props = filter.filter(accessControlList, user, roles.get('USER'), 'U', assert)
+      props = filter(testAcl, userFixture, roles.get('USER'), 'U', assert)
       props.should.have.properties({
         'name': 'eliias',
         'description': 'Hey, ich bin der Hannes.',
@@ -52,7 +56,7 @@ describe('ACL', function() {
     })
 
     it('should filter properties for role MANAGER', function() {
-      let props = filter.filter(accessControlList, user, 'MANAGER', 'U')
+      let props = filter(testAcl, userFixture, 'MANAGER', 'U')
       props.should.have.properties({
         'name': 'eliias',
         'description': 'Hey, ich bin der Hannes.',
@@ -67,7 +71,7 @@ describe('ACL', function() {
     })
 
     it('should filter properties for role ADMIN', function() {
-      let props = filter.filter(accessControlList, user, 'ADMIN', 'U')
+      let props = filter(testAcl, userFixture, 'ADMIN', 'U')
       props.should.have.properties({
         'name': 'eliias',
         'description': 'Hey, ich bin der Hannes.',

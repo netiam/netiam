@@ -8,6 +8,9 @@
         "ALLOW": {
             "USER": "R",
             "GUEST": "R"
+        },
+        "DENY": {
+            "GUEST": "R"
         }
     },
     "name": {

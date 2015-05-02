@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import Role from './models/role'
 
-let documents = [
+const documents = [
   {
     '_id': '53ff92f6dc52d7472e074815',
     'name': 'GUEST',
@@ -31,8 +31,8 @@ let documents = [
   }
 ]
 let roles = []
-let ids = {}
-let names = {}
+const ids = {}
+const names = {}
 
 // fetch roles from db
 roles = roles.concat(documents)
