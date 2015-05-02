@@ -5,6 +5,8 @@
 [![Code Climate](https://codeclimate.com/github/eliias/netiam/badges/gpa.svg)](https://codeclimate.com/github/eliias/netiam)
 [![Test Coverage](https://codeclimate.com/github/eliias/netiam/badges/coverage.svg)](https://codeclimate.com/github/eliias/netiam)
 
+> A pure REST library
+
 This REST API library addresses some issues I had with API designs over the
 last years. It does not claim to provide a full featured solution and to be
 honest, it might never will. Nevertheless, someone might find this library
