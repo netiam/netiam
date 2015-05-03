@@ -67,14 +67,14 @@ export default function acl(spec) {
 
   /**
    * Get allowed keys for a specific role
-   * @param {String} resource
+   * @param {Object} resource
    * @param {String|Object} role
    * @param {String} [privilege='R']
    * @param {Array} [asserts=[]]
    * @returns {[String]} A list of allowed keys for given collection
    */
   function allowedForRole(resource, role, privilege, asserts) {
-    const role = roles.get(role)
+    role = roles.get(role)
     const allKeys = keys()
     const allRefs = refs()
     let allowedKeys = []
@@ -104,6 +104,11 @@ export default function acl(spec) {
       deniedKeys = deniedKeys.concat(
         path(allKeys, key, DENY, role, privilege)
       )
+    })
+
+    // expand populated paths
+    allRefs.forEach(function() {
+      // TODO
     })
 
     return _.uniq(
@@ -138,5 +143,4 @@ export default function acl(spec) {
   o.allowed = allowed
 
   return Object.freeze(o)
-
 }
