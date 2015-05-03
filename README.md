@@ -1,9 +1,9 @@
 # netiam
 
-[![Build Status](https://travis-ci.org/eliias/netiam.svg)](https://travis-ci.org/eliias/netiam)
-[![Dependencies](https://david-dm.org/eliias/netiam.svg)](https://david-dm.org/eliias/netiam)
-[![Code Climate](https://codeclimate.com/github/eliias/netiam/badges/gpa.svg)](https://codeclimate.com/github/eliias/netiam)
-[![Test Coverage](https://codeclimate.com/github/eliias/netiam/badges/coverage.svg)](https://codeclimate.com/github/eliias/netiam)
+[![Build Status](https://travis-ci.org/netiam/netiam.svg)](https://travis-ci.org/netiam/netiam)
+[![Dependencies](https://david-dm.org/netiam/netiam.svg)](https://david-dm.org/netiam/netiam)
+[![Code Climate](https://codeclimate.com/github/netiam/netiam/badges/gpa.svg)](https://codeclimate.com/github/netiam/netiam)
+[![Test Coverage](https://codeclimate.com/github/netiam/netiam/badges/coverage.svg)](https://codeclimate.com/github/netiam/netiam)
 
 > A pure REST library
 
