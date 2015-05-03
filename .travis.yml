@@ -2,7 +2,7 @@ language: node_js
 sudo: false
 cache:
   directories:
-  - node_modules
+    - node_modules
 deploy:
   provider: npm
   email: hannes@impossiblearts.com
