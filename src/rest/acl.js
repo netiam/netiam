@@ -140,7 +140,29 @@ export default function acl(spec) {
     return allowedKeys
   }
 
+  /**
+   * Filters an object literal
+   * @param {Object} resource
+   * @param {Object} role
+   * @param {String} [privilege='R']
+   * @param {Array} [asserts=[]]
+   * @returns {Object}
+   */
+  function filter(resource, role, privilege = 'R', asserts = []) {
+
+    return _.pick(
+      resource,
+      allowed(
+        resource,
+        role,
+        privilege,
+        asserts
+      )
+    )
+  }
+
   o.allowed = allowed
+  o.filter = filter
 
   return Object.freeze(o)
 }
