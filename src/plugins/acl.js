@@ -1,5 +1,4 @@
 import _ from 'lodash'
-import path from 'path'
 import acl from '../rest/acl'
 import roles from '../rest/roles'
 
@@ -23,77 +22,53 @@ function getRole(user) {
 }
 
 function request(opts) {
-  opts = Object.assign({
-    basedir: './models'
-  }, opts)
-
-  const file =
-    path.join(
-      path.dirname(require.main.filename),
-      opts.basedir,
-      opts.model.modelName.toLowerCase() +
-      '.acl.json'
-    )
-  const routeAcl = acl(require(file))
+  const list = acl(opts)
 
   return function(req) {
     if (req.method === 'POST' && req.is('json')) {
       if (_.isArray(req.body)) {
         req.body = _.map(function(node) {
-          return routeAcl.filter(node, getRole(req.user), 'C')
+          return list.filter(node, getRole(req.user), 'C')
         })
         return
       }
 
       if (_.isObject(req.body)) {
-        req.body = routeAcl.filter(req.body, getRole(req.user), 'C')
+        req.body = list.filter(req.body, getRole(req.user), 'C')
         return
       }
     }
 
-    // Update
+    // update
     if (req.method === 'PUT' && req.is('json')) {
       if (_.isArray(req.body)) {
         req.body = _.map(function(node) {
-          return routeAcl.filter(node, getRole(req.user), 'U')
+          return list.filter(node, getRole(req.user), 'U')
         })
         return
       }
 
       if (_.isObject(req.body)) {
-        req.body = routeAcl.filter(req.body, getRole(req.user), 'U')
-        return
+        req.body = list.filter(req.body, getRole(req.user), 'U')
       }
     }
   }
 }
 
 function response(opts) {
-  opts = Object.assign({
-    basedir: './models'
-  }, opts)
-
-  const file =
-    path.join(
-      path.dirname(require.main.filename),
-      opts.basedir,
-      opts.model.modelName.toLowerCase() +
-      '.acl.json'
-    )
-  const routeAcl = acl(require(file))
+  const list = acl(opts)
 
   return function(req, res) {
     if (_.isArray(res.body)) {
       res.body =
         _.map(res.body, function(node) {
-          return routeAcl.filter(node, getRole(req.user), 'R')
+          return list.filter(node, getRole(req.user), 'R')
         })
       return
     }
 
     if (_.isObject(res.body)) {
-      res.body = routeAcl.filter(res.body, getRole(req.user), 'R')
-      return
+      res.body = list.filter(res.body, getRole(req.user), 'R')
     }
   }
 

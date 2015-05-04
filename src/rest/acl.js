@@ -13,6 +13,13 @@ export default function acl(spec) {
   const {collection} = spec
   let o = {}
 
+  list.load(function(err, data) {
+    if (err) {
+      throw err
+    }
+    list = data
+  })
+
   /**
    * Get all keys from collection
    * @returns {[String]}
@@ -141,7 +148,7 @@ export default function acl(spec) {
   }
 
   /**
-   * Filters an object literal
+   * Filters a resource object by ACL
    * @param {Object} resource
    * @param {Object} role
    * @param {String} [privilege='R']
@@ -149,7 +156,6 @@ export default function acl(spec) {
    * @returns {Object}
    */
   function filter(resource, role, privilege = 'R', asserts = []) {
-
     return _.pick(
       resource,
       allowed(

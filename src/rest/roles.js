@@ -65,7 +65,7 @@ function normalizeString(role) {
 /**
  * Normalize role input as object
  * @param {String} role
- * @returns {Object} The normalized role
+ * @returns {Role} The normalized role
  */
 function normalizeObject(role) {
   // Evaluate as native MongoDB ObjectID
@@ -95,7 +95,7 @@ function normalizeObject(role) {
 /**
  * Normalize input values and returns the specified role
  * @param {String|Object} role
- * @returns {Object} The normalized role
+ * @returns {Role} The normalized role
  */
 function normalize(role) {
   if (!role) {
@@ -122,7 +122,7 @@ function normalize(role) {
  * Get role by ID, name or the role object itself.
  * Use this method to normalize access to roles.
  * @param {String|Object} role
- * @return {Object}
+ * @returns {Role}
  */
 function get(role) {
   try {
