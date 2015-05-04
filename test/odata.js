@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import request from 'supertest'
 import User from './models/user'
 import db from './utils/db.test'
@@ -7,7 +6,6 @@ import api from '../src/netiam'
 describe('rest', function() {
   let userFixture = require('./fixtures/user.json')
   let app = require('./utils/app.test')({port: 3001})
-  let userId
 
   this.timeout(10000)
 
@@ -46,6 +44,7 @@ describe('rest', function() {
   })
 
   describe('users', function() {
+
     it('should create a user', function(done) {
       request(app)
         .post('/users')
@@ -69,8 +68,6 @@ describe('rest', function() {
               47.822352
             ]
           })
-
-          userId = res.body.id
 
           done()
         })
