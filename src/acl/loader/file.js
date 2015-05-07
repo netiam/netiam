@@ -18,7 +18,7 @@ export default function(config) {
    */
   function load(cb) {
     if (loaded) {
-      return cb()
+      return cb(null, list)
     }
 
     fs.readFile(file, function(err, data) {
