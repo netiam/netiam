@@ -13,7 +13,7 @@ deploy:
     branch: master
     repo: netiam/netiam
 node_js:
-- iojs-v1
+- iojs-v2
 services:
 - mongodb
 after_success:

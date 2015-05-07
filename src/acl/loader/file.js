@@ -33,6 +33,22 @@ export default function(config) {
   }
 
   /**
+   * Load ACL file synchronous
+   * @returns Object
+   */
+  function loadSync() {
+    const data = fs.readFileSync(file, 'utf8')
+    try {
+      list = JSON.parse(data)
+      loaded = true
+
+      return list
+    } catch(e) {
+      throw new Error('Cannot parse ACL data')
+    }
+  }
+
+  /**
    * Get list
    * @returns {Object}
    */
@@ -51,6 +67,7 @@ export default function(config) {
   return Object.freeze({
     get,
     isLoaded,
-    load
+    load,
+    loadSync
   })
 }

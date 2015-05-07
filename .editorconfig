@@ -17,6 +17,11 @@ indent_style = space
 indent_size = 2
 quote_type = single
 
+[*.json]
+indent_style = space
+indent_size = 2
+quote_type = single
+
 [{package.json,.travis.yml}]
 indent_style = space
 indent_size = 2

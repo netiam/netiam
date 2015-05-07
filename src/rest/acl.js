@@ -9,16 +9,11 @@ export default function acl(spec) {
   const WILDCARD = '*'
   const ALLOW = 'ALLOW'
   const DENY = 'DENY'
-  const {list} = spec
   const {collection} = spec
+  let {list} = spec
   let o = {}
 
-  list.load(function(err, data) {
-    if (err) {
-      throw err
-    }
-    list = data
-  })
+  list = list.loadSync()
 
   /**
    * Get all keys from collection
@@ -46,9 +41,11 @@ export default function acl(spec) {
    * @returns {[String]}
    */
   function path(allKeys, path, type, role, privilege) {
-    if (list.hasOwnProperty(path)) {
-      if (list[path].hasOwnProperty(type)) {
-        if (list[path][type][role.name] && list[path][type][role.name].indexOf(privilege) !== -1) {
+    if (list.fields.hasOwnProperty(path)) {
+      if (list.fields[path].hasOwnProperty(type)) {
+        if (list.fields[path][type][role.name]
+          && list.fields[path][type][role.name].indexOf(privilege) !== -1
+        ) {
           if (path === WILDCARD) {
             return allKeys
           }

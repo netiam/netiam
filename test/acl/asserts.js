@@ -2,8 +2,9 @@ import acl from '../../src/rest/acl'
 import roles from '../../src/rest/roles'
 import asserts from '../../src/rest/asserts'
 import User from '../models/user'
+import loader from '../../src/acl/loader/file'
 
-const userAcl = require('./../fixtures/acl.json')
+const userAcl = loader({path: __dirname + '/../fixtures/acl.json'})
 const userFixture = require('./../fixtures/user.json')
 const testAcl = acl({
   collection: User,
