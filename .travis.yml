@@ -2,7 +2,7 @@ language: node_js
 sudo: false
 cache:
   directories:
-    - node_modules
+  - node_modules
 deploy:
   provider: npm
   email: hannes@impossiblearts.com
@@ -17,20 +17,21 @@ node_js:
 services:
 - mongodb
 after_success:
- - npm run build
- - npm run test-coverage
- - codeclimate < coverage/lcov.info
+- npm run build
+- npm run test-coverage
+- codeclimate < coverage/lcov.info
 addons:
   code_climate:
     repo_token:
       secure: kmN4GIE9O7uFtw4dCcJvrLitZFJmHPF0G8gCiHGEdK0HdK6xT9rTD8TjHXGM07QNB0Teyfwmtc32DKzO6hPgLGSGBjMiJlOUe5GKrz16a2k7QmbDF8t4jsptuwFKB+aKXmNVhJ8Pc7POlGoVxMd0wGfqeZ9lKLfG5pE+WSGkDxQ=
 env:
   global:
-    secure: FH/vtdyQWRlL6exOcXtBsohmh8wIOTrGTjXJE/KS4CoLcz6KaIDy3MQwR3bhmMUz9FwfubEkAwqqSrbvniTCIV1/tldcM/OYhYiOeOrVtCRD3iEoL3bykgbYMg7UIYbY7LHl1hUvrgkV1TC5cmVh8rpAk9WKdt2Iut4MHXCItb0=
+    secure: TxSMqm+QwN44Uxp0OUsrALSomXtvjJflILI+3sxB2RY1FUrKM+pbLfHaBWGjH5kbSMPdia1WFzBbLen1zrDdpA2Mo4/y+N6iX3ZSL9oR6xJCJJs16NUwJSU+UNMf/wxqcvlGSDbFr+i0+u6BVEFKyI0AHNUpOfKN3RxH/Y+pUoM=
 notifications:
+  email: false
   webhooks:
     urls:
-      - https://jenkins.dovigo.org/view/netiam/job/netiam-site/build?token=$JENKINS_TOKEN
+    - https://jenkins.dovigo.org/view/netiam/job/netiam-site/build?token=$JENKINS_TOKEN
     on_success: always
     on_failure: never
     on_start: never
