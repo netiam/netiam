@@ -17,6 +17,10 @@ export default function(config) {
    * @param {Function} cb
    */
   function load(cb) {
+    if (loaded) {
+      return cb()
+    }
+
     fs.readFile(file, function(err, data) {
       if (err) {
         return cb(err)
