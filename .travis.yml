@@ -16,6 +16,8 @@ node_js:
 - iojs-v2
 services:
 - mongodb
+before_deploy:
+- npm config set spin false --global
 after_success:
 - npm run build
 - npm run test-coverage
