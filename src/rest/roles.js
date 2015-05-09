@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import Role from './models/role'
+import Role from './collections/role'
 
 const documents = [
   {
@@ -30,137 +30,148 @@ const documents = [
     'description': 'System administrators.'
   }
 ]
-let roles = []
-const ids = {}
-const names = {}
 
-// fetch roles from db
-roles = roles.concat(documents)
+//export default function(spec) {
+  let roles = []
+  // FIXME const {documents} = spec
+  const ids = {}
+  const names = {}
 
-// Create mappings
-roles.forEach(function(role) {
-  ids[role.id] = role
-  names[role.name] = role
-})
+  // fetch roles from db
+  roles = roles.concat(documents)
 
-/**
- * Normalize role input as string
- * @param {String} role
- * @returns {Object} The normalized role
- */
-function normalizeString(role) {
-  // Evaluate as ID
-  if (ids[role]) {
-    return ids[role]
-  }
-  // Evaluate as name
-  if (names[role.toUpperCase()]) {
-    return names[role.toUpperCase()]
-  }
-
-  // Return guest
-  return names.GUEST
-}
-
-/**
- * Normalize role input as object
- * @param {String} role
- * @returns {Role} The normalized role
- */
-function normalizeObject(role) {
-  // Evaluate as native MongoDB ObjectID
-  if (role.toString && ids[role.toString()]) {
-    return ids[role.toString()]
-  }
-
-  // Evaluate as object with id.toString()
-  if (role.id && ids[role.id]) {
-    return ids[role.id]
-  }
-
-  // Evaluate as object with id
-  if (role.id && ids[role.id]) {
-    return ids[role.id]
-  }
-
-  // Evaluate as object with name
-  if (role.name && names[role.name]) {
-    return names[role.name]
-  }
-
-  // Return guest
-  return names.GUEST
-}
-
-/**
- * Normalize input values and returns the specified role
- * @param {String|Object} role
- * @returns {Role} The normalized role
- */
-function normalize(role) {
-  if (!role) {
-    throw 'Invalid role: ' + role
-  }
-
-  if (!roles) {
-    throw 'Roles middleware is not ready'
-  }
-
-  if (_.isString(role)) {
-    return normalizeString(role)
-  }
-
-  if (_.isObject(role)) {
-    return normalizeObject(role)
-  }
-
-  // Return guest
-  return names.GUEST
-}
-
-/**
- * Get role by ID, name or the role object itself.
- * Use this method to normalize access to roles.
- * @param {String|Object} role
- * @returns {Role}
- */
-function get(role) {
-  try {
-    return normalize(role)
-  } catch (err) {
-    console.error(err)
-  }
-  return null
-}
-
-/**
- * Add role
- * @param {String} role
- * @param {String} [parent]
- * @returns {Object}
- */
-function add(role, parent) {
-  let r = new Role({
-    name: role,
-    parent: parent ? get(parent) : null
+  // Create mappings
+  roles.forEach(function(role) {
+    ids[role.id] = role
+    names[role.name] = role
   })
 
-  names[role] = r
+  /**
+   * Normalize role input as string
+   * @param {String} role
+   * @returns {Object} The normalized role
+   */
+  function normalizeString(role) {
+    // Evaluate as ID
+    if (ids[role]) {
+      return ids[role]
+    }
+    // Evaluate as name
+    if (names[role.toUpperCase()]) {
+      return names[role.toUpperCase()]
+    }
 
-  return r
-}
+    // Return guest
+    return names.GUEST
+  }
 
-/**
- * Is role already registered
- * @param {String|Object} role
- * @returns {Boolean}
- */
-function has(role) {
-  return get(role) ? true : false
-}
+  /**
+   * Normalize role input as object
+   * @param {String} role
+   * @returns {Role} The normalized role
+   */
+  function normalizeObject(role) {
+    // Evaluate as native MongoDB ObjectID
+    if (role.toString && ids[role.toString()]) {
+      return ids[role.toString()]
+    }
 
-export default Object.freeze({
-  add: add,
-  has: has,
-  get: get
-})
+    // Evaluate as object with id.toString()
+    if (role.id && ids[role.id]) {
+      return ids[role.id]
+    }
+
+    // Evaluate as object with id
+    if (role.id && ids[role.id]) {
+      return ids[role.id]
+    }
+
+    // Evaluate as object with name
+    if (role.name && names[role.name]) {
+      return names[role.name]
+    }
+
+    // Return guest
+    return names.GUEST
+  }
+
+  /**
+   * Normalize input values and returns the specified role
+   * @param {String|Object} role
+   * @returns {Role} The normalized role
+   */
+  function normalize(role) {
+    if (!role) {
+      throw 'Invalid role: ' + role
+    }
+
+    if (!roles) {
+      throw 'Roles middleware is not ready'
+    }
+
+    if (_.isString(role)) {
+      return normalizeString(role)
+    }
+
+    if (_.isObject(role)) {
+      return normalizeObject(role)
+    }
+
+    // Return guest
+    return names.GUEST
+  }
+
+  /**
+   * Get role by ID, name or the role object itself.
+   * Use this method to normalize access to roles.
+   * @param {String|Object} role
+   * @returns {Role}
+   */
+  function get(role) {
+    try {
+      return normalize(role)
+    } catch (err) {
+      console.error(err)
+    }
+    return null
+  }
+
+  /**
+   * Add role
+   * @param {String} role
+   * @param {String} [parent]
+   * @returns {Object}
+   */
+  function add(role, parent) {
+    let r = new Role({
+      name: role,
+      parent: parent ? get(parent) : null
+    })
+
+    names[role] = r
+
+    return r
+  }
+
+  /**
+   * Is role already registered
+   * @param {String|Object} role
+   * @returns {Boolean}
+   */
+  function has(role) {
+    return get(role) ? true : false
+  }
+
+  /*
+  return Object.freeze({
+    add: add,
+    has: has,
+    get: get
+  })
+  */
+  export default Object.freeze({
+    add: add,
+    has: has,
+    get: get
+  })
+//}

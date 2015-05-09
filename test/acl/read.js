@@ -14,7 +14,7 @@ const testAcl = acl({
 
 describe('ACL', function() {
 
-  describe('READ', function() {
+  describe('read', function() {
     it('should filter properties for role GUEST', function() {
       let props = filter(testAcl, userFixture, roles.get('GUEST'), 'R')
       props.should.have.properties({

@@ -9,16 +9,17 @@ import roles from '../rest/roles'
  */
 function getRole(user) {
   const guest = roles.get('GUEST')
+  const userRole = roles.get(user.role)
+
+  if (userRole) {
+    return userRole
+  }
 
   if (!guest) {
     throw 'Role GUEST is not available'
   }
 
-  if (!user || !user.role) {
-    return guest
-  }
-
-  return roles.get(user.role) || guest
+  return guest
 }
 
 function request(opts) {

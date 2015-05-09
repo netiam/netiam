@@ -1,6 +1,6 @@
-import mongoose, {Schema} from 'mongoose'
+import {Schema} from 'mongoose'
 
-let schema = new Schema({
+export default new Schema({
   name: {
     type: String,
     unique: true,
@@ -13,5 +13,3 @@ let schema = new Schema({
   superuser: Boolean,
   description: String
 })
-
-export default mongoose.model('Role', schema)
