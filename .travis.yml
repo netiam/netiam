@@ -8,7 +8,7 @@ deploy:
   email: hannes@impossiblearts.com
   skip_cleanup: true
   api_key:
-    secure: OyxBma7IJFkTphj8OIP/Dm9Df040EIWyTzmaRzH9p9qEUP1XOUgAoP6MWWM3kvTle47SdEVZxwtum4ePZdE1hqsPQ8JSkLb9yZCcT2RNADGmB6xPGEPSCf4aqvaJ61u1F2lk3p496hf8f/OcRaqbO9Bq29ed8wOXwRJ0/ZleBZw=
+    secure: CezJ96R0fVpiigEGJsY4bZyW5nre6S+t1uKxeDXnwBEpgCmzkMrThAX9g/C4YzMR8x2v/YNTeJPlRpEb0Vm61JCyIJmbLo/77lurwZ7AzT5e8Nd2I7qpeg+JWB27zLjygb7j0btRI4NJzAFvktXFVf/cwBiwYUq+phXZ4NzXGbM=
   on:
     branch: master
     repo: netiam/netiam
@@ -16,8 +16,6 @@ node_js:
 - iojs-v2
 services:
 - mongodb
-before_deploy:
-- npm config set spin false --global
 after_success:
 - npm run build
 - npm run test-coverage
@@ -28,7 +26,7 @@ addons:
       secure: fiPhvy4r3erfWdNNKC3YfyJ2npIjtLXI480NaV3MlI/PAvFEQXO0SgqQEZy9gyKEOcAJXOwO/IG7yvC4oip6y6a+Vy6DIXKDGW43+2B3re7RJ8vY5cALp0ra6axWEopJ5Q55tiQtj6Ys/sBqRVLwu+px5SeATlGncfSmA2qKA/k=
 env:
   global:
-    secure: TxSMqm+QwN44Uxp0OUsrALSomXtvjJflILI+3sxB2RY1FUrKM+pbLfHaBWGjH5kbSMPdia1WFzBbLen1zrDdpA2Mo4/y+N6iX3ZSL9oR6xJCJJs16NUwJSU+UNMf/wxqcvlGSDbFr+i0+u6BVEFKyI0AHNUpOfKN3RxH/Y+pUoM=
+    secure: gj5pjZBlV26EV4RYcSVeewt/K/EWb1ft8XBHFa+BVzh4LcZl0p7ZxX3WqA+vOydr3/oOix6X2pjC036K/7CcNMHOEcxweLfIXB5U3zb8Ajl9+p15RWRPGF4q+mU2zxz1Rd4wtThEvFOdzOev5WGC8SWG60h3XZfY1Yob0gDH5VE=
 notifications:
   email: false
   webhooks:
