@@ -4,11 +4,11 @@ import {
   BasicStrategy,
   DigestStrategy
   } from 'passport-http'
-import BearerStrategy from 'passport-http-bearer'
+import RESTError from '../rest/error'
 
 export default function auth(opts) {
+  const spec = {}
   const {collection} = opts
-  const {spec} = {}
   let {usernameField} = opts
   let {passwordField} = opts
 
@@ -60,5 +60,25 @@ export default function auth(opts) {
   passport.use(new BasicStrategy(spec, handle))
   passport.use(new DigestStrategy(spec, handle))
   passport.use(new LocalStrategy(spec, handle))
-  passport.use(new BearerStrategy(spec, handle))
+
+  return function(req, res) {
+    return new Promise((resolve, reject) => {
+      passport.authenticate([
+        'local',
+        'basic',
+        'digest'
+      ], function(err, authenticated) {
+        if (err) {
+          return reject(err)
+        }
+
+        if (!authenticated) {
+          return reject(new RESTError('Please login first', 401, 'Unauthorized'))
+        }
+
+        resolve()
+      })(req, res)
+    })
+  }
+
 }

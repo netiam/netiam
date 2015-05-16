@@ -22,7 +22,6 @@
     "mongoose": "^4.0.2",
     "passport": "^0.2.1",
     "passport-http": "^0.2.2",
-    "passport-http-bearer": "^1.0.1",
     "passport-local": "^1.0.0"
   },
   "devDependencies": {
@@ -62,9 +61,9 @@
   "author": "Hannes Moser <hannes@impossiblearts.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/eliias/netiam/issues"
+    "url": "https://github.com/netiam/netiam/issues"
   },
-  "homepage": "https://github.com/eliias/netiam",
+  "homepage": "https://github.com/netiam/netiam",
   "engines": {
     "node": ">=v0.12",
     "iojs": ">=v1",
