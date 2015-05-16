@@ -26,7 +26,7 @@ addons:
       secure: fiPhvy4r3erfWdNNKC3YfyJ2npIjtLXI480NaV3MlI/PAvFEQXO0SgqQEZy9gyKEOcAJXOwO/IG7yvC4oip6y6a+Vy6DIXKDGW43+2B3re7RJ8vY5cALp0ra6axWEopJ5Q55tiQtj6Ys/sBqRVLwu+px5SeATlGncfSmA2qKA/k=
 env:
   global:
-    secure: gj5pjZBlV26EV4RYcSVeewt/K/EWb1ft8XBHFa+BVzh4LcZl0p7ZxX3WqA+vOydr3/oOix6X2pjC036K/7CcNMHOEcxweLfIXB5U3zb8Ajl9+p15RWRPGF4q+mU2zxz1Rd4wtThEvFOdzOev5WGC8SWG60h3XZfY1Yob0gDH5VE=
+    secure: Pi2hUWJm01OCsJugGtjgotiG+BxQPWwkNqQLsWS0BV4UyIP6Cp3FnFUi0snkLcFkXC1cf7uVRboFyOYMeDxlsvedi9BEpPF/1+8AMLd7c6iyEBMNDrk4zffNA7xg+wuFRfTESpDrPQmTPilXxjr1+MajJWKdiFunnvjzWKKX4TM=
 notifications:
   email: false
   webhooks:
