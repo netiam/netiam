@@ -43,7 +43,11 @@ export default function auth(opts) {
           return done(err)
         }
 
-        done(null, isMatch)
+        if (!isMatch) {
+          return done(new Error('Invalid username or password'))
+        }
+
+        done(null, user)
       })
     })
   }
@@ -56,7 +60,6 @@ export default function auth(opts) {
       done(err, user)
     })
   })
-
   passport.use(new BasicStrategy(spec, handle))
   passport.use(new DigestStrategy(spec, handle))
   passport.use(new LocalStrategy(spec, handle))
@@ -64,20 +67,29 @@ export default function auth(opts) {
   return function(req, res) {
     return new Promise((resolve, reject) => {
       passport.authenticate([
-        'local',
-        'basic',
-        'digest'
-      ], function(err, authenticated) {
-        if (err) {
-          return reject(err)
-        }
+          'local',
+          'basic',
+          'digest'
+        ],
+        {session: false}
+        , function(err, user) {
+          if (err) {
+            return reject(err)
+          }
 
-        if (!authenticated) {
-          return reject(new RESTError('Please login first', 401, 'Unauthorized'))
-        }
+          if (!user) {
+            return reject(new RESTError('Cannot find user', 401, 'Unauthorized'))
+          }
 
-        resolve()
-      })(req, res)
+          req.logIn(user, function(err) {
+            if (err) {
+              return reject(err)
+            }
+
+            resolve()
+          })
+
+        })(req, res)
     })
   }
 
