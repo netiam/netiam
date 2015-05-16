@@ -5,7 +5,7 @@ import path from 'path'
  * File-based ACLs
  * @param {Object} config
  * @param {String} config.path
- * @returns {{get:get, isLoaded:isLoaded, load: load}}
+ * @returns {{get, isLoaded, load, loadSync}}
  */
 export default function(config) {
   const file = path.resolve(config.path)

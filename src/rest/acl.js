@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import mongoose from 'mongoose'
+//import mongoose from 'mongoose'
 import roles from './roles'
 
 /**
@@ -112,10 +112,10 @@ export default function acl(spec) {
     })
 
     // expand populated paths
-    allRefs.forEach(function(ref) {
-      const path = collection.schema.path(ref)
-      const modelName = path.options.ref
-      const model = mongoose.models[modelName]
+    allRefs.forEach(function() {
+      //const path = collection.schema.path(ref)
+      //const modelName = path.options.ref
+      //const model = mongoose.models[modelName]
     })
 
     return _.uniq(
