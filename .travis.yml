@@ -18,7 +18,7 @@ services:
 - mongodb
 after_success:
 - npm run build
-- npm run test-coverage
+- npm run test:coverage
 - codeclimate < coverage/lcov.info
 addons:
   code_climate:
