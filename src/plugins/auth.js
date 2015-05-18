@@ -88,7 +88,6 @@ export default function auth(opts) {
 
             resolve()
           })
-
         })(req, res)
     })
   }
