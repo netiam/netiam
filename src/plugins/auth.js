@@ -71,8 +71,8 @@ export default function auth(opts) {
           'basic',
           'digest'
         ],
-        {session: false}
-        , function(err, user) {
+        {session: false},
+        function(err, user) {
           if (err) {
             return reject(err)
           }
