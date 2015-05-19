@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import filter from './odata/filter'
+import RESTError from './error'
 
 export const MANY_TO_ONE = Symbol('many-to-one')
 export const ONE_TO_MANY = Symbol('one-to-many')
@@ -140,7 +141,7 @@ export default function resource(spec) {
       // execute
       q.exec(function(err, documents) {
         if (err) {
-          return reject(new Error(err, 500))
+          return reject(new RESTError(err, 500))
         }
 
         if (!_.isArray(documents)) {
@@ -178,10 +179,10 @@ export default function resource(spec) {
       // execute
       q.exec(function(err, document) {
         if (err) {
-          return reject(new Error(err, 500))
+          return reject(new RESTError(err, 500))
         }
         if (!document) {
-          return reject(new Error('Document not found', 404))
+          return reject(new RESTError('Document not found', 404))
         }
 
         resolve(document)
@@ -216,10 +217,10 @@ export default function resource(spec) {
       // create model
       collection.create(req.body, function(err, documents) {
         if (err) {
-          return reject(new Error(err, 500))
+          return reject(new RESTError(err, 500))
         }
         if (!documents) {
-          return reject(new Error('Document could not be created', 500))
+          return reject(new RESTError('Document could not be created', 500))
         }
 
         // populate
@@ -255,17 +256,17 @@ export default function resource(spec) {
       // Execute query
       q.exec(function(err, document) {
         if (err) {
-          return reject(new Error(err, 500))
+          return reject(new RESTError(err, 500))
         }
         if (!document) {
-          return reject(new Error('Document Not Found', 404))
+          return reject(new RESTError('Document Not Found', 404))
         }
 
         document
           .merge(req.body)
           .save(function(err) {
             if (err) {
-              return reject(new Error(err, 500))
+              return reject(new RESTError(err, 500))
             }
 
             // Populate
@@ -295,10 +296,10 @@ export default function resource(spec) {
       qo[idField] = req.params[idParam]
       collection.findOneAndRemove(qo, function(err, documents) {
         if (err) {
-          return reject(new Error(err, 500))
+          return reject(new RESTError(err, 500))
         }
         if (!documents) {
-          return reject(new Error('Document not found', 404))
+          return reject(new RESTError('Document not found', 404))
         }
 
         resolve()
