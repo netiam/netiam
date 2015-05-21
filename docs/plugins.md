@@ -10,11 +10,10 @@ chain order).
 ```js
 /**
  * Data plugin
- * @param {Route} route
- * @param {Object} data
+ * @param {*} any
  * @returns {Function}
  */
-function data( route, body ) {
+function data( any ) {
     /**
      * @scope {Resource}
      * @param {Object} req
@@ -34,11 +33,11 @@ All of the following methods, which are chained to the route, are plugins.
 ```js
 app
     .get( '/resource/:id' )
-    .authenticate(…)
+    .auth(…)
     .rest(…)
     .transform(…)
     .data(…)
-    .acl(…)
+    .acl.req(…)
     .json( {…} )
     .catch( function( err ) {…} )
 ```
@@ -50,23 +49,7 @@ app
     Every plugin is initialized at startup time. Also every plugin must be
     initialized for every route (not only for a specific resource).
 
-2. Priority
+2. Dispatch
 
-    A plugin might have a specific priority. Priorities are saved as numeric values
-    from 0 to 99. Someone might also use the predefined values *LOW*, *NORMAL* or
-    *HIGH*.
-
-    Some plugins (e.g. authenticate) need to run upfront and therefore should have
-    the highest priority.
-
-3. Hooks
-
-    A plugin must use a hook in order to transform either a request or response.
-    Several hooks are available.
-
-    ```js
-    .pre( 'dispatch', function(req, res) { … } )
-    ```
-4. Dispatch
-
-    Every plugin must implement a dispatch routine which must return a promise.
+    Every plugin must implement a dispatch routine which can return any value.
+    If your middleware works async, just return a promise.

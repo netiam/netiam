@@ -67,7 +67,7 @@ netiam
      .get( '/users/:user/receipes/:id' )
      .rest( {
         model: Receipe,
-        idAttribute: 'id',
+        idParam: 'id',
 
         parent: 'user',
         parentModel: User,

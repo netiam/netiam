@@ -24,7 +24,7 @@ This describes the execution flow of the library.
 
     ```js
     netiam
-        .authenticate( … )
+        .auth( … )
         .get( '/users/:id' );
     ```
 
@@ -49,9 +49,9 @@ This describes the execution flow of the library.
 
     ```js
     netiam
-        .authenticate(…)
+        .auth(…)
         .get( '/resource/:id' )
-        .acl( {
+        .acl.req( {
             model: user,
             def: './models/user.acl.json'
          } );
