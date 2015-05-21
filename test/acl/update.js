@@ -4,6 +4,7 @@ import roles from '../../src/rest/roles'
 import asserts from '../../src/rest/asserts'
 import User from '../models/user'
 import loader from '../../src/acl/loader/file'
+import rolesFixture from '../utils/roles'
 
 const userAcl = loader({path: __dirname + '/../fixtures/acl.json'})
 const userFixture = require('./../fixtures/user.json')
@@ -13,6 +14,10 @@ const testAcl = acl({
 })
 
 describe('ACL', function() {
+
+  before(function(done) {
+    rolesFixture(done)
+  })
 
   describe('update', function() {
     it('should filter properties for role GUEST', function() {

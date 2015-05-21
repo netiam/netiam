@@ -1,10 +1,12 @@
+import path from 'path'
+import User from '../models/user'
 import acl from '../../src/rest/acl'
 import roles from '../../src/rest/roles'
 import asserts from '../../src/rest/asserts'
-import User from '../models/user'
 import loader from '../../src/acl/loader/file'
+import rolesFixture from '../utils/roles'
 
-const userAcl = loader({path: __dirname + '/../fixtures/acl.json'})
+const userAcl = loader({path: path.join(__dirname, '../fixtures/acl.json')})
 const userFixture = require('./../fixtures/user.json')
 const testAcl = acl({
   collection: User,
@@ -12,6 +14,18 @@ const testAcl = acl({
 })
 
 describe('ACL', function() {
+
+  before(function(done) {
+    rolesFixture(function(err) {
+      if (err) {
+        return done(err)
+      }
+
+      roles.load(function(err) {
+        done(err)
+      })
+    })
+  })
 
   describe('asserts', function() {
     it('should deny user owns resource', function() {

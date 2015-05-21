@@ -8,6 +8,11 @@ import roles from './roles'
  */
 function owner(field, value) {
 
+  // add role OWNER to allow checks against ACLs with owner assert
+  if (!roles.has('OWNER')) {
+    roles.add('OWNER')
+  }
+
   /**
    * @param {Object} acl
    * @param {Object} resource
@@ -32,11 +37,6 @@ function owner(field, value) {
       privilege
     )
   }
-}
-
-// add role OWNER to allow checks against ACLs with owner assert
-if (!roles.has('OWNER')) {
-  roles.add('OWNER')
 }
 
 export default Object.freeze({
