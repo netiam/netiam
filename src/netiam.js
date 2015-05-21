@@ -16,7 +16,7 @@ export default function netiam() {
     return p
   }
 
-  const o = function(req, res) {
+  const dispatcher = function(req, res) {
     dispatch(req, res)
       .catch(err => {
         if (err.nonce) {
@@ -37,7 +37,7 @@ export default function netiam() {
     if (_.isFunction(plugin)) {
       return (...spec) => {
         stack.push(plugin(...spec))
-        return o
+        return dispatcher
       }
     }
 
@@ -47,7 +47,7 @@ export default function netiam() {
       _.forEach(plugin, function(name, key) {
         container[key] = (...spec) => {
           stack.push(name(...spec))
-          return o
+          return dispatcher
         }
       })
 
@@ -57,8 +57,8 @@ export default function netiam() {
 
   // plugins
   _.forEach(plugins, function(plugin, name) {
-    o[name] = registerPlugin(plugin)
+    dispatcher[name] = registerPlugin(plugin)
   })
 
-  return Object.freeze(o)
+  return Object.freeze(dispatcher)
 }
