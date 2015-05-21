@@ -3,7 +3,7 @@ import User from './models/user'
 import db from './utils/db.test'
 import api from '../src/netiam'
 
-describe('rest', function() {
+describe('odata', function() {
   let userFixture = require('./fixtures/user.json')
   let app = require('./utils/app.test')({port: 3001})
 
@@ -43,7 +43,7 @@ describe('rest', function() {
     })
   })
 
-  describe('users', function() {
+  describe('filter', function() {
 
     it('should create a user', function(done) {
       request(app)
