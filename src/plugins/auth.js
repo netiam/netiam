@@ -6,7 +6,7 @@ import {
   } from 'passport-http'
 import RESTError from '../rest/error'
 
-export default function auth(opts) {
+export default function(opts) {
   const spec = {}
   const {collection} = opts
   let {usernameField} = opts

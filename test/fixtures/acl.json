@@ -43,7 +43,7 @@
     },
     "password": {
       "ALLOW": {
-        "OWNER": "RU"
+        "OWNER": ""
       }
     },
     "firstname": {

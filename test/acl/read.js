@@ -10,13 +10,21 @@ const userAcl = loader({path: __dirname + '/../fixtures/acl.json'})
 const userFixture = require('./../fixtures/user.json')
 const testAcl = acl({
   collection: User,
-  list: userAcl
+  acl: userAcl
 })
 
 describe('ACL', function() {
 
   before(function(done) {
-    rolesFixture(done)
+    rolesFixture(function(err) {
+      if (err) {
+        return done(err)
+      }
+
+      roles.load(function(err) {
+        done(err)
+      })
+    })
   })
 
   describe('read', function() {
@@ -51,7 +59,6 @@ describe('ACL', function() {
         'name': 'eliias',
         'description': 'Hey, ich bin der Hannes.',
         'email': 'hannes@impossiblearts.com',
-        'password': '[&dXN%cGZ#pP3&j',
         'firstname': 'Hannes',
         'lastname': 'Moser',
         'location': [

@@ -1,5 +1,4 @@
 import _ from 'lodash'
-//import mongoose from 'mongoose'
 import roles from './roles'
 
 /**
@@ -11,10 +10,10 @@ export default function acl(spec) {
   const ALLOW = 'ALLOW'
   const DENY = 'DENY'
   const {collection} = spec
-  let {list} = spec
+  let {acl} = spec
   let o = {}
 
-  list = list.loadSync()
+  acl = acl.loadSync()
 
   /**
    * Get all keys from collection
@@ -42,10 +41,10 @@ export default function acl(spec) {
    * @returns {[String]}
    */
   function path(allKeys, path, type, role, privilege) {
-    if (list.fields.hasOwnProperty(path)) {
-      if (list.fields[path].hasOwnProperty(type)) {
-        if (list.fields[path][type][role.name]
-          && list.fields[path][type][role.name].indexOf(privilege) !== -1
+    if (acl.fields.hasOwnProperty(path)) {
+      if (acl.fields[path].hasOwnProperty(type)) {
+        if (acl.fields[path][type][role.name]
+          && acl.fields[path][type][role.name].indexOf(privilege) !== -1
         ) {
           if (path === WILDCARD) {
             return allKeys

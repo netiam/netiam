@@ -10,7 +10,7 @@ const userAcl = loader({path: path.join(__dirname, '../fixtures/acl.json')})
 const userFixture = require('./../fixtures/user.json')
 const testAcl = acl({
   collection: User,
-  list: userAcl
+  acl: userAcl
 })
 
 describe('ACL', function() {
@@ -36,7 +36,6 @@ describe('ACL', function() {
     it('should check if user owns resource', function() {
       let assert = asserts.owner('email', 'hannes@impossiblearts.com')
       assert(testAcl, userFixture, roles.get('USER')).should.eql([
-        'password',
         'created',
         'modified'
       ])

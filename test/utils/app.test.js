@@ -1,10 +1,12 @@
 import express from 'express'
 import bodyParser from 'body-parser'
-
-const app = express()
-const server = require('http').createServer(app)
+import http from 'http'
+import passport from 'passport'
 
 export default function(opts) {
+  const app = express()
+  const server = http.createServer(app)
+
   opts = Object.assign({
     port: 3001
   }, opts)
@@ -13,6 +15,7 @@ export default function(opts) {
 
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded({extended: true}))
+  app.use(passport.initialize())
 
   // Error handling
   app.use(function(err, req, res, next) {

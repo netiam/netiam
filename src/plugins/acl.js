@@ -1,7 +1,6 @@
 import _ from 'lodash'
 import acl from '../rest/acl'
 import roles from '../rest/roles'
-import Role from '../rest/models/role'
 
 function request(opts) {
   const list = acl(opts)

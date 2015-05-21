@@ -10,7 +10,10 @@ function response(map) {
 
   function mapDocument(document) {
     const doc = {}
-    document = document.toObject()
+
+    if (_.isFunction(document.toObject)) {
+      document = document.toObject()
+    }
 
     _.forEach(document, function(val, key) {
       key = map[key] || key
@@ -28,7 +31,6 @@ function response(map) {
 
     if (_.isObject(res.body)) {
       res.body = mapDocument(res.body)
-      return
     }
   }
 
