@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-export default function restPlugin(schema) {
+export default function(schema) {
 
   if (!schema.get('created')) {
     schema.add({created: Date})
