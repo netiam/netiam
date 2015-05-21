@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import Role from 'models/role'
+import Role from './models/role'
 
 const documents = [
   {
