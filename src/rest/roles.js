@@ -122,13 +122,14 @@ function normalize(role) {
  * @returns {Role}
  */
 function get(role) {
-  role = normalize(role)
-
-  if (!role) {
-    throw new Error('Role does not exist')
+  try {
+    return normalize(role)
+  } catch (err) {
+    // FIXME this should not fail silenty
+    return getByName('guest')
   }
 
-  return role
+  return getByName('guest')
 }
 
 /**
