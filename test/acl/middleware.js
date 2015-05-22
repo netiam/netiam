@@ -145,21 +145,6 @@ describe('ACL', function() {
         })
     })
 
-    it('should deny access to user document', function(done) {
-      request(app)
-        .get('/auth-users/' + userId)
-        .set('Accept', 'application/json')
-        .expect(401)
-        .expect('Content-Type', /json/)
-        .end(function(err) {
-          if (err) {
-            return done(err)
-          }
-
-          done()
-        })
-    })
-
   })
 
 })
