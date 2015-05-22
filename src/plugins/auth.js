@@ -53,7 +53,7 @@ export default function(opts) {
   }
 
   passport.serializeUser(function(user, done) {
-    done(null, user.id)
+    done(null, user._id)
   })
   passport.deserializeUser(function(id, done) {
     collection.findById(id, function(err, user) {
@@ -78,7 +78,7 @@ export default function(opts) {
           }
 
           if (!user) {
-            return reject(new RESTError('Cannot find user', 401, 'Unauthorized'))
+            return reject(new RESTError('Unauthorized', 401, 'Please login first'))
           }
 
           req.logIn(user, function(err) {

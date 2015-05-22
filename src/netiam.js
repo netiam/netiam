@@ -22,7 +22,8 @@ export default function netiam() {
         if (err.nonce) {
           return
         }
-
+        console.log(err)
+        console.log(err.stack)
         res
           .status(err.code || 500)
           .json({

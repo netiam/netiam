@@ -80,6 +80,10 @@ export default function acl(spec) {
    * @returns {[Object]}
    */
   function hierarchy(role) {
+    if (!role) {
+      return []
+    }
+
     if (!role.parent) {
       return [roles.get(role)]
     }
