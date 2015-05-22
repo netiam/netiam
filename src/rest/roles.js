@@ -6,7 +6,8 @@ const names = {}
 let roles = []
 let isLoaded = false
 
-function load(cb) {
+function load(cb = _.noop) {
+
   Role.find({}, function(err, documents) {
     if (err) {
       return cb(err)
@@ -23,6 +24,8 @@ function load(cb) {
     cb()
   })
 }
+
+load()
 
 function getByName(role) {
   if (!isLoaded) {
