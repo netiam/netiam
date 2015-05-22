@@ -4,7 +4,6 @@ import {
   BasicStrategy,
   DigestStrategy
   } from 'passport-http'
-import RESTError from '../rest/error'
 
 export default function(opts) {
   const spec = {}
@@ -78,10 +77,10 @@ export default function(opts) {
           }
 
           if (!user) {
-            return reject(new RESTError('Unauthorized', 401, 'Please login first'))
+            return resolve()
           }
 
-          req.logIn(user, function(err) {
+          req.login(user, function(err) {
             if (err) {
               return reject(err)
             }
