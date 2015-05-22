@@ -13,6 +13,14 @@ export default function acl(spec) {
   let {acl} = spec
   let o = {}
 
+  if (!collection) {
+    throw new Error('You must provide a valid "collection"')
+  }
+
+  if (!acl) {
+    throw new Error('You must provide a valid "acl"')
+  }
+
   acl = acl.loadSync()
 
   /**
@@ -28,7 +36,17 @@ export default function acl(spec) {
    * @returns {[String]}
    */
   function refs() {
-    return collection.refs()
+    const refs = {}
+
+    if (collection.schema && _.isObject(collection.schema.paths)) {
+      _.forEach(collection.schema.paths, function(path, key) {
+        if (path.options && path.options.ref) {
+          refs[key] = path.options.ref
+        }
+      })
+    }
+
+    return refs
   }
 
   /**
@@ -111,7 +129,7 @@ export default function acl(spec) {
     })
 
     // expand populated paths
-    allRefs.forEach(function() {
+    _.forEach(allRefs, function(/*ref, path*/) {
       //const path = collection.schema.path(ref)
       //const modelName = path.options.ref
       //const model = mongoose.models[modelName]
