@@ -14,7 +14,7 @@ module.exports = function(grunt) {
 
     babel: {
       options: {
-        sourceMap: true,
+        sourceMap: false,
         stage: 1
       },
       build: {
@@ -33,6 +33,10 @@ module.exports = function(grunt) {
       build: ['<%= config.dist %>']
     },
 
+    concurrent: {
+      build: ['eslint', 'babel']
+    },
+
     eslint: {
       target: ['<%= config.src %>']
     },
@@ -40,7 +44,7 @@ module.exports = function(grunt) {
     watch: {
       scripts: {
         files: ['<%= config.src %>/**/*.js'],
-        tasks: ['eslint', 'babel']
+        tasks: ['concurrent:build']
       }
     }
 
