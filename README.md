@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/netiam/netiam.svg)](https://travis-ci.org/netiam/netiam)
 [![Dependencies](https://david-dm.org/netiam/netiam.svg)](https://david-dm.org/netiam/netiam)
+[![Code Climate](https://codeclimate.com/github/netiam/netiam/badges/gpa.svg)](https://codeclimate.com/github/netiam/netiam)
 
 > A pure REST library
 
