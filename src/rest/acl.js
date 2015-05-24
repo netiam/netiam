@@ -5,7 +5,7 @@ import roles from './roles'
  * ACL
  * @param {Object} spec
  */
-export default function acl(spec) {
+export default function(spec) {
   const WILDCARD = '*'
   const ALLOW = 'ALLOW'
   const DENY = 'DENY'
@@ -36,38 +36,38 @@ export default function acl(spec) {
    * @returns {[String]}
    */
   function refs() {
-    const refs = {}
+    const paths = {}
 
     if (collection.schema && _.isObject(collection.schema.paths)) {
       _.forEach(collection.schema.paths, function(path, key) {
         if (path.options && path.options.ref) {
-          refs[key] = path.options.ref
+          paths[key] = path.options.ref
         }
       })
     }
 
-    return refs
+    return paths
   }
 
   /**
    * Check path for allowed keys, can also handle wildcard entries
    * @param {[String]} allKeys
-   * @param {String} path
+   * @param {String} modelPath
    * @param {String} type
    * @param {Role} role
    * @param {String} privilege
    * @returns {[String]}
    */
-  function path(allKeys, path, type, role, privilege) {
-    if (acl.fields.hasOwnProperty(path)) {
-      if (acl.fields[path].hasOwnProperty(type)) {
-        if (acl.fields[path][type][role.name]
-          && acl.fields[path][type][role.name].indexOf(privilege) !== -1
+  function path(allKeys, modelPath, type, role, privilege) {
+    if (acl.fields.hasOwnProperty(modelPath)) {
+      if (acl.fields[modelPath].hasOwnProperty(type)) {
+        if (acl.fields[modelPath][type][role.name] &&
+          acl.fields[modelPath][type][role.name].indexOf(privilege) !== -1
         ) {
-          if (path === WILDCARD) {
+          if (modelPath === WILDCARD) {
             return allKeys
           }
-          return [path]
+          return [modelPath]
         }
       }
     }

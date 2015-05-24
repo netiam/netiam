@@ -82,17 +82,17 @@ export default function resource(spec) {
    *  'owner': ':user'
    * }
    *
-   * @param {Object} params
+   * @param {Object} parameters
    * @returns {Object}
    * @private
    */
-  function params(params) {
+  function params(parameters) {
     map = _.clone(map)
 
     return _.forOwn(_.clone(map), function(val, key, obj) {
       // handle route params
       if (val.charAt(0) === ':') {
-        obj[key] = params[val.substring(1)]
+        obj[key] = parameters[val.substring(1)]
         return
       }
 

@@ -12,20 +12,20 @@ export default function(schema) {
   }
 
   function refs() {
-    const refs = []
+    const paths = []
 
     schema.eachPath(function(name, path) {
       let caster = path.caster
       let opt = path.options
 
       if (caster && caster._opts && caster._opts.ref) {
-        refs.push(name)
+        paths.push(name)
       } else if (opt && opt.ref) {
-        refs.push(name)
+        paths.push(name)
       }
     })
 
-    return refs
+    return paths
   }
 
   /**

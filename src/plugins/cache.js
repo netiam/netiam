@@ -64,8 +64,8 @@ function request(opts) {
     return new Promise((resolve, reject) => {
 
       // no cache?
-      if (req.query[opts.passthrough.param]
-        && req.query[opts.passthrough.param] === opts.passthrough.secret) {
+      if (req.query[opts.passthrough.param] &&
+        req.query[opts.passthrough.param] === opts.passthrough.secret) {
         return
       }
 
