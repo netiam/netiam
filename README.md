@@ -91,18 +91,18 @@ objects.
 ```js
 const path = api()
     .rest({…})
-    .json();
+    .json()
 
-app.get( '/foo', path );
+app.get('/foo', path)
 ```
 
 ### Plugin example
 
 ```js
-export default function data( data ) {
-    return function( req, res ) {
+export default function data(data) {
+    return function(req, res) {
         res.body = data;
-    };
+    }
 }
 
 ```
@@ -114,12 +114,12 @@ app.get(
     '/users',
     api()
         .auth(…)
-        .get( '/resource/:id' )
+        .get('/resource/:id')
         .rest(…)
         .transform(…)
         .data(…)
         .acl(…)
-        .json( {…} )
+        .json({…})
 )
 ```
 
