@@ -8,7 +8,7 @@ import db from '../utils/db.test'
 import rolesFixture from '../utils/roles'
 import userFixture from '../fixtures/user.json'
 
-const userAcl = loader({path: path.join(__dirname, '../fixtures/acl.json')})
+const acl = loader({path: path.join(__dirname, '../fixtures/acl.json')})
 
 describe('ACL', function() {
   const app = require('../utils/app.test')({port: 3001})
@@ -32,7 +32,7 @@ describe('ACL', function() {
         .map.res({_id: 'id'})
         .acl.res({
           collection: User,
-          acl: userAcl
+          acl: acl
         })
         .json()
     )
@@ -45,7 +45,7 @@ describe('ACL', function() {
         .map.res({_id: 'id'})
         .acl.res({
           collection: User,
-          acl: userAcl
+          acl: acl
         })
         .json()
     )
@@ -81,9 +81,11 @@ describe('ACL', function() {
     let userId
 
     it('should create a user', function(done) {
+      const userWithRole = Object.assign(userFixture, {role: roles.get('user')})
+
       request(app)
         .post('/users')
-        .send(userFixture)
+        .send(userWithRole)
         .set('Accept', 'application/json')
         .expect(201)
         .expect('Content-Type', /json/)
