@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import acl from '../rest/acl'
 import roles from '../rest/roles'
+import RESTError from '../rest/error'
 
 function request(opts) {
   const list = acl(opts)
@@ -10,6 +11,10 @@ function request(opts) {
 
     // create
     if (req.method === 'POST' && req.is('json')) {
+      if (!list.resource(role, 'C')) {
+        throw new RESTError('Forbidden', 403)
+      }
+
       if (_.isArray(req.body)) {
         req.body = _.map(function(node) {
           return list.filter(node, role, 'C')
@@ -25,6 +30,10 @@ function request(opts) {
 
     // update
     if (req.method === 'PUT' && req.is('json')) {
+      if (!list.resource(role, 'U')) {
+        throw new RESTError('Forbidden', 403)
+      }
+
       if (_.isArray(req.body)) {
         req.body = _.map(function(node) {
           return list.filter(node, role, 'U')
@@ -44,6 +53,10 @@ function response(opts) {
 
   return function(req, res) {
     const role = roles.get(req.user ? req.user.role : null)
+
+    if (!list.resource(role, 'R')) {
+      throw new RESTError('Forbidden', 403)
+    }
 
     if (_.isArray(res.body)) {
       res.body =

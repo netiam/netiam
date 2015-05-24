@@ -2,10 +2,8 @@
   "resource": {
     "ALLOW": {
       "ADMIN": "CRUD",
-      "USER": "R"
-    },
-    "DENY": {
-      "GUEST": "CRUD"
+      "USER": "R",
+      "GUEST": "R"
     }
   },
   "fields": {

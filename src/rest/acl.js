@@ -188,8 +188,59 @@ export default function acl(spec) {
     )
   }
 
+  /**
+   * Is role with privilege allowed to access resource
+   * @param {Object} role
+   * @param {String} [privilege='R']
+   * @returns {Boolean} True if allowed, otherwise false
+   */
+  function resource(role, privilege = 'R') {
+    if (!acl.resource) {
+      return false
+    }
+
+    if (!acl.resource[ALLOW]) {
+      return false
+    }
+
+    let isAllowed = false
+
+    role = roles.get(role)
+
+    // wildcard allow
+    if (acl.resource[ALLOW] && acl.resource[ALLOW][WILDCARD]) {
+      if (acl.resource[ALLOW][WILDCARD].indexOf(privilege) !== -1) {
+        isAllowed = true
+      }
+    }
+
+    // allow
+    if (acl.resource[ALLOW] && acl.resource[ALLOW][role.name]) {
+      if (acl.resource[ALLOW][role.name].indexOf(privilege) !== -1) {
+        isAllowed = true
+      }
+    }
+
+    // wildcard deny
+    if (acl.resource[DENY] && acl.resource[DENY][WILDCARD]) {
+      if (acl.resource[DENY][WILDCARD].indexOf(privilege) !== -1) {
+        isAllowed = false
+      }
+    }
+
+    // deny
+    if (acl.resource[DENY] && acl.resource[DENY][role.name]) {
+      if (acl.resource[DENY][role.name].indexOf(privilege) !== -1) {
+        isAllowed = false
+      }
+    }
+
+    return isAllowed
+  }
+
   o.allowed = allowed
   o.filter = filter
+  o.resource = resource
 
   return Object.freeze(o)
 }
