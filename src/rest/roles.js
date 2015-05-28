@@ -7,6 +7,9 @@ let roles = []
 let isLoaded = false
 
 function load(cb = _.noop) {
+  if (isLoaded) {
+    cb()
+  }
 
   Role.find({}, function(err, documents) {
     if (err) {
@@ -24,8 +27,6 @@ function load(cb = _.noop) {
     cb()
   })
 }
-
-load()
 
 function getByName(role) {
   if (!isLoaded) {
@@ -128,7 +129,6 @@ function get(role) {
   try {
     return normalize(role)
   } catch (err) {
-    // FIXME this should not fail silenty
     return getByName('guest')
   }
 

@@ -111,6 +111,11 @@ export default function(spec) {
       return allKeys
     }
 
+    // ALLOW wildcard
+    allowedKeys = allowedKeys.concat(
+      path(allKeys, WILDCARD, ALLOW, role, privilege)
+    )
+
     // ALLOW statements
     allKeys.forEach(function(key) {
       allowedKeys = allowedKeys.concat(
@@ -124,6 +129,11 @@ export default function(spec) {
         assert(o, resource, role, privilege)
       )
     })
+
+    // ALLOW wildcard
+    deniedKeys = deniedKeys.concat(
+      path(allKeys, WILDCARD, DENY, role, privilege)
+    )
 
     // DENY statements
     allKeys.forEach(function(key) {
