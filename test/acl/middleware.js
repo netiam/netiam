@@ -2,10 +2,11 @@ import path from 'path'
 import request from 'supertest'
 import User from '../models/user'
 import api from '../../src/netiam'
-import loader from '../../src/acl/loader/file'
+import fixtures from '../fixtures'
 import roles from '../../src/rest/roles'
+import Role from '../../src/rest/models/role'
+import loader from '../../src/acl/loader/file'
 import db from '../utils/db.test'
-import rolesFixture from '../utils/roles'
 import userFixture from '../fixtures/user.json'
 
 const acl = loader({path: path.join(__dirname, '../fixtures/acl.json')})
@@ -50,22 +51,20 @@ describe('ACL', function() {
         .json()
     )
 
-    db.connection.db.dropDatabase(function(err) {
+    fixtures(function(err) {
       if (err) {
         return done(err)
       }
 
-      rolesFixture(function(err) {
+      Role.find({}, function(err, docs) {
         if (err) {
           return done(err)
         }
 
-        roles.load(function(err) {
-          done(err)
-        })
+        roles.set(docs)
+        done()
       })
     })
-
   })
 
   after(function(done) {
