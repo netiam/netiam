@@ -1,5 +1,8 @@
 import _ from 'lodash'
+import dbg from 'debug'
 import plugins from './plugins/index'
+
+const debug = dbg('netiam')
 
 export default function netiam() {
   const stack = []
@@ -22,6 +25,8 @@ export default function netiam() {
         if (err.nonce) {
           return
         }
+
+        debug(err)
 
         res
           .status(err.code || 500)

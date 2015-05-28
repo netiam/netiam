@@ -259,7 +259,7 @@ export default function resource(spec) {
           return reject(new RESTError(err, 500))
         }
         if (!document) {
-          return reject(new RESTError('Document Not Found', 404))
+          return reject(new RESTError('Document not found', 404))
         }
 
         document

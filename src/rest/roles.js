@@ -1,31 +1,18 @@
 import _ from 'lodash'
-import Role from './models/role'
 
 const ids = {}
 const names = {}
 let roles = []
 let isLoaded = false
 
-function load(cb = _.noop) {
-  if (isLoaded) {
-    cb()
-  }
-
-  Role.find({}, function(err, documents) {
-    if (err) {
-      return cb(err)
-    }
-
-    roles = roles.concat(documents)
-    roles.forEach(function(role) {
-      ids[role.id] = role
-      names[role.name] = role
-    })
-
-    isLoaded = true
-
-    cb()
+function set(documents) {
+  roles = documents
+  roles.forEach(function(role) {
+    ids[role.id] = role
+    names[role.name] = role
   })
+
+  isLoaded = true
 }
 
 function getByName(role) {
@@ -131,25 +118,18 @@ function get(role) {
   } catch (err) {
     return getByName('guest')
   }
-
-  return getByName('guest')
 }
 
 /**
  * Add role
- * @param {String} name
- * @param {String} [parent]
+ * @param {*} role
  * @returns {Role}
  */
-function add(name, parent) {
-  let role = new Role({
-    name: name,
-    parent: parent ? get(parent) : null
-  })
+function add(role) {
+  roles.push(role)
+  names[role.name] = role
 
-  names[role] = role
-
-  return role
+  return roles.get(role)
 }
 
 /**
@@ -165,5 +145,5 @@ export default Object.freeze({
   add,
   has,
   get,
-  load
+  set
 })

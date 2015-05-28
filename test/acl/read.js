@@ -1,10 +1,11 @@
 import filter from './../utils/filter'
 import acl from '../../src/rest/acl'
-import roles from '../../src/rest/roles'
 import asserts from '../../src/rest/asserts'
 import User from '../models/user'
 import loader from '../../src/acl/loader/file'
-import rolesFixture from '../utils/roles'
+import fixtures from '../fixtures'
+import roles from '../../src/rest/roles'
+import Role from '../../src/rest/models/role'
 
 const userAcl = loader({path: __dirname + '/../fixtures/acl.json'})
 const userFixture = require('./../fixtures/user.json')
@@ -16,13 +17,18 @@ const testAcl = acl({
 describe('ACL', function() {
 
   before(function(done) {
-    rolesFixture(function(err) {
+    fixtures(function(err) {
       if (err) {
         return done(err)
       }
 
-      roles.load(function(err) {
-        done(err)
+      Role.find({}, function(err, docs) {
+        if (err) {
+          return done(err)
+        }
+
+        roles.set(docs)
+        done()
       })
     })
   })

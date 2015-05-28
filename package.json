@@ -16,11 +16,12 @@
     "bcrypt": "^0.8.3",
     "busboy": "^0.2.9",
     "d3": "^3.5.5",
+    "debug": "^2.2.0",
     "jsdom": "^5.4.1",
     "lodash": "^3.8.0",
     "mmmagic": "^0.3.14",
     "mongoose": "^4.0.3",
-    "passport": "^0.2.1",
+    "passport": "^0.2.2",
     "passport-http": "^0.2.2",
     "passport-local": "^1.0.0"
   },
@@ -30,7 +31,7 @@
     "body-parser": "^1.10.1",
     "codeclimate-test-reporter": "^0.0.4",
     "eslint": "^0.20.0",
-    "express": "^4.10.7",
+    "express": "^4.12.4",
     "grunt": "^0.4.5",
     "grunt-babel": "^5.0.0",
     "grunt-cli": "^0.1.13",
@@ -42,6 +43,7 @@
     "load-grunt-tasks": "^3.1.0",
     "mkdirp": "^0.5.0",
     "mocha": "^2.0.1",
+    "pow-mongoose-fixtures": "^0.3.0",
     "semantic-release": "^3.3.1",
     "should": "^5.2.0",
     "supertest": "^0.15.0",
@@ -67,7 +69,7 @@
   "homepage": "https://github.com/netiam/netiam",
   "engines": {
     "node": ">=v0.12",
-    "iojs": ">=v1",
+    "iojs": ">=v2",
     "npm": ">=2.1.12"
   }
 }
