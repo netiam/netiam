@@ -117,4 +117,3 @@ export default Object.freeze({
   req: request,
   res: response
 })
-
