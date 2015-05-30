@@ -121,6 +121,35 @@ export default function resource(spec) {
     return q
   }
 
+  function listHandle(q, query, resolve, reject) {
+    // populate
+    if (query.expand.length > 0) {
+      q = q.populate(query.expand.join(' '))
+    }
+
+    // sort
+    q = q.sort(query.sort)
+
+    // pagination
+    q = q.skip(query.offset)
+    if (query.limit && query.limit !== -1) {
+      q = q.limit(query.limit)
+    }
+
+    // execute
+    q.exec(function(err, documents) {
+      if (err) {
+        return reject(error.internalServerError(err.message))
+      }
+
+      if (!_.isArray(documents)) {
+        return resolve([])
+      }
+
+      resolve(documents)
+    })
+  }
+
   /**
    * Fetches database for a list of documents. As all public resource methods,
    * this one provides several predefined parameters someone can use to
@@ -168,22 +197,11 @@ export default function resource(spec) {
             // select only related
             q = q.where('_id').in(doc[relationshipField])
 
-            // extensions
-            q = queryExtension(q, query)
-
-            // execute
-            q.exec(function(err, documents) {
-              if (err) {
-                return reject(error.internalServerError(err.message))
-              }
-
-              if (!_.isArray(documents)) {
-                return resolve([])
-              }
-
-              resolve(documents)
-            })
+            // handle
+            listHandle(q, query, resolve, reject)
           })
+
+        return
       }
 
       if (relationship === ONE_TO_MANY) {
@@ -192,23 +210,15 @@ export default function resource(spec) {
         // query
         let q = collection.find(f.toObject())
 
-        // extensions
-        q = queryExtension(q, query)
+        // handle
+        listHandle(q, query, resolve, reject)
 
-        // execute
-        q.exec(function(err, documents) {
-          if (err) {
-            return reject(error.internalServerError(err.message))
-          }
-
-          if (!_.isArray(documents)) {
-            return resolve([])
-          }
-
-          resolve(documents)
-        })
+        return
       }
 
+      reject(error.internalServerError(
+        'Cannot handle relationships, is "map" options set?'
+      ))
     })
   }
 
@@ -354,8 +364,7 @@ export default function resource(spec) {
       let query = normalize(req.query)
 
       // query
-      let qo = {}
-      qo[idField] = req.params[idParam]
+      let qo = {[idField]: req.params[idParam]}
 
       // Build query
       let q = collection.findOne(qo)
@@ -401,6 +410,7 @@ export default function resource(spec) {
 
       // Query Options
       qo[idField] = req.params[idParam]
+
       collection.findOneAndRemove(qo, function(err, documents) {
         if (err) {
           return reject(error.internalServerError(err.message))
