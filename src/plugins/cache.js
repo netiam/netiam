@@ -14,6 +14,12 @@ const defaults = {
   languages: false
 }
 
+function process(obj) {
+  return _.reduce(obj, function(result, item, key) {
+    return result + ':' + key + '=' + item
+  }, '|')
+}
+
 /**
  * Create request hash (cache identifier)
  * @param {Object} req
@@ -30,17 +36,13 @@ function hash(req, opts = {}) {
   }
 
   // query
-  if (req.query && opts.query) {
-    str += _.reduce(req.query, function(result, item, key) {
-      return result + ':' + key + '=' + item
-    }, '|')
+  if (opts.query) {
+    str += process(req.query)
   }
 
   // params
-  if (req.params && opts.params) {
-    str += _.reduce(req.params, function(result, item, key) {
-      return result + ':' + key + '=' + item
-    }, '|')
+  if (opts.params) {
+    str += process(req.params)
   }
 
   // language
