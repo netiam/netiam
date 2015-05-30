@@ -9,8 +9,8 @@ export default function resource(spec) {
   const {collection} = spec
   const {relationshipField} = spec
   const {relationshipCollection} = spec
+  const {map} = spec
   let {relationship} = spec
-  let {map} = spec
   let {idParam} = spec
   let {idField} = spec
 
@@ -89,9 +89,9 @@ export default function resource(spec) {
    * @private
    */
   function params(parameters) {
-    map = _.clone(map)
+    const newMap = _.clone(map)
 
-    return _.forOwn(_.clone(map), function(val, key, obj) {
+    return _.forOwn(newMap, function(val, key, obj) {
       // handle route params
       if (val.charAt(0) === ':') {
         obj[key] = parameters[val.substring(1)]
@@ -101,24 +101,6 @@ export default function resource(spec) {
       // Static value
       obj[key] = val
     })
-  }
-
-  function queryExtension(q, query) {
-    // populate
-    if (query.expand.length > 0) {
-      q = q.populate(query.expand.join(' '))
-    }
-
-    // sort
-    q = q.sort(query.sort)
-
-    // pagination
-    q = q.skip(query.offset)
-    if (query.limit && query.limit !== -1) {
-      q = q.limit(query.limit)
-    }
-
-    return q
   }
 
   function listHandle(q, query, resolve, reject) {
@@ -208,7 +190,7 @@ export default function resource(spec) {
         f = f.where(params(req.params))
 
         // query
-        let q = collection.find(f.toObject())
+        const q = collection.find(f.toObject())
 
         // handle
         listHandle(q, query, resolve, reject)
@@ -270,10 +252,10 @@ export default function resource(spec) {
             }
 
             // query options
-            let qo = {[idField]: req.params[idParam]}
+            const qo = {[idField]: req.params[idParam]}
 
             // query
-            let q = relationshipCollection.findOne(qo)
+            const q = relationshipCollection.findOne(qo)
 
             // handle
             readHandle(q, query, resolve, reject)
@@ -284,10 +266,10 @@ export default function resource(spec) {
 
       if (relationship === ONE_TO_MANY) {
         // query options
-        let qo = {[idField]: req.params[idParam]}
+        const qo = {[idField]: req.params[idParam]}
 
         // query
-        let q = collection.findOne(qo)
+        const q = collection.findOne(qo)
 
         // handle
         return readHandle(q, query, resolve, reject)
@@ -305,20 +287,7 @@ export default function resource(spec) {
   function create(req) {
     return new Promise((resolve, reject) => {
       // normalize
-      let query = normalize(req.query)
-
-      // handle relationship
-      if (map) {
-        let key = Object.keys(map)[0]
-        if (relationship === ONE_TO_MANY && map) {
-          req.body[key] = req.params[map[key].substr(1)]
-        }
-
-        if (relationship === MANY_TO_ONE && map) {
-          reject(new Error('MANY_TO_ONE relationships are not supported'))
-        }
-
-      }
+      const query = normalize(req.query)
 
       // create model
       collection.create(req.body, function(err, documents) {
@@ -350,13 +319,13 @@ export default function resource(spec) {
   function update(req) {
     return new Promise((resolve, reject) => {
       // normalize
-      let query = normalize(req.query)
+      const query = normalize(req.query)
 
       // query
-      let qo = {[idField]: req.params[idParam]}
+      const qo = {[idField]: req.params[idParam]}
 
       // Build query
-      let q = collection.findOne(qo)
+      const q = collection.findOne(qo)
 
       // Execute query
       q.exec(function(err, document) {
@@ -395,10 +364,8 @@ export default function resource(spec) {
    */
   function remove(req) {
     return new Promise((resolve, reject) => {
-      let qo = {}
-
-      // Query Options
-      qo[idField] = req.params[idParam]
+      // query options
+      const qo = {[idField]: req.params[idParam]}
 
       collection.findOneAndRemove(qo, function(err, documents) {
         if (err) {
