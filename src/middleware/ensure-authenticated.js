@@ -1,6 +1,6 @@
 import * as error from '../rest/error'
 
-export default function ensureAuthenticated(req, res, next) {
+export default function(req, res, next) {
   if (req.isAuthenticated && req.isAuthenticated()) {
     return next()
   }

@@ -47,7 +47,7 @@ export default function(config) {
       loaded = true
 
       return list
-    } catch(e) {
+    } catch (e) {
       throw new Error('Cannot parse ACL data')
     }
   }
