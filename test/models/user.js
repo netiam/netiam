@@ -1,9 +1,12 @@
 import mongoose, {Schema} from 'mongoose'
-import restPlugin from '../../src/rest/model'
-import authPlugin from '../../src/rest/schema/plugins/auth'
+import {
+  auth,
+  created,
+  merge,
+  modified
+  } from '../../src/rest/schema/plugins'
 
-// Define user schema
-let schema = new Schema({
+const schema = new Schema({
   name: String,
   description: String,
   email: {
@@ -24,9 +27,9 @@ let schema = new Schema({
   }
 })
 
-// Apply plugin(s)
-schema.plugin(restPlugin, {})
-schema.plugin(authPlugin, {})
+schema.plugin(auth)
+schema.plugin(created)
+schema.plugin(merge)
+schema.plugin(modified)
 
-// Create model class and export
 export default mongoose.model('User', schema)
