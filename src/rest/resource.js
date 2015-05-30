@@ -215,10 +215,25 @@ export default function resource(spec) {
 
         return
       }
+    })
+  }
 
-      reject(error.internalServerError(
-        'Cannot handle relationships, is "map" options set?'
-      ))
+  function readHandle(q, query, resolve, reject) {
+    // populate
+    if (query.expand.length > 0) {
+      q = q.populate(query.expand.join(' '))
+    }
+
+    // execute
+    q.exec(function(err, document) {
+      if (err) {
+        return reject(error.internalServerError(err.message))
+      }
+      if (!document) {
+        return reject(error.notFound('Document not found'))
+      }
+
+      resolve(document)
     })
   }
 
@@ -260,23 +275,11 @@ export default function resource(spec) {
             // query
             let q = relationshipCollection.findOne(qo)
 
-            // populate
-            if (query.expand.length > 0) {
-              q = q.populate(query.expand.join(' '))
-            }
-
-            // execute
-            q.exec(function(err, document) {
-              if (err) {
-                return reject(error.internalServerError(err.message))
-              }
-              if (!document) {
-                return reject(error.notFound('Document not found'))
-              }
-
-              resolve(document)
-            })
+            // handle
+            readHandle(q, query, resolve, reject)
           })
+
+        return
       }
 
       if (relationship === ONE_TO_MANY) {
@@ -286,22 +289,8 @@ export default function resource(spec) {
         // query
         let q = collection.findOne(qo)
 
-        // populate
-        if (query.expand.length > 0) {
-          q = q.populate(query.expand.join(' '))
-        }
-
-        // execute
-        q.exec(function(err, document) {
-          if (err) {
-            return reject(error.internalServerError(err.message))
-          }
-          if (!document) {
-            return reject(error.notFound('Document not found'))
-          }
-
-          resolve(document)
-        })
+        // handle
+        return readHandle(q, query, resolve, reject)
       }
 
     })
