@@ -6,11 +6,13 @@ export const MANY_TO_ONE = Symbol('many-to-one')
 export const ONE_TO_MANY = Symbol('one-to-many')
 
 export default function resource(spec) {
-  let {collection} = spec
+  const {collection} = spec
+  const {relationshipField} = spec
+  const {relationshipCollection} = spec
+  let {relationship} = spec
+  let {map} = spec
   let {idParam} = spec
   let {idField} = spec
-  let {map} = spec
-  let {relationship} = spec
 
   idParam = idParam || 'id'
   idField = idField || '_id'
@@ -101,6 +103,24 @@ export default function resource(spec) {
     })
   }
 
+  function queryExtension(q, query) {
+    // populate
+    if (query.expand.length > 0) {
+      q = q.populate(query.expand.join(' '))
+    }
+
+    // sort
+    q = q.sort(query.sort)
+
+    // pagination
+    q = q.skip(query.offset)
+    if (query.limit && query.limit !== -1) {
+      q = q.limit(query.limit)
+    }
+
+    return q
+  }
+
   /**
    * Fetches database for a list of documents. As all public resource methods,
    * this one provides several predefined parameters someone can use to
@@ -116,40 +136,79 @@ export default function resource(spec) {
   function list(req) {
     return new Promise((resolve, reject) => {
       // normalize
-      let query = normalize(req.query)
+      const query = normalize(req.query)
 
       // filter
-      let f = filter(query.filter).where(params(req.params))
+      let f = filter(query.filter)
 
-      // query
-      let q = collection.find(f.toObject())
+      // handle relationships
+      if (relationship === MANY_TO_ONE &&
+        relationshipField &&
+        relationshipCollection &&
+        map) {
 
-      // populate
-      query.expand.forEach(function(field) {
-        q = q.populate(field)
-      })
+        const key = Object.keys(map)[0]
+        const val = req.params[map[key].substr(1)]
 
-      // sort
-      q = q.sort(query.sort)
+        collection
+          .findOne({[key]: val})
+          .select(relationshipField)
+          .exec(function(err, doc) {
+            if (err) {
+              return reject(err)
+            }
 
-      // pagination
-      q = q.skip(query.offset)
-      if (query.limit && query.limit !== -1) {
-        q = q.limit(query.limit)
+            if (!doc) {
+              return resolve([])
+            }
+
+            // query
+            let q = relationshipCollection.find(f.toObject())
+
+            // select only related
+            q = q.where('_id').in(doc[relationshipField])
+
+            // extensions
+            q = queryExtension(q, query)
+
+            // execute
+            q.exec(function(err, documents) {
+              if (err) {
+                return reject(new RESTError(err, 500))
+              }
+
+              if (!_.isArray(documents)) {
+                return resolve([])
+              }
+
+              resolve(documents)
+            })
+          })
       }
 
-      // execute
-      q.exec(function(err, documents) {
-        if (err) {
-          return reject(new RESTError(err, 500))
-        }
+      if (relationship === ONE_TO_MANY) {
+        f = f.where(params(req.params))
 
-        if (!_.isArray(documents)) {
-          return resolve([])
-        }
+        // query
+        let q = collection.find(f.toObject())
 
-        resolve(documents)
-      })
+        // extensions
+        q = queryExtension(q, query)
+
+        // execute
+        q.exec(function(err, documents) {
+          if (err) {
+            return reject(new RESTError(err, 500))
+          }
+
+          if (!_.isArray(documents)) {
+            return resolve([])
+          }
+
+          resolve(documents)
+        })
+      }
+
     })
   }
 
@@ -162,31 +221,79 @@ export default function resource(spec) {
   function read(req) {
     return new Promise((resolve, reject) => {
       // normalize
-      let query = normalize(req.query)
+      const query = normalize(req.query)
 
-      // query options
-      let qo = {}
-      qo[idField] = req.params[idParam]
+      // handle relationships
+      if (relationship === MANY_TO_ONE &&
+        relationshipField &&
+        relationshipCollection &&
+        map) {
 
-      // query
-      let q = collection.findOne(qo)
+        const key = Object.keys(map)[0]
+        const val = req.params[map[key].substr(1)]
 
-      // populate
-      query.expand.forEach(function(field) {
-        q = q.populate(field)
-      })
+        collection
+          .findOne({[key]: val})
+          .select(relationshipField)
+          .exec(function(err, doc) {
+            if (err) {
+              return reject(err)
+            }
 
-      // execute
-      q.exec(function(err, document) {
-        if (err) {
-          return reject(new RESTError(err, 500))
+            if (!doc) {
+              return reject(new RESTError('Document not found', 404, 'Document not found'))
+            }
+
+            // query options
+            let qo = {[idField]: req.params[idParam]}
+
+            // query
+            let q = relationshipCollection.findOne(qo)
+
+            // populate
+            if (query.expand.length > 0) {
+              q = q.populate(query.expand.join(' '))
+            }
+
+            // execute
+            q.exec(function(err, document) {
+              if (err) {
+                return reject(new RESTError(err, 500))
+              }
+              if (!document) {
+                return reject(new RESTError('Document not found', 404))
+              }
+
+              resolve(document)
+            })
+          })
+      }
+
+      if (relationship === ONE_TO_MANY) {
+        // query options
+        let qo = {[idField]: req.params[idParam]}
+
+        // query
+        let q = collection.findOne(qo)
+
+        // populate
+        if (query.expand.length > 0) {
+          q = q.populate(query.expand.join(' '))
         }
-        if (!document) {
-          return reject(new RESTError('Document not found', 404))
-        }
 
-        resolve(document)
-      })
+        // execute
+        q.exec(function(err, document) {
+          if (err) {
+            return reject(new RESTError(err, 500))
+          }
+          if (!document) {
+            return reject(new RESTError('Document not found', 404))
+          }
+
+          resolve(document)
+        })
+      }
+
     })
   }
 

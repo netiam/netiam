@@ -1,8 +1,8 @@
 import resource from '../rest/resource'
 
 export default function rest(opts) {
+  const restResource = resource(opts)
   let {idParam} = opts
-  let restResource = resource(opts)
 
   idParam = idParam || 'id'
 
