@@ -1,5 +1,5 @@
 import passport from 'passport'
-import RESTError from '../rest/error'
+import * as error from '../rest/error'
 
 export default function login(opts) {
   opts = Object.assign({
@@ -14,10 +14,10 @@ export default function login(opts) {
         {session: opts.session},
         function(err, user) {
           if (err) {
-            return reject(new RESTError(err.message, 500))
+            return reject(error.internalServerError(err.message))
           }
           if (!user) {
-            return reject(new RESTError('User not found', 404))
+            return reject(error.notFound('User not found'))
           }
 
           res.body = user

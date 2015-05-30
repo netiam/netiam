@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import filter from './odata/filter'
-import RESTError from './error'
+import * as error from './error'
 
 export const MANY_TO_ONE = Symbol('many-to-one')
 export const ONE_TO_MANY = Symbol('one-to-many')
@@ -174,7 +174,7 @@ export default function resource(spec) {
             // execute
             q.exec(function(err, documents) {
               if (err) {
-                return reject(new RESTError(err, 500))
+                return reject(error.internalServerError(err.message))
               }
 
               if (!_.isArray(documents)) {
@@ -198,7 +198,7 @@ export default function resource(spec) {
         // execute
         q.exec(function(err, documents) {
           if (err) {
-            return reject(new RESTError(err, 500))
+            return reject(error.internalServerError(err.message))
           }
 
           if (!_.isArray(documents)) {
@@ -241,7 +241,7 @@ export default function resource(spec) {
             }
 
             if (!doc) {
-              return reject(new RESTError('Document not found', 404, 'Document not found'))
+              return reject(error.notFound('Document not found'))
             }
 
             // query options
@@ -258,10 +258,10 @@ export default function resource(spec) {
             // execute
             q.exec(function(err, document) {
               if (err) {
-                return reject(new RESTError(err, 500))
+                return reject(error.internalServerError(err.message))
               }
               if (!document) {
-                return reject(new RESTError('Document not found', 404))
+                return reject(error.notFound('Document not found'))
               }
 
               resolve(document)
@@ -284,10 +284,10 @@ export default function resource(spec) {
         // execute
         q.exec(function(err, document) {
           if (err) {
-            return reject(new RESTError(err, 500))
+            return reject(error.internalServerError(err.message))
           }
           if (!document) {
-            return reject(new RESTError('Document not found', 404))
+            return reject(error.notFound('Document not found'))
           }
 
           resolve(document)
@@ -324,10 +324,10 @@ export default function resource(spec) {
       // create model
       collection.create(req.body, function(err, documents) {
         if (err) {
-          return reject(new RESTError(err, 500))
+          return reject(error.internalServerError(err.message))
         }
         if (!documents) {
-          return reject(new RESTError('Document could not be created', 500))
+          return reject(error.internalServerError('Document could not be created'))
         }
 
         // populate
@@ -363,17 +363,17 @@ export default function resource(spec) {
       // Execute query
       q.exec(function(err, document) {
         if (err) {
-          return reject(new RESTError(err, 500))
+          return reject(error.internalServerError(err.message))
         }
         if (!document) {
-          return reject(new RESTError('Document not found', 404))
+          return reject(error.notFound('Document not found'))
         }
 
         document
           .merge(req.body)
           .save(function(err) {
             if (err) {
-              return reject(new RESTError(err, 500))
+              return reject(error.internalServerError(err.message))
             }
 
             // Populate
@@ -403,10 +403,10 @@ export default function resource(spec) {
       qo[idField] = req.params[idParam]
       collection.findOneAndRemove(qo, function(err, documents) {
         if (err) {
-          return reject(new RESTError(err, 500))
+          return reject(error.internalServerError(err.message))
         }
         if (!documents) {
-          return reject(new RESTError('Document not found', 404))
+          return reject(error.notFound('Document not found'))
         }
 
         resolve()

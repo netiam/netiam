@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import acl from '../rest/acl'
 import roles from '../rest/roles'
-import RESTError from '../rest/error'
+import * as error from '../rest/error'
 
 function request(opts) {
   const list = acl(opts)
@@ -15,10 +15,8 @@ function request(opts) {
     // create
     if (req.method === 'POST' && req.is('json')) {
       if (!list.resource(req.user, role, 'C')) {
-        throw new RESTError(
-          `You have not enough privileges to create this resource as ${role.name}`,
-          403,
-          'Forbidden'
+        throw error.forbidden(
+          `You have not enough privileges to create this resource as ${role.name}`
         )
       }
 
@@ -38,10 +36,8 @@ function request(opts) {
     // update
     if (req.method === 'PUT' && req.is('json')) {
       if (!list.resource(req.user, role, 'U')) {
-        throw new RESTError(
-          `You have not enough privileges to modify this resource as ${role.name}`,
-          403,
-          'Forbidden'
+        throw error.forbidden(
+          `You have not enough privileges to modify this resource as ${role.name}`
         )
       }
 
@@ -69,10 +65,8 @@ function response(opts) {
     const role = roles.get(req.user ? req.user.role : null)
 
     if (!list.resource(req.user, role, 'R')) {
-      throw new RESTError(
-        `You have not enough privileges to read this resource as ${role.name}`,
-        403,
-        'Forbidden'
+      throw error.forbidden(
+        `You have not enough privileges to read this resource as ${role.name}`
       )
     }
 
