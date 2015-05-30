@@ -193,9 +193,7 @@ export default function resource(spec) {
         const q = collection.find(f.toObject())
 
         // handle
-        listHandle(q, query, resolve, reject)
-
-        return
+        return listHandle(q, query, resolve, reject)
       }
     })
   }
