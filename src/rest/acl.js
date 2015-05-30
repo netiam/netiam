@@ -1,10 +1,6 @@
 import _ from 'lodash'
 import roles from './roles'
 
-/**
- * ACL
- * @param {Object} spec
- */
 export default function(spec) {
   const WILDCARD = '*'
   const ALLOW = 'ALLOW'
