@@ -6,52 +6,32 @@ export default function rest(opts) {
 
   idParam = idParam || 'id'
 
-  return function(req, res) {
+  return async function(req, res) {
     const method = req.method
 
     if (method === 'GET' && !req.params[idParam]) {
-      return restResource
-        .list(req, res)
-        .then(function(documents) {
-          res.body = documents
-          res.status(200)
-        })
+      res.body = await restResource.list(req, res)
+      return res.status(200)
     }
 
     if (method === 'POST') {
-      return restResource
-        .create(req, res)
-        .then(function(document) {
-          res.body = document
-          res.status(201)
-        })
+      res.body = await restResource.create(req, res)
+      return res.status(201)
     }
 
     if (method === 'GET') {
-      return restResource
-        .read(req, res)
-        .then(function(document) {
-          res.body = document
-          res.status(200)
-        })
+      res.body = await restResource.read(req, res)
+      return res.status(200)
     }
 
     if (method === 'PUT') {
-      return restResource
-        .update(req, res)
-        .then(function(document) {
-          res.body = document
-          res.status(200)
-        })
+      res.body = await restResource.update(req, res)
+      return res.status(200)
     }
 
     if (method === 'DELETE') {
-      return restResource
-        .remove(req, res)
-        .then(function(document) {
-          res.body = document
-          res.status(204)
-        })
+      res.body = await restResource.remove(req, res)
+      return res.status(204)
     }
   }
 }

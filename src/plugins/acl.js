@@ -82,7 +82,6 @@ function response(opts) {
       res.body = list.filter(req.user, res.body, role, 'R', asserts)
     }
   }
-
 }
 
 export default Object.freeze({

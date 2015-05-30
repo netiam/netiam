@@ -7,35 +7,30 @@ const debug = dbg('netiam')
 export default function netiam() {
   const stack = []
 
-  function dispatch(req, res) {
-    let p = Promise.resolve()
-
-    stack.forEach(function(call) {
-      p = p.then(function() {
-        return call(req, res)
-      })
-    })
-
-    return p
+  async function dispatch(req, res) {
+    for (let call of stack) {
+      await call(req, res)
+    }
   }
 
   const dispatcher = function(req, res) {
-    dispatch(req, res)
-      .catch(err => {
-        if (err.nonce) {
-          return
-        }
+    try {
+      dispatch(req, res)
+    } catch (err) {
+      if (err.nonce) {
+        return
+      }
 
-        debug(err)
+      debug(err)
 
-        res
-          .status(err.code || 500)
-          .json({
-            status: err.status || 'INTERNAL SERVER ERROR',
-            message: err.message || 'Undefined Error',
-            data: err.data || undefined
-          })
-      })
+      res
+        .status(err.code || 500)
+        .json({
+          status: err.status || 'INTERNAL SERVER ERROR',
+          message: err.message || 'Undefined Error',
+          data: err.data || undefined
+        })
+    }
   }
 
   function registerPlugin(plugin) {
