@@ -93,13 +93,14 @@ export default function(spec) {
 
   /**
    * Get allowed keys for a specific role
+   * @param {User} user
    * @param {Object} resource
    * @param {String|Object} role
    * @param {String} [privilege='R']
    * @param {Array} [asserts=[]]
    * @returns {[String]} A list of allowed keys for given collection
    */
-  function allowedForRole(resource, role, privilege, asserts) {
+  function allowedForRole(user, resource, role, privilege, asserts) {
     role = roles.get(role)
     const allKeys = keys()
     const allRefs = refs()
@@ -126,7 +127,7 @@ export default function(spec) {
     // asserts
     asserts.forEach(function(assert) {
       allowedKeys = allowedKeys.concat(
-        assert(o, resource, role, privilege)
+        assert(user, o, resource, role, privilege)
       )
     })
 
@@ -156,23 +157,28 @@ export default function(spec) {
 
   /**
    * Get allowed keys for given collection
+   * @param {User} user
    * @param {String} resource
    * @param {String|Object} role
    * @param {String} [privilege='R']
    * @param {Array} [asserts=[]]
    * @returns {[String]} A list of allowed keys for given collection
    */
-  function allowed(resource, role, privilege = 'R', asserts = []) {
+  function allowed(user, resource, role, privilege = 'R', asserts = []) {
     role = roles.get(role)
     const roleHierarchy = hierarchy(role).reverse()
     let allowedKeys = []
 
-    if (_.isFunction(asserts)) {
+    if (!_.isArray(asserts)) {
       asserts = [asserts]
     }
 
+    asserts.forEach(function(assert) {
+      allowedKeys = allowedKeys.concat(assert(user, o, resource, role, privilege))
+    })
+
     roleHierarchy.forEach(function(r) {
-      allowedKeys = allowedKeys.concat(allowedForRole(resource, r, privilege, asserts))
+      allowedKeys = allowedKeys.concat(allowedForRole(user, resource, r, privilege, asserts))
     })
 
     return allowedKeys
@@ -180,16 +186,18 @@ export default function(spec) {
 
   /**
    * Filters a resource object by ACL
+   * @param {User} user
    * @param {Object} resource
    * @param {Object} role
    * @param {String} [privilege='R']
    * @param {Array} [asserts=[]]
    * @returns {Object}
    */
-  function filter(resource, role, privilege = 'R', asserts = []) {
+  function filter(user, resource, role, privilege = 'R', asserts = []) {
     return _.pick(
       resource,
       allowed(
+        user,
         resource,
         role,
         privilege,
@@ -200,11 +208,12 @@ export default function(spec) {
 
   /**
    * Is role with privilege allowed to access resource
+   * @param {User} user
    * @param {Object} role
    * @param {String} [privilege='R']
    * @returns {Boolean} True if allowed, otherwise false
    */
-  function resource(role, privilege = 'R') {
+  function resource(user, role, privilege = 'R') {
     if (!acl.resource) {
       return false
     }

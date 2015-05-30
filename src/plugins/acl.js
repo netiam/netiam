@@ -5,13 +5,16 @@ import RESTError from '../rest/error'
 
 function request(opts) {
   const list = acl(opts)
+  let {asserts} = opts
+
+  asserts = asserts || []
 
   return function(req) {
     const role = roles.get(req.user ? req.user.role : null)
 
     // create
     if (req.method === 'POST' && req.is('json')) {
-      if (!list.resource(role, 'C')) {
+      if (!list.resource(req.user, role, 'C')) {
         throw new RESTError(
           `You have not enough privileges to create this resource as ${role.name}`,
           403,
@@ -21,20 +24,20 @@ function request(opts) {
 
       if (_.isArray(req.body)) {
         req.body = _.map(function(node) {
-          return list.filter(node, role, 'C')
+          return list.filter(req.user, node, role, 'C', asserts)
         })
         return
       }
 
       if (_.isObject(req.body)) {
-        req.body = list.filter(req.body, role, 'C')
+        req.body = list.filter(req.user, req.body, role, 'C', asserts)
         return
       }
     }
 
     // update
     if (req.method === 'PUT' && req.is('json')) {
-      if (!list.resource(role, 'U')) {
+      if (!list.resource(req.user, role, 'U')) {
         throw new RESTError(
           `You have not enough privileges to modify this resource as ${role.name}`,
           403,
@@ -44,13 +47,13 @@ function request(opts) {
 
       if (_.isArray(req.body)) {
         req.body = _.map(function(node) {
-          return list.filter(node, role, 'U')
+          return list.filter(req.user, node, role, 'U', asserts)
         })
         return
       }
 
       if (_.isObject(req.body)) {
-        req.body = list.filter(req.body, role, 'U')
+        req.body = list.filter(req.user, req.body, role, 'U', asserts)
       }
     }
   }
@@ -58,11 +61,14 @@ function request(opts) {
 
 function response(opts) {
   const list = acl(opts)
+  let {asserts} = opts
+
+  asserts = asserts || []
 
   return function(req, res) {
     const role = roles.get(req.user ? req.user.role : null)
 
-    if (!list.resource(role, 'R')) {
+    if (!list.resource(req.user, role, 'R')) {
       throw new RESTError(
         `You have not enough privileges to read this resource as ${role.name}`,
         403,
@@ -73,13 +79,13 @@ function response(opts) {
     if (_.isArray(res.body)) {
       res.body =
         _.map(res.body, function(node) {
-          return list.filter(node, role, 'R')
+          return list.filter(req.user, node, role, 'R', asserts)
         })
       return
     }
 
     if (_.isObject(res.body)) {
-      res.body = list.filter(res.body, role, 'R')
+      res.body = list.filter(req.user, res.body, role, 'R', asserts)
     }
   }
 
