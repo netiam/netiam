@@ -34,18 +34,17 @@ describe('ACL', function() {
   })
 
   describe('asserts', function() {
-    it('should deny user owns resource', function() {
-      let assert = asserts.owner('email', 'box@xyz.com')
-      assert(testAcl, userFixture, roles.get('USER')).should.eql([])
-    })
 
     it('should check if user owns resource', function() {
-      let assert = asserts.owner('email', 'hannes@impossiblearts.com')
-      assert(testAcl, userFixture, roles.get('USER')).should.eql([
+      const assert = asserts.owner('id')
+      const userFixtureWithId = Object.assign(userFixture, {id: 'test1234'})
+
+      assert(userFixtureWithId, testAcl, userFixtureWithId, roles.get('USER')).should.eql([
         'created',
         'modified'
       ])
     })
+
   })
 
 })

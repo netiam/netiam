@@ -35,7 +35,7 @@ describe('ACL', function() {
 
   describe('read', function() {
     it('should filter properties for role GUEST', function() {
-      let props = filter(testAcl, userFixture, roles.get('GUEST'), 'R')
+      let props = filter(userFixture, testAcl, userFixture, roles.get('GUEST'), 'R')
       props.should.have.properties({
         'name': 'eliias',
         'description': 'Hey, ich bin der Hannes.'
@@ -43,7 +43,7 @@ describe('ACL', function() {
     })
 
     it('should filter properties for role USER', function() {
-      let props = filter(testAcl, userFixture, roles.get('USER'), 'R')
+      let props = filter(userFixture, testAcl, userFixture, roles.get('USER'), 'R')
       props.should.have.properties({
         'name': 'eliias',
         'description': 'Hey, ich bin der Hannes.',
@@ -58,8 +58,9 @@ describe('ACL', function() {
     })
 
     it('should filter properties for role USER who is also resource OWNER', function() {
-      let assert = asserts.owner('email', 'hannes@impossiblearts.com')
-      let props = filter(testAcl, userFixture, roles.get('USER'), 'R', assert)
+      const assert = asserts.owner('id')
+      const userFixtureWithId = Object.assign(userFixture, {id: 'test1234'})
+      let props = filter(userFixtureWithId, testAcl, userFixtureWithId, roles.get('USER'), 'R', assert)
 
       props.should.have.properties({
         'name': 'eliias',
@@ -77,7 +78,7 @@ describe('ACL', function() {
     })
 
     it('should filter properties for role MANAGER', function() {
-      let props = filter(testAcl, userFixture, 'MANAGER', 'R')
+      let props = filter(userFixture, testAcl, userFixture, 'MANAGER', 'R')
       props.should.have.properties({
         'name': 'eliias',
         'description': 'Hey, ich bin der Hannes.',
@@ -92,7 +93,7 @@ describe('ACL', function() {
     })
 
     it('should filter properties for role ADMIN', function() {
-      let props = filter(testAcl, userFixture, 'ADMIN', 'R')
+      let props = filter(userFixture, testAcl, userFixture, 'ADMIN', 'R')
       props.should.have.properties({
         'name': 'eliias',
         'description': 'Hey, ich bin der Hannes.',

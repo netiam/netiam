@@ -28,12 +28,12 @@ function owner(field) {
 
     let value = resource[field]
 
-    if (_.isFunction(value.toString)) {
-      value = value.toString()
-    }
-
     if (!value) {
       return []
+    }
+
+    if (_.isFunction(value.toString)) {
+      value = value.toString()
     }
 
     if (value !== user.id) {

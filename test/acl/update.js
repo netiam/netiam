@@ -35,7 +35,7 @@ describe('ACL', function() {
 
   describe('update', function() {
     it('should filter properties for role GUEST', function() {
-      let props = filter(testAcl, userFixture, roles.get('GUEST'), 'U')
+      let props = filter(userFixture, testAcl, userFixture, roles.get('GUEST'), 'U')
       props.should.have.properties({
         'name': 'eliias',
         'description': 'Hey, ich bin der Hannes.'
@@ -43,7 +43,7 @@ describe('ACL', function() {
     })
 
     it('should filter properties for role USER', function() {
-      let props = filter(testAcl, userFixture, roles.get('USER'), 'U')
+      let props = filter(userFixture, testAcl, userFixture, roles.get('USER'), 'U')
       props.should.have.properties({
         'name': 'eliias',
         'description': 'Hey, ich bin der Hannes.',
@@ -58,9 +58,9 @@ describe('ACL', function() {
     })
 
     it('should filter properties for role USER who is also resource OWNER', function() {
-      let assert = asserts.owner('email', 'hannes@impossiblearts.com'),
-        props
-      props = filter(testAcl, userFixture, roles.get('USER'), 'U', assert)
+      const assert = asserts.owner('id')
+      const userFixtureWithId = Object.assign(userFixture, {id: 'test1234'})
+      let props = filter(userFixtureWithId, testAcl, userFixtureWithId, roles.get('USER'), 'U', assert)
       props.should.have.properties({
         'name': 'eliias',
         'description': 'Hey, ich bin der Hannes.',
@@ -75,7 +75,7 @@ describe('ACL', function() {
     })
 
     it('should filter properties for role MANAGER', function() {
-      let props = filter(testAcl, userFixture, 'MANAGER', 'U')
+      let props = filter(userFixture, testAcl, userFixture, 'MANAGER', 'U')
       props.should.have.properties({
         'name': 'eliias',
         'description': 'Hey, ich bin der Hannes.',
@@ -90,7 +90,7 @@ describe('ACL', function() {
     })
 
     it('should filter properties for role ADMIN', function() {
-      let props = filter(testAcl, userFixture, 'ADMIN', 'U')
+      let props = filter(userFixture, testAcl, userFixture, 'ADMIN', 'U')
       props.should.have.properties({
         'name': 'eliias',
         'description': 'Hey, ich bin der Hannes.',

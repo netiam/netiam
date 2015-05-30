@@ -3,6 +3,7 @@ import _ from 'lodash'
 /**
  * Filters an object literal
  *
+ * @param {Object} user
  * @param {Object} acl
  * @param {Object} resource
  * @param {Object} role
@@ -10,14 +11,11 @@ import _ from 'lodash'
  * @param {Function|Array} [asserts]
  * @returns {Object}
  */
-export default function filter(acl, resource, role, privilege = 'R', asserts = []) {
-  if (_.isFunction(asserts)) {
-    asserts = [asserts]
-  }
-
+export default function filter(user, acl, resource, role, privilege = 'R', asserts = []) {
   return _.pick(
     resource,
     acl.allowed(
+      user,
       resource,
       role,
       privilege,
