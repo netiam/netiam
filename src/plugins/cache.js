@@ -62,38 +62,26 @@ function request(opts) {
 
   opts = Object.assign(defaults, opts)
 
-  return function(req, res) {
-    return new Promise((resolve, reject) => {
+  return async function(req, res) {
+    // no cache?
+    if (req.query[opts.passthrough.param] &&
+      req.query[opts.passthrough.param] === opts.passthrough.secret) {
+      return
+    }
 
-      // no cache?
-      if (req.query[opts.passthrough.param] &&
-        req.query[opts.passthrough.param] === opts.passthrough.secret) {
-        return resolve()
-      }
+    const id = hash(req, opts)
+    const data = await opts.storage.load(opts.PREFIX + id)
 
-      const id = hash(req, opts)
+    if (data) {
+      res.body = data
+      res
+        .set('Cache', id)
+        .json(JSON.parse(data))
 
-      opts.storage.load(opts.PREFIX + id)
-        .then(function(data) {
-          if (data) {
-            res.body = data
-
-            res
-              .set('Cache', id)
-              .json(JSON.parse(data))
-
-            const err = new Error('Stop stack execution')
-            err.nonce = true
-
-            return reject(err)
-          }
-
-          resolve()
-        })
-        .catch(function() {
-          resolve()
-        })
-    })
+      const err = new Error('Stop stack execution')
+      err.nonce = true
+      throw err
+    }
   }
 }
 
@@ -101,11 +89,11 @@ function response(opts) {
 
   opts = Object.assign(defaults, opts)
 
-  return function(req, res) {
+  return async function(req, res) {
     if (res.body) {
-      let id = hash(req, opts)
+      const id = hash(req, opts)
       try {
-        opts.storage.save(opts.PREFIX + id, JSON.stringify(res.body))
+        await opts.storage.save(opts.PREFIX + id, JSON.stringify(res.body))
       } catch (exc) {
         console.warn('Cannot save cache entry: ' + id)
       }
