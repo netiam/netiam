@@ -5,7 +5,6 @@ import data from './data'
 import graph from './graph'
 import json from './json'
 import jsonapi from './jsonapi'
-import login from './login'
 import map from './map'
 import profile from './profile'
 import render from './render'
@@ -20,7 +19,6 @@ export default {
   graph,
   json,
   jsonapi,
-  login,
   map,
   profile,
   render,
