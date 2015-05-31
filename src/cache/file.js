@@ -31,8 +31,14 @@ export default function(config) {
    * @param {String} id
    */
   function has(id) {
-    return new Promise((resolve) => {
-      fs.exists(get(id), resolve)
+    return new Promise((resolve, reject) => {
+      fs.access(get(id), fs.R_OK | fs.W_OK, function(err) {
+        if (err) {
+          return reject(err)
+        }
+
+        resolve(true)
+      })
     })
   }
 
