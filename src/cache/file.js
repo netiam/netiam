@@ -29,24 +29,36 @@ export default function(config) {
   /**
    * Has cache entry
    * @param {String} id
-   * @param {Function} cb
    */
-  function has(id, cb) {
-    fs.exists(get(id), cb)
+  function has(id) {
+    return new Promise((resolve) => {
+      fs.exists(get(id), resolve)
+    })
   }
 
   /**
    * Load cache entry
    * @param {String} id
-   * @param {Function} cb
    */
-  function load(id, cb) {
-    has(id, function(exists) {
-      if (!exists) {
-        return cb(new Error(`Cache entry does not exist: "${id}"`))
-      }
+  function load(id) {
+    return new Promise((resolve, reject) => {
+      has(id)
+        .then(function(exists) {
+          if (!exists) {
+            return reject(new Error(`Cache entry does not exist: "${id}"`))
+          }
 
-      fs.readFile(get(id), cb)
+          fs.readFile(get(id), function(err, data) {
+            if (err) {
+              return reject(err)
+            }
+
+            resolve(data)
+          })
+        })
+        .catch(function() {
+          resolve()
+        })
     })
   }
 
@@ -54,10 +66,17 @@ export default function(config) {
    * Save cache entry
    * @param {String} id
    * @param {String} data
-   * @param {Function} cb
    */
-  function save(id, data, cb) {
-    fs.writeFile(get(id), data, cb)
+  function save(id, data) {
+    return new Promise((resolve, reject) => {
+      fs.writeFile(get(id), data, function(err) {
+        if (err) {
+          return reject(err)
+        }
+
+        resolve()
+      })
+    })
   }
 
   return Object.freeze({

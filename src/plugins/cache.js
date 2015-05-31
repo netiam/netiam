@@ -68,31 +68,31 @@ function request(opts) {
       // no cache?
       if (req.query[opts.passthrough.param] &&
         req.query[opts.passthrough.param] === opts.passthrough.secret) {
-        return
+        return resolve()
       }
 
-      let id = hash(req, opts)
+      const id = hash(req, opts)
 
-      opts.storage.load(opts.PREFIX + id, function(err, data) {
-        if (err) {
-          return resolve()
-        }
+      opts.storage.load(opts.PREFIX + id)
+        .then(function(data) {
+          if (data) {
+            res.body = data
 
-        if (data) {
-          res.body = data
+            res
+              .set('Cache', id)
+              .json(JSON.parse(data))
 
-          res
-            .set('Cache', id)
-            .json(JSON.parse(data))
+            const err = new Error('Stop stack execution')
+            err.nonce = true
 
-          err = new Error('Stop stack execution')
-          err.nonce = true
+            return reject(err)
+          }
 
-          return reject(err)
-        }
-
-        resolve()
-      })
+          resolve()
+        })
+        .catch(function() {
+          resolve()
+        })
     })
   }
 }
