@@ -84,10 +84,6 @@ describe('rest', function() {
   })
 
   describe('subresource - many to one', function() {
-    const users = []
-    for (let i = 0; i < 3; i += 1) {
-      users.push(userFixture)
-    }
     let projectWithUsers
     let userId
 

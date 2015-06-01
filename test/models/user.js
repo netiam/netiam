@@ -18,6 +18,10 @@ const schema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Role'
   },
+  project: {
+    type: Schema.Types.ObjectId,
+    ref: 'Project'
+  },
   password: String,
   firstname: String,
   lastname: String,
