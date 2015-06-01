@@ -75,6 +75,7 @@ describe('rest', function() {
   })
 
   after(function(done) {
+    app.close()
     db.connection.db.dropDatabase(function(err) {
       if (err) {
         return done(err)

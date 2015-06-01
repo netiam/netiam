@@ -3,7 +3,6 @@ import User from '../models/user'
 import Project from '../models/project'
 import db from '../utils/db.test'
 import api from '../../src/netiam'
-import * as Resource from '../../src/rest/resource'
 
 describe('rest', function() {
   let userFixture = require('../fixtures/user.json')
@@ -61,6 +60,7 @@ describe('rest', function() {
   })
 
   after(function(done) {
+    app.close()
     db.connection.db.dropDatabase(function(err) {
       if (err) {
         return done(err)

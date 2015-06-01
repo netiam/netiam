@@ -31,5 +31,9 @@ export default function(opts) {
 
   server.listen(opts.port)
 
+  app.close = function() {
+    server.close()
+  }
+
   return app
 }
