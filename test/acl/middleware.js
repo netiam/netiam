@@ -12,7 +12,7 @@ import userFixture from '../fixtures/user.json'
 const acl = loader({path: path.join(__dirname, '../fixtures/acl.json')})
 
 describe('ACL', function() {
-  const {app, server} = require('../utils/app.test')({port: 3001})
+  const app = require('../utils/app.test')()
 
   this.timeout(10000)
 
@@ -68,13 +68,11 @@ describe('ACL', function() {
   })
 
   after(function(done) {
-    server.close(function() {
-      db.connection.db.dropDatabase(function(err) {
-        if (err) {
-          return done(err)
-        }
-        done()
-      })
+    db.connection.db.dropDatabase(function(err) {
+      if (err) {
+        return done(err)
+      }
+      done()
     })
   })
 

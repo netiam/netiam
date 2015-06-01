@@ -1,15 +1,9 @@
 import express from 'express'
 import bodyParser from 'body-parser'
-import http from 'http'
 import passport from 'passport'
 
-export default function(opts) {
+export default function() {
   const app = express()
-  const server = http.createServer(app)
-
-  opts = Object.assign({
-    port: 3001
-  }, opts)
 
   require('./db.test')
 
@@ -29,10 +23,5 @@ export default function(opts) {
       })
   })
 
-  server.listen(opts.port)
-
-  return Object.freeze({
-    app,
-    server
-  })
+  return app
 }

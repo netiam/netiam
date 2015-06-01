@@ -5,7 +5,7 @@ import api from '../src/netiam'
 
 describe('odata', function() {
   const userFixture = require('./fixtures/user.json')
-  const {app, server} = require('./utils/app.test')({port: 3001})
+  const app = require('./utils/app.test')()
 
   this.timeout(10000)
 
@@ -35,13 +35,11 @@ describe('odata', function() {
   })
 
   after(function(done) {
-    server.close(function() {
-      db.connection.db.dropDatabase(function(err) {
-        if (err) {
-          return done(err)
-        }
-        done()
-      })
+    db.connection.db.dropDatabase(function(err) {
+      if (err) {
+        return done(err)
+      }
+      done()
     })
   })
 
