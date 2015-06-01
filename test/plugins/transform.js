@@ -2,12 +2,8 @@ import _ from 'lodash'
 import request from 'supertest'
 import api from '../../src/netiam'
 
-describe('plugins', function() {
-  const userFixture = require('./../fixtures/user.json')
+export default function() {
   const app = require('./../utils/app.test.js')()
-  let userId
-
-  this.timeout(10000)
 
   before(function() {
     app.get(
@@ -46,4 +42,4 @@ describe('plugins', function() {
 
   })
 
-})
+}

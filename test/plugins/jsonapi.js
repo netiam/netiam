@@ -4,12 +4,11 @@ import User from './../models/user'
 import db from './../utils/db.test.js'
 import api from '../../src/netiam'
 
-describe('plugins', function() {
+export default function() {
+
   const userFixture = require('./../fixtures/user.json')
   const app = require('./../utils/app.test.js')()
   let userId
-
-  this.timeout(10000)
 
   before(function(done) {
     app.post(
@@ -194,4 +193,4 @@ describe('plugins', function() {
 
   })
 
-})
+}
