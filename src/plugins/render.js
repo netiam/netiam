@@ -1,9 +1,12 @@
 import d3 from 'd3'
 import jsdom from 'jsdom'
 
-export default function(opts) {
-  const {width} = opts
-  const {height} = opts
+export default function(opts = {}) {
+  let {width} = opts
+  let {height} = opts
+
+  width = width || 400
+  height = height || 400
 
   return function(req, res) {
     if (!res.body) {

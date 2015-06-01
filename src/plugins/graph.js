@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-export default function graph(opts) {
+export default function(opts = {}) {
   let {nodesField} = opts
 
   nodesField = nodesField || 'nodes'
