@@ -35,12 +35,13 @@ describe('odata', function() {
   })
 
   after(function(done) {
-    server.close()
-    db.connection.db.dropDatabase(function(err) {
-      if (err) {
-        return done(err)
-      }
-      done()
+    server.close(function() {
+      db.connection.db.dropDatabase(function(err) {
+        if (err) {
+          return done(err)
+        }
+        done()
+      })
     })
   })
 
