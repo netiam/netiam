@@ -6,9 +6,9 @@ import api from '../../src/netiam'
 import * as Resource from '../../src/rest/resource'
 
 describe('rest', function() {
-  let userFixture = require('../fixtures/user.json')
-  let projectFixture = require('../fixtures/project.json')
-  let app = require('../utils/app.test')({port: 3001})
+  const userFixture = require('../fixtures/user.json')
+  const projectFixture = require('../fixtures/project.json')
+  const {app, server} = require('../utils/app.test')({port: 3001})
   let projectId
 
   this.timeout(10000)
@@ -75,7 +75,7 @@ describe('rest', function() {
   })
 
   after(function(done) {
-    app.close()
+    server.close()
     db.connection.db.dropDatabase(function(err) {
       if (err) {
         return done(err)

@@ -4,9 +4,9 @@ import db from './utils/db.test'
 import api from '../src/netiam'
 
 describe('cache', function() {
-  let user = require('./fixtures/user.json')
-  let app = require('./utils/app.test')({port: 3001})
-  let storage = require('../src/cache/file')
+  const user = require('./fixtures/user.json')
+  const {app, server} = require('./utils/app.test')({port: 3001})
+  const storage = require('../src/cache/file')
 
   this.timeout(10000)
 
@@ -38,6 +38,7 @@ describe('cache', function() {
   })
 
   after(function(done) {
+    server.close()
     db.connection.db.dropDatabase(function(err) {
       if (err) {
         return done(err)
