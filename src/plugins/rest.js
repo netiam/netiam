@@ -3,7 +3,6 @@ import resource from '../rest/resource'
 export default function rest(opts) {
   const restResource = resource(opts)
   let {idParam} = opts
-
   idParam = idParam || 'id'
 
   return async function(req, res) {
