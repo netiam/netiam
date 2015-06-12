@@ -15,6 +15,7 @@ module.exports = function(grunt) {
     babel: {
       options: {
         sourceMap: false,
+        optional: ['runtime'],
         stage: 1
       },
       build: {

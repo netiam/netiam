@@ -65,6 +65,7 @@ function response(opts) {
     const role = roles.get(req.user ? req.user.role : null)
 
     if (!list.resource(req.user, role, 'R')) {
+
       throw error.forbidden(
         `You have not enough privileges to read this resource as ${role.name}`
       )

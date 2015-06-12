@@ -9,7 +9,11 @@ export default function netiam() {
 
   async function dispatch(req, res) {
     for (let call of stack) {
-      await call(req, res)
+      try {
+        await call(req, res)
+      } catch (err) {
+        throw err
+      }
     }
   }
 
