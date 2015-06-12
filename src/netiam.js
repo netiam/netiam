@@ -8,15 +8,11 @@ export default function netiam() {
   const stack = []
 
   function dispatch(req, res) {
-    let p = Promise.resolve()
-
-    stack.forEach(function(call) {
-      p = p.then(function() {
+    return _.reduce(stack, function(p, call) {
+      return p.then(function() {
         return call(req, res)
       })
-    })
-
-    return p
+    }, Promise.resolve())
   }
 
   const dispatcher = function(req, res) {
