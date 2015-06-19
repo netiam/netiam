@@ -1,2 +1,0 @@
-#!/usr/bin/env bash
-babel -e 1 -w -d ./lib ./src
