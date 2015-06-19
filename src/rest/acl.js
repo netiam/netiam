@@ -139,11 +139,11 @@ export default function(spec) {
       )
     })
 
-    // expand populated paths
-    _.forEach(allRefs, function(/*ref, path*/) {
-      //const path = collection.schema.path(ref)
-      //const modelName = path.options.ref
-      //const model = mongoose.models[modelName]
+    // filter in populated paths
+    _.forEach(allRefs, function(ref, path) {
+      if (!_.isArray(resource[path]) && !_.isObject(resource[path])) {
+        return
+      }
     })
 
     return _.uniq(

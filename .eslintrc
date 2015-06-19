@@ -1,24 +1,25 @@
 {
-    "ecmaFeatures": {
-        "modules": true
-    },
-    "rules": {
-        "quotes": [
-            1,
-            "single"
-        ],
-        "semi": [
-            2,
-            "never"
-        ],
-        "consistent-return": 0,
-        "no-underscore-dangle": 0,
-        "no-shadow": 0
-    },
-    "env": {
-        "node": true,
-        "mocha": true,
-        "es6": true
-    },
-    "parser": "babel-eslint"
+  "ecmaFeatures": {
+    "modules": true
+  },
+  "rules": {
+    "quotes": [
+      1,
+      "single"
+    ],
+    "semi": [
+      2,
+      "never"
+    ],
+    "consistent-return": 0,
+    "no-underscore-dangle": 0,
+    "no-use-before-define": 0,
+    "no-shadow": 0
+  },
+  "env": {
+    "node": true,
+    "mocha": true,
+    "es6": true
+  },
+  "parser": "babel-eslint"
 }
