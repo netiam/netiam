@@ -6,6 +6,7 @@ import graph from './graph'
 import json from './json'
 import jsonapi from './jsonapi'
 import map from './map'
+import merge from './merge'
 import profile from './profile'
 import render from './render'
 import rest from './rest'
@@ -20,6 +21,7 @@ export default {
   json,
   jsonapi,
   map,
+  merge,
   profile,
   render,
   rest,
