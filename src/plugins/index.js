@@ -1,6 +1,7 @@
 import acl from './acl'
 import auth from './auth'
 import cache from './cache'
+import client from './client'
 import data from './data'
 import graph from './graph'
 import json from './json'
@@ -16,6 +17,7 @@ export default {
   acl,
   auth,
   cache,
+  client,
   data,
   graph,
   json,

@@ -1,6 +1,6 @@
 {
   "name": "netiam",
-  "version": "0.0.0-semantically-released",
+  "version": "3.1.0",
   "description": "REST API library",
   "main": "index.js",
   "scripts": {
