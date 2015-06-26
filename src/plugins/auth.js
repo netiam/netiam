@@ -3,7 +3,10 @@ import LocalStrategy from 'passport-local'
 import {
   BasicStrategy,
   DigestStrategy
-  } from 'passport-http'
+} from 'passport-http'
+import BearerStrategy from 'passport-http-bearer'
+import * as oauth from '../rest/schema/oauth/token'
+import Token from '../rest/models/token'
 
 export default function(opts) {
   const spec = {}
@@ -24,9 +27,7 @@ export default function(opts) {
    * @param {Function} done
    */
   function handle(username, password, done) {
-    const query = {
-      [usernameField]: username
-    }
+    const query = {[usernameField]: username}
 
     collection.findOne(query, function(err, user) {
       if (err) {
@@ -51,6 +52,27 @@ export default function(opts) {
     })
   }
 
+  /**
+   * Handle bearer token requests
+   * @param {String} token
+   * @param {Function} done
+   */
+  function handleBearer(token, done) {
+    Token
+      .findOne({
+        token_type: oauth.TOKEN_TYPE_ACCESS,
+        token: token
+      })
+      .populate('owner')
+      .exec(function(err, document) {
+        if (err) {
+          return done(err)
+        }
+
+        done(document.owner)
+      })
+  }
+
   passport.serializeUser(function(user, done) {
     done(null, user._id)
   })
@@ -60,15 +82,17 @@ export default function(opts) {
     })
   })
   passport.use(new BasicStrategy(spec, handle))
+  passport.use(new BearerStrategy(spec, handleBearer))
   passport.use(new DigestStrategy(spec, handle))
   passport.use(new LocalStrategy(spec, handle))
 
   return function(req, res) {
     return new Promise((resolve, reject) => {
       passport.authenticate([
-          'local',
           'basic',
-          'digest'
+          'bearer',
+          'digest',
+          'local'
         ],
         {session: false},
         function(err, user) {

@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import request from 'supertest'
 import Client from './../models/client'
 import db from './../utils/db.test.js'

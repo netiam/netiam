@@ -11,6 +11,12 @@
       2,
       "never"
     ],
+    "camelcase": [
+      2,
+      {
+        "properties": "never"
+      }
+    ],
     "consistent-return": 0,
     "no-underscore-dangle": 0,
     "no-use-before-define": 0,
