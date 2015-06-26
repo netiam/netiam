@@ -69,7 +69,11 @@ export default function(opts) {
           return done(err)
         }
 
-        done(document.owner)
+        if(!document) {
+          return done(new Error('User not found'))
+        }
+
+        done(null, document.owner)
       })
   }
 
