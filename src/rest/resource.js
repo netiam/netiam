@@ -35,7 +35,7 @@ export default function resource(spec) {
     }
 
     // Property expansion
-    if (query.expand) {
+    if (_.isString(query.expand)) {
       query.expand = query.expand.split(',')
     } else {
       query.expand = []

@@ -10,7 +10,7 @@ const Token = new Schema({
   token: {
     type: String,
     default: function() {
-      return crypto.randomBytes(64).toString('base64')
+      return crypto.randomBytes(64).toString('hex')
     },
     required: true
   },
