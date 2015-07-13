@@ -6,6 +6,7 @@
   "scripts": {
     "build": "grunt build",
     "dev": "grunt watch",
+    "start": "npm run dev",
     "test": "npm run test:unit",
     "test:unit": "mocha",
     "test:coverage": "istanbul cover _mocha --report lcovonly -- -R spec",
