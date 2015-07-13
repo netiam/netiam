@@ -1,5 +1,4 @@
 import _ from 'lodash'
-import roles from './roles'
 
 /**
  * Acl owner assertion
@@ -10,26 +9,20 @@ function owner(field) {
 
   /**
    * @param {User} user
-   * @param {Object} acl
    * @param {Object} resource
    * @param {Object} role
    * @param {String} privilege
    * @returns {Array} List of allowed keys
    */
-  return function(user, acl, resource, role, privilege = 'R') {
-    // add role OWNER to allow checks against ACLs with owner assert
-    if (!roles.has('OWNER')) {
-      roles.add('OWNER')
-    }
-
+  return function(user, resource) {
     if (!user || !user.id) {
-      return []
+      return false
     }
 
     let value = resource[field]
 
     if (!value) {
-      return []
+      return false
     }
 
     if (_.isFunction(value.toString)) {
@@ -37,15 +30,10 @@ function owner(field) {
     }
 
     if (value !== user.id) {
-      return []
+      return false
     }
 
-    return acl.allowed(
-      user,
-      resource,
-      roles.get('OWNER'),
-      privilege
-    )
+    return true
   }
 }
 

@@ -1,15 +1,11 @@
-import path from 'path'
 import request from 'supertest'
 import User from '../models/user'
 import api from '../../src/netiam'
 import fixtures from '../fixtures'
 import roles from '../../src/rest/roles'
 import Role from '../../src/rest/models/role'
-import loader from '../../src/acl/loader/file'
 import db from '../utils/db.test'
 import userFixture from '../fixtures/user.json'
-
-const acl = loader({path: path.join(__dirname, '../fixtures/acl.json')})
 
 describe('ACL', function() {
   const app = require('../utils/app.test')()
@@ -30,11 +26,8 @@ describe('ACL', function() {
       '/users/:id',
       api()
         .rest({collection: User})
+        .acl.res({collection: User})
         .map.res({_id: 'id'})
-        .acl.res({
-          collection: User,
-          acl: acl
-        })
         .json()
     )
 
@@ -43,11 +36,8 @@ describe('ACL', function() {
       api()
         .auth({collection: User})
         .rest({collection: User})
+        .acl.res({collection: User})
         .map.res({_id: 'id'})
-        .acl.res({
-          collection: User,
-          acl: acl
-        })
         .json()
     )
 

@@ -5,37 +5,30 @@ export default function(spec) {
   const WILDCARD = '*'
   const ALLOW = 'ALLOW'
   const DENY = 'DENY'
-  const {collection} = spec
-  let {acl} = spec
+  const {settings} = spec
   let o = {}
 
-  if (!collection) {
-    throw new Error('You must provide a valid "collection"')
+  if (!settings) {
+    throw new Error('You must provide an ACL "settings" option')
   }
-
-  if (!acl) {
-    throw new Error('You must provide a valid "acl"')
-  }
-
-  acl = acl.loadSync()
 
   /**
    * Get all keys from collection
    * @returns {[String]}
    */
-  function keys() {
-    return Object.keys(collection.schema.paths)
+  function keys(schema) {
+    return Object.keys(schema.paths)
   }
 
   /**
    * Get all keys which a possible population
    * @returns {[String]}
    */
-  function refs() {
+  function refs(schema) {
     const paths = {}
 
-    if (collection.schema && _.isObject(collection.schema.paths)) {
-      _.forEach(collection.schema.paths, function(path, key) {
+    if (schema && _.isObject(schema.paths)) {
+      _.forEach(schema.paths, function(path, key) {
         if (path.options && path.options.ref) {
           paths[key] = path.options.ref
         }
@@ -43,6 +36,15 @@ export default function(spec) {
     }
 
     return paths
+  }
+
+  /**
+   * Get schema for resource
+   * @param {Document} resource
+   * @returns {Schema}
+   */
+  function getSchemaForResource(resource) {
+    return resource.constructor.schema
   }
 
   /**
@@ -55,10 +57,10 @@ export default function(spec) {
    * @returns {[String]}
    */
   function path(allKeys, modelPath, type, role, privilege) {
-    if (acl.fields.hasOwnProperty(modelPath)) {
-      if (acl.fields[modelPath].hasOwnProperty(type)) {
-        if (acl.fields[modelPath][type][role.name] &&
-          acl.fields[modelPath][type][role.name].indexOf(privilege) !== -1
+    if (settings.fields.hasOwnProperty(modelPath)) {
+      if (settings.fields[modelPath].hasOwnProperty(type)) {
+        if (settings.fields[modelPath][type][role.name] &&
+          settings.fields[modelPath][type][role.name].indexOf(privilege) !== -1
         ) {
           if (modelPath === WILDCARD) {
             return allKeys
@@ -98,8 +100,8 @@ export default function(spec) {
    */
   function allowedForRole(user, resource, role, privilege, asserts) {
     role = roles.get(role)
-    const allKeys = keys()
-    const allRefs = refs()
+    const schema = getSchemaForResource(resource)
+    const allKeys = keys(schema)
     let allowedKeys = []
     let deniedKeys = []
 
@@ -139,13 +141,6 @@ export default function(spec) {
       )
     })
 
-    // filter in populated paths
-    _.forEach(allRefs, function(ref, path) {
-      if (!_.isArray(resource[path]) && !_.isObject(resource[path])) {
-        return
-      }
-    })
-
     return _.uniq(
       _.difference(allowedKeys, deniedKeys)
     )
@@ -170,11 +165,13 @@ export default function(spec) {
     }
 
     asserts.forEach(function(assert) {
-      allowedKeys = allowedKeys.concat(assert(user, o, resource, role, privilege))
+      allowedKeys = allowedKeys.concat(
+        assert(user, o, resource, role, privilege))
     })
 
     roleHierarchy.forEach(function(r) {
-      allowedKeys = allowedKeys.concat(allowedForRole(user, resource, r, privilege, asserts))
+      allowedKeys = allowedKeys.concat(
+        allowedForRole(user, resource, r, privilege, asserts))
     })
 
     return allowedKeys
@@ -182,15 +179,16 @@ export default function(spec) {
 
   /**
    * Filters a resource object by ACL
-   * @param {User} user
-   * @param {Object} resource
-   * @param {Object} role
+   * @param {Document} user
+   * @param {Document} resource
+   * @param {Document} role
    * @param {String} [privilege='R']
    * @param {Array} [asserts=[]]
    * @returns {Object}
    */
   function filter(user, resource, role, privilege = 'R', asserts = []) {
-    return _.pick(
+    const schema = getSchemaForResource(resource)
+    const data = _.pick(
       resource,
       allowed(
         user,
@@ -200,6 +198,33 @@ export default function(spec) {
         asserts
       )
     )
+
+    // filter in populated paths
+    const allRefs = refs(schema)
+    _.forEach(allRefs, function(ref, path) {
+      // list of documents
+      if (_.isArray(data[path]) && data[path].length > 0) {
+        data[path] = data[path].map(function(nestedResource) {
+          if (nestedResource.getAcl) {
+            return o.filterByAcl(user, role, privilege, asserts)
+          }
+
+          return o
+        })
+        return
+      }
+
+      // single document
+      if (_.isObject(data[path])) {
+        if (data[path].filterByAcl) {
+          data[path] = data[path].filterByAcl(user, role, privilege, asserts)
+          return
+        }
+        return data[path]
+      }
+    })
+
+    return data
   }
 
   /**
@@ -210,11 +235,11 @@ export default function(spec) {
    * @returns {Boolean} True if allowed, otherwise false
    */
   function resource(user, role, privilege = 'R') {
-    if (!acl.resource) {
+    if (!settings.resource) {
       return false
     }
 
-    if (!acl.resource[ALLOW]) {
+    if (!settings.resource[ALLOW]) {
       return false
     }
 
@@ -223,29 +248,29 @@ export default function(spec) {
     role = roles.get(role)
 
     // wildcard allow
-    if (acl.resource[ALLOW] && acl.resource[ALLOW][WILDCARD]) {
-      if (acl.resource[ALLOW][WILDCARD].indexOf(privilege) !== -1) {
+    if (settings.resource[ALLOW] && settings.resource[ALLOW][WILDCARD]) {
+      if (settings.resource[ALLOW][WILDCARD].indexOf(privilege) !== -1) {
         isAllowed = true
       }
     }
 
     // allow
-    if (acl.resource[ALLOW] && acl.resource[ALLOW][role.name]) {
-      if (acl.resource[ALLOW][role.name].indexOf(privilege) !== -1) {
+    if (settings.resource[ALLOW] && settings.resource[ALLOW][role.name]) {
+      if (settings.resource[ALLOW][role.name].indexOf(privilege) !== -1) {
         isAllowed = true
       }
     }
 
     // wildcard deny
-    if (acl.resource[DENY] && acl.resource[DENY][WILDCARD]) {
-      if (acl.resource[DENY][WILDCARD].indexOf(privilege) !== -1) {
+    if (settings.resource[DENY] && settings.resource[DENY][WILDCARD]) {
+      if (settings.resource[DENY][WILDCARD].indexOf(privilege) !== -1) {
         isAllowed = false
       }
     }
 
     // deny
-    if (acl.resource[DENY] && acl.resource[DENY][role.name]) {
-      if (acl.resource[DENY][role.name].indexOf(privilege) !== -1) {
+    if (settings.resource[DENY] && settings.resource[DENY][role.name]) {
+      if (settings.resource[DENY][role.name].indexOf(privilege) !== -1) {
         isAllowed = false
       }
     }

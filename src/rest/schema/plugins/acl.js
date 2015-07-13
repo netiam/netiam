@@ -1,17 +1,20 @@
+import aclFilter from '../../acl'
+
 export default function aclPlugin(schema, opts = {}) {
+  const {settings} = opts
 
-  const {acl} = opts
-
-  if (!acl) {
-    throw new Error('You must provide an ACL object as "acl" option')
+  if (!settings) {
+    throw new Error('You must provide an ACL settings list as "settings" option')
   }
 
-  if (acl.isValid && acl.isValid()) {
-    throw new Error('The acl object is invalid')
+  const acl = aclFilter({settings: settings})
+
+  schema.statics.filterByAcl = function(user, role, privilege = 'R', asserts = []) {
+    return acl.resource(user, role, privilege, asserts)
   }
 
-  schema.methods.filterByAcl = function() {
-    return acl.filter(this)
+  schema.methods.filterByAcl = function(user, role, privilege = 'R', asserts = []) {
+    return acl.filter(user, this, role, privilege, asserts)
   }
 
 }

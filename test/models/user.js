@@ -1,5 +1,6 @@
 import mongoose, {Schema} from 'mongoose'
 import {
+  acl,
   auth,
   created,
   merge,
@@ -31,6 +32,7 @@ const schema = new Schema({
   }
 })
 
+schema.plugin(acl, {settings: require('../fixtures/user.acl.json')})
 schema.plugin(auth)
 schema.plugin(created)
 schema.plugin(merge)

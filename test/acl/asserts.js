@@ -1,18 +1,10 @@
-import path from 'path'
 import User from '../models/user'
-import acl from '../../src/rest/acl'
 import asserts from '../../src/rest/asserts'
-import loader from '../../src/acl/loader/file'
 import fixtures from '../fixtures'
 import roles from '../../src/rest/roles'
 import Role from '../../src/rest/models/role'
-
-const userAcl = loader({path: path.join(__dirname, '../fixtures/acl.json')})
 const userFixture = require('./../fixtures/user.json')
-const testAcl = acl({
-  collection: User,
-  acl: userAcl
-})
+const projectFixture = require('./../fixtures/project.json')
 
 describe('ACL', function() {
 
@@ -36,13 +28,19 @@ describe('ACL', function() {
   describe('asserts', function() {
 
     it('should check if user owns resource', function() {
-      const assert = asserts.owner('id')
+      const assert = asserts.owner('owner')
       const userFixtureWithId = Object.assign(userFixture, {id: 'test1234'})
+      const projectFixtureWithOwner = Object.assign(projectFixture, {owner: 'test1234'})
 
-      assert(userFixtureWithId, testAcl, userFixtureWithId, roles.get('USER')).should.eql([
-        'created',
-        'modified'
-      ])
+      assert(userFixtureWithId, projectFixtureWithOwner).should.eql(true)
+    })
+
+    it('should check if user does not own resource', function() {
+      const assert = asserts.owner('owner')
+      const userFixtureWithWrongId = Object.assign(userFixture, {id: 'test12345'})
+      const projectFixtureWithOwner = Object.assign(projectFixture, {owner: 'test1234'})
+
+      assert(userFixtureWithWrongId, projectFixtureWithOwner).should.eql(false)
     })
 
   })
