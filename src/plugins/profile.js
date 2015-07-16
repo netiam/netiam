@@ -1,5 +1,8 @@
 import _ from 'lodash'
+import dbg from 'debug'
 import path from 'path'
+
+const debug = dbg('netiam:plugins:profile')
 
 export default function profile(opts) {
 
@@ -38,7 +41,7 @@ export default function profile(opts) {
       try {
         schema = require(file)
       } catch (err) {
-        return console.error(err)
+        debug(err)
       }
       res.body = _.pick(res.body, schema)
     }
