@@ -1,5 +1,8 @@
+import dbg from 'debug'
 import _ from 'lodash'
 import * as errors from '../rest/error'
+
+const debug = dbg('netiam:plugins:merge')
 
 export default function merge(spec) {
   const {collection} = spec
@@ -58,6 +61,7 @@ export default function merge(spec) {
           .findOne({[idField]: req.params[idParam]})
           .exec(function(err, document) {
             if (err) {
+              debug(err)
               return reject(errors.internalServerError(err.message))
             }
 

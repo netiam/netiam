@@ -1,4 +1,7 @@
+import dbg from 'debug'
 import * as errors from '../rest/error'
+
+const debug = dbg('netiam:plugins:client')
 
 const API_CLIENT_ID = 'Api-Client-Id'
 
@@ -18,6 +21,7 @@ export default function(spec) {
         })
         .exec(function(err, document) {
           if (err) {
+            debug(err)
             return reject(errors.internalServerError(err.message))
           }
 

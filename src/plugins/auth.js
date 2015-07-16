@@ -7,6 +7,10 @@ import {
 import BearerStrategy from 'passport-http-bearer'
 import * as oauth from '../rest/schema/oauth/token'
 import Token from '../rest/models/token'
+import dbg from 'debug'
+import * as errors from '../rest/error'
+
+const debug = dbg('netiam:plugins:auth')
 
 export default function(opts) {
   const spec = {}
@@ -31,6 +35,7 @@ export default function(opts) {
 
     collection.findOne(query, function(err, user) {
       if (err) {
+        debug(err)
         return done(err)
       }
 
@@ -40,11 +45,12 @@ export default function(opts) {
 
       user.comparePassword(password, function(err, isMatch) {
         if (err) {
+          debug(err)
           return done(err)
         }
 
         if (!isMatch) {
-          return done(new Error('Invalid username or password'))
+          return done(errors.badRequest('Invalid username or password'))
         }
 
         done(null, user)
@@ -66,11 +72,12 @@ export default function(opts) {
       .populate('owner')
       .exec(function(err, document) {
         if (err) {
+          debug(err)
           return done(err)
         }
 
-        if(!document) {
-          return done(new Error('User not found'))
+        if (!document) {
+          return done(errors.notFound('User does not exist'))
         }
 
         done(null, document.owner)
@@ -82,7 +89,12 @@ export default function(opts) {
   })
   passport.deserializeUser(function(id, done) {
     collection.findById(id, function(err, user) {
-      done(err, user)
+      if (err) {
+        debug(err)
+        return done(err)
+      }
+
+      done(null, user)
     })
   })
   passport.use(new BasicStrategy(spec, handle))
@@ -101,6 +113,7 @@ export default function(opts) {
         {session: false},
         function(err, user) {
           if (err) {
+            debug(err)
             return reject(err)
           }
 
@@ -110,6 +123,7 @@ export default function(opts) {
 
           req.login(user, function(err) {
             if (err) {
+              debug(err)
               return reject(err)
             }
 

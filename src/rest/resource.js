@@ -1,6 +1,9 @@
 import _ from 'lodash'
+import dbg from 'debug'
 import filter from './odata/filter'
 import * as error from './error'
+
+const debug = dbg('netiam:rest:resource')
 
 export const MANY_TO_ONE = Symbol('many-to-one')
 export const ONE_TO_MANY = Symbol('one-to-many')
@@ -121,6 +124,7 @@ export default function resource(spec) {
     // execute
     q.exec(function(err, documents) {
       if (err) {
+        debug(err)
         return reject(error.internalServerError(err.message))
       }
 
@@ -166,6 +170,7 @@ export default function resource(spec) {
           .select(relationshipField)
           .exec(function(err, doc) {
             if (err) {
+              debug(err)
               return reject(err)
             }
 
@@ -207,6 +212,7 @@ export default function resource(spec) {
     // execute
     q.exec(function(err, document) {
       if (err) {
+        debug(err)
         return reject(error.internalServerError(err.message))
       }
       if (!document) {
@@ -242,6 +248,7 @@ export default function resource(spec) {
           .select(relationshipField)
           .exec(function(err, doc) {
             if (err) {
+              debug(err)
               return reject(err)
             }
 
@@ -290,6 +297,7 @@ export default function resource(spec) {
       // create model
       collection.create(req.body, function(err, documents) {
         if (err) {
+          debug(err)
           return reject(error.internalServerError(err.message))
         }
         if (!documents) {
@@ -328,6 +336,7 @@ export default function resource(spec) {
       // Execute query
       q.exec(function(err, document) {
         if (err) {
+          debug(err)
           return reject(error.internalServerError(err.message))
         }
         if (!document) {
@@ -338,6 +347,7 @@ export default function resource(spec) {
           .merge(req.body)
           .save(function(err) {
             if (err) {
+              debug(err)
               return reject(error.internalServerError(err.message))
             }
 
@@ -367,6 +377,7 @@ export default function resource(spec) {
 
       collection.findOneAndRemove(qo, function(err, documents) {
         if (err) {
+          debug(err)
           return reject(error.internalServerError(err.message))
         }
         if (!documents) {

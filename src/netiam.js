@@ -2,7 +2,7 @@ import _ from 'lodash'
 import dbg from 'debug'
 import plugins from './plugins/index'
 
-const debug = dbg('netiam')
+const debug = dbg('netiam:dispatch')
 
 export default function netiam() {
   const stack = []

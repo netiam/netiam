@@ -1,3 +1,7 @@
+import dbg from 'debug'
+
+const debug = dbg('netiam:cache:file')
+
 /**
  * Cache
  * @param {Object} config
@@ -34,6 +38,7 @@ export default function(config) {
     return new Promise((resolve, reject) => {
       fs.access(get(id), fs.R_OK | fs.W_OK, function(err) {
         if (err) {
+          debug(err)
           return reject(err)
         }
 
@@ -56,6 +61,7 @@ export default function(config) {
 
           fs.readFile(get(id), function(err, data) {
             if (err) {
+              debug(err)
               return reject(err)
             }
 
@@ -77,6 +83,7 @@ export default function(config) {
     return new Promise((resolve, reject) => {
       fs.writeFile(get(id), data, function(err) {
         if (err) {
+          debug(err)
           return reject(err)
         }
 
