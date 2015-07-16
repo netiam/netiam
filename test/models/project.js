@@ -4,10 +4,14 @@ import {
   created,
   merge,
   modified
-  } from '../../src/rest/schema/plugins'
+} from '../../src/rest/schema/plugins'
 
 const schema = new Schema({
   name: String,
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  },
   users: [
     {
       type: Schema.Types.ObjectId,

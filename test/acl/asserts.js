@@ -1,10 +1,14 @@
 import User from '../models/user'
+import Project from '../models/project'
 import asserts from '../../src/rest/asserts'
 import fixtures from '../fixtures'
 import roles from '../../src/rest/roles'
 import Role from '../../src/rest/models/role'
+import acl from '../../src/rest/acl'
+
 const userFixture = require('./../fixtures/user.json')
 const projectFixture = require('./../fixtures/project.json')
+const acls = acl({settings: require('../fixtures/acl.json')})
 
 describe('ACL', function() {
 
@@ -29,18 +33,19 @@ describe('ACL', function() {
 
     it('should check if user owns resource', function() {
       const assert = asserts.owner('owner')
-      const userFixtureWithId = Object.assign(userFixture, {id: 'test1234'})
-      const projectFixtureWithOwner = Object.assign(projectFixture, {owner: 'test1234'})
+      const userFixtureWithId = new User(Object.assign(userFixture, {id: 'test1234'}))
+      const projectFixtureWithOwner = new Project(Object.assign(projectFixture, {owner: userFixtureWithId}))
 
-      assert(userFixtureWithId, projectFixtureWithOwner).should.eql(true)
+      assert(userFixtureWithId, acls, projectFixtureWithOwner).should.eql([])
     })
 
     it('should check if user does not own resource', function() {
       const assert = asserts.owner('owner')
-      const userFixtureWithWrongId = Object.assign(userFixture, {id: 'test12345'})
-      const projectFixtureWithOwner = Object.assign(projectFixture, {owner: 'test1234'})
+      const userFixtureWithId = new User(Object.assign(userFixture, {id: 'test1234'}))
+      const userFixtureWithWrongId = new User(Object.assign(userFixture, {id: 'test12345'}))
+      const projectFixtureWithOwner = new Project(Object.assign(projectFixture, {owner: userFixtureWithId}))
 
-      assert(userFixtureWithWrongId, projectFixtureWithOwner).should.eql(false)
+      assert(userFixtureWithWrongId, acls, projectFixtureWithOwner).should.eql([])
     })
 
   })
