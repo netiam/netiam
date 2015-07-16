@@ -5,6 +5,7 @@ import * as error from '../rest/error'
 function request(opts) {
   const {collection} = opts
   let {asserts} = opts
+  const Model = collection
 
   asserts = asserts || []
 
@@ -21,13 +22,15 @@ function request(opts) {
 
       if (_.isArray(req.body)) {
         req.body = _.map(function(node) {
-          return collection.filterByAcl(req.user, node, role, 'C', asserts)
+          return collection.filterByAcl(
+            req.user, new Model(node), role, 'C', asserts)
         })
         return
       }
 
       if (_.isObject(req.body)) {
-        req.body = collection.filterByAcl(req.user, req.body, role, 'C', asserts)
+        req.body = collection.filterByAcl(
+          req.user, new Model(req.body), role, 'C', asserts)
         return
       }
     }
@@ -41,22 +44,16 @@ function request(opts) {
       }
 
       if (_.isArray(req.body)) {
-        throw error.notImplemnted('ACL request filtering is not implemented')
-        // TODO
-        /*
-         req.body = _.map(function(node) {
-         return collection.filterByAcl(req.user, node, role, 'U', asserts)
-         })
-         return
-         */
+        req.body = _.map(function(node) {
+          return collection.filterByAcl(
+            req.user, new Model(node), role, 'U', asserts)
+        })
+        return
       }
 
       if (_.isObject(req.body)) {
-        throw error.notImplemnted('ACL request filtering is not implemented')
-        // TODO
-        /*
-         req.body = collection.filterByAcl(req.user, req.body, role, 'U', asserts)
-         */
+        req.body = collection.filterByAcl(
+          req.user, new Model(req.body), role, 'U', asserts)
       }
     }
   }
