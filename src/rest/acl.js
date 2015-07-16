@@ -147,9 +147,9 @@ export default function(spec) {
   }
 
   /**
-   * Get allowed keys for given collection
+   * Get allowed keys for given resource
    * @param {User} user
-   * @param {String} resource
+   * @param {Document} resource
    * @param {String|Object} role
    * @param {String} [privilege='R']
    * @param {Array} [asserts=[]]
