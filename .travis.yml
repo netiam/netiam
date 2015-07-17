@@ -27,11 +27,3 @@ addons:
 env:
   global:
     secure: Pi2hUWJm01OCsJugGtjgotiG+BxQPWwkNqQLsWS0BV4UyIP6Cp3FnFUi0snkLcFkXC1cf7uVRboFyOYMeDxlsvedi9BEpPF/1+8AMLd7c6iyEBMNDrk4zffNA7xg+wuFRfTESpDrPQmTPilXxjr1+MajJWKdiFunnvjzWKKX4TM=
-notifications:
-  email: false
-  webhooks:
-    urls:
-    - https://jenkins.dovigo.org/view/netiam/job/netiam-site/build?token=$JENKINS_TOKEN
-    on_success: always
-    on_failure: never
-    on_start: never
