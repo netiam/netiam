@@ -5,7 +5,7 @@ import * as error from '../rest/error'
 function request(opts) {
   const {collection} = opts
   let {asserts} = opts
-  const Model = collection
+  //const Model = collection
 
   asserts = asserts || []
 
@@ -20,6 +20,7 @@ function request(opts) {
         )
       }
 
+      /*
       if (_.isArray(req.body)) {
         req.body = _.map(function(node) {
           return collection.filterByAcl(
@@ -33,6 +34,7 @@ function request(opts) {
           req.user, new Model(req.body), role, 'C', asserts)
         return
       }
+      */
     }
 
     // update
@@ -42,7 +44,7 @@ function request(opts) {
           `You have not enough privileges to modify this resource as ${role.name}`
         )
       }
-
+      /*
       if (_.isArray(req.body)) {
         req.body = _.map(function(node) {
           return collection.filterByAcl(
@@ -55,6 +57,7 @@ function request(opts) {
         req.body = collection.filterByAcl(
           req.user, new Model(req.body), role, 'U', asserts)
       }
+      */
     }
   }
 }
