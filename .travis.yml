@@ -8,7 +8,7 @@ deploy:
   email: hannes@impossiblearts.com
   skip_cleanup: true
   api_key:
-    secure: CezJ96R0fVpiigEGJsY4bZyW5nre6S+t1uKxeDXnwBEpgCmzkMrThAX9g/C4YzMR8x2v/YNTeJPlRpEb0Vm61JCyIJmbLo/77lurwZ7AzT5e8Nd2I7qpeg+JWB27zLjygb7j0btRI4NJzAFvktXFVf/cwBiwYUq+phXZ4NzXGbM=
+    secure: JVhlHd54xgvDx1ZWeqW6s66iRJE8C3yhg3qNyPfSa/rRTbbDmbD6Ae3aXbUztBiZEJ2Ti7cBYLTp733xgS0zCxQvOsdJUvTwj6fBxY3oSCLqaPsruSGYbgQ1CWx3x4LoZDoLEKiIGJStdwIJ1EDjvAF+IrqWfPP2h1V3vSgVtmI=
   on:
     branch: master
     repo: netiam/netiam
