@@ -6,6 +6,7 @@ export default function(spec) {
   const ALLOW = 'ALLOW'
   const DENY = 'DENY'
   const {settings} = spec
+  const {schema} = spec
   let o = {}
 
   if (!settings) {
@@ -16,7 +17,7 @@ export default function(spec) {
    * Get all keys from collection
    * @returns {[String]}
    */
-  function keys(schema) {
+  function keys() {
     return Object.keys(schema.paths)
   }
 
@@ -24,7 +25,7 @@ export default function(spec) {
    * Get all keys which a possible population
    * @returns {[String]}
    */
-  function refs(schema) {
+  function refs() {
     const paths = {}
 
     if (schema && _.isObject(schema.paths)) {
@@ -36,15 +37,6 @@ export default function(spec) {
     }
 
     return paths
-  }
-
-  /**
-   * Get schema for resource
-   * @param {Document} resource
-   * @returns {Schema}
-   */
-  function getSchemaForResource(resource) {
-    return resource.constructor.schema
   }
 
   /**
@@ -100,8 +92,7 @@ export default function(spec) {
    */
   function allowedForRole(user, resource, role, privilege, asserts) {
     role = roles.get(role)
-    const schema = getSchemaForResource(resource)
-    const allKeys = keys(schema)
+    const allKeys = keys()
     let allowedKeys = []
     let deniedKeys = []
 
@@ -187,7 +178,6 @@ export default function(spec) {
    * @returns {Object}
    */
   function filter(user, resource, role, privilege = 'R', asserts = []) {
-    const schema = getSchemaForResource(resource)
     const data = _.pick(
       resource,
       allowed(
@@ -200,7 +190,7 @@ export default function(spec) {
     )
 
     // filter in populated paths
-    const allRefs = refs(schema)
+    const allRefs = refs()
     _.forEach(allRefs, function(ref, path) {
       // list of documents
       if (_.isArray(data[path]) && data[path].length > 0) {

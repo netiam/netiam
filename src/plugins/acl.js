@@ -14,7 +14,7 @@ function request(opts) {
 
     // create
     if (req.method === 'POST' && req.is('json')) {
-      if (!collection.filterByAcl(req.user, role, 'C')) {
+      if (!collection.checkResourceAcl(req.user, role, 'C')) {
         throw error.forbidden(
           `You have not enough privileges to create this resource as ${role.name}`
         )
@@ -39,7 +39,7 @@ function request(opts) {
 
     // update
     if (req.method === 'PUT' && req.is('json')) {
-      if (!collection.filterByAcl(req.user, role, 'U')) {
+      if (!collection.checkResourceAcl(req.user, role, 'U')) {
         throw error.forbidden(
           `You have not enough privileges to modify this resource as ${role.name}`
         )
@@ -71,7 +71,7 @@ function response(opts) {
   return function(req, res) {
     const role = roles.get(req.user ? req.user.role : null)
 
-    if (!collection.filterByAcl(req.user, role, 'R')) {
+    if (!collection.checkResourceAcl(req.user, role, 'R')) {
       throw error.forbidden(
         `You have not enough privileges to read this resource as ${role.name}`
       )
@@ -80,13 +80,13 @@ function response(opts) {
     if (_.isArray(res.body)) {
       res.body =
         _.map(res.body, function(node) {
-          return node.filterByAcl(req.user, role, 'R', asserts)
+          return collection.filterByAcl(req.user, node, role, 'R', asserts)
         })
       return
     }
 
     if (_.isObject(res.body)) {
-      res.body = res.body.filterByAcl(req.user, role, 'R', asserts)
+      res.body = collection.filterByAcl(req.user, res.body, role, 'R', asserts)
     }
   }
 }
