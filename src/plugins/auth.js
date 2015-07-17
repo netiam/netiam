@@ -13,7 +13,6 @@ import * as errors from '../rest/error'
 const debug = dbg('netiam:plugins:auth')
 
 export default function(opts) {
-  const spec = {}
   const {collection} = opts
   let {usernameField} = opts
   let {passwordField} = opts
@@ -21,8 +20,10 @@ export default function(opts) {
   usernameField = usernameField || 'email'
   passwordField = passwordField || 'password'
 
-  spec.usernameField = usernameField
-  spec.passwordField = passwordField
+  const spec = {
+    usernameField,
+    passwordField
+  }
 
   /**
    * Handle
