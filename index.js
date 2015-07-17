@@ -5,11 +5,7 @@ const plugins = require('./lib/plugins')
 const models = require('./lib/rest/models')
 const RoleSchema = require('./lib/rest/schema/role')
 const schemaPlugins = require('./lib/rest/schema/plugins')
-const aclLoader = require('./lib/acl/loader')
 
-lib.acl = {
-  loader: aclLoader
-}
 lib.error = error
 lib.middleware = middleware
 lib.plugins = plugins
