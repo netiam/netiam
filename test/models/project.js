@@ -20,7 +20,6 @@ const schema = new Schema({
   ]
 })
 
-schema.plugin(acl, {settings: require('../fixtures/project.acl.json')})
 schema.plugin(created)
 schema.plugin(merge)
 schema.plugin(modified)

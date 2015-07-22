@@ -4,6 +4,102 @@ import dbg from 'debug'
 
 const debug = dbg('netiam:plugins:state')
 
+function extend(document, user, collection, refField, userField) {
+  return new Promise((resolve, reject) => {
+    collection.findOne({
+      [refField]: document.id,
+      [userField]: user.id
+    }, function(err, state) {
+      if (err) {
+        debug(err)
+        return reject(err)
+      }
+
+      if (!state) {
+        return resolve(document)
+      }
+
+      const documentWithState = Object.assign(
+        state.toObject(),
+        document.toObject()
+      )
+
+      delete documentWithState[refField]
+      delete documentWithState[userField]
+
+      resolve(documentWithState)
+    })
+  })
+}
+
+function handle(data, user, collection, refField, userField, expand = {}) {
+  return new Promise((resolve, reject) => {
+    if (_.isArray(data)) {
+      async.map(
+        data,
+        (document, done) => {
+          const subdocs = []
+          _.forEach(expand, (spec, key) => {
+            subdocs.push(
+              handle(
+                document[key],
+                user,
+                spec.collection,
+                spec.refField,
+                spec.userField)
+            )
+          })
+
+          Promise
+            .all(subdocs)
+            .then(extend(document, user, collection, refField, userField))
+            .then((extendedDocument) => {
+              done(null, extendedDocument)
+            })
+            .catch((err) => {
+              debug(err)
+              done(err)
+            })
+        },
+        (err, extendedDocuments) => {
+          if (err) {
+            debug(err)
+            return reject(err)
+          }
+
+          resolve(extendedDocuments)
+        }
+      )
+      return
+    }
+
+    if (_.isObject(data)) {
+      const subdocs = []
+      _.forEach(expand, (spec, key) => {
+        subdocs.push(
+          handle(
+            data[key],
+            user,
+            spec.collection,
+            spec.refField,
+            spec.userField)
+        )
+      })
+
+      Promise
+        .all(subdocs)
+        .then(extend(data, user, collection, refField, userField))
+        .then(function(extendedDocument) {
+          resolve(extendedDocument)
+        })
+        .catch(function(err) {
+          debug(err)
+          reject(err)
+        })
+    }
+  })
+}
+
 /**
  * This plugin can merge user state into existing resource documents
  *
@@ -17,70 +113,9 @@ export default function state(spec) {
   let {userField} = spec
 
   userField = userField || 'owner'
-  //const {expand} = spec
+  const {expand} = spec
 
   return function(req, res) {
-    return new Promise((resolve, reject) => {
-      if (!req.user) {
-        return resolve()
-      }
-
-      function extendDocument(document, done) {
-        collection.findOne({
-          [refField]: document.id,
-          [userField]: req.user.id
-        }, function(err, state) {
-          if (err) {
-            debug(err)
-            return done(err)
-          }
-
-          if (!state) {
-            return done(null, document)
-          }
-
-          const mergedDocument = Object.assign(
-            state.toObject(),
-            document.toObject()
-          )
-
-          delete mergedDocument[refField]
-          delete mergedDocument[userField]
-
-          return done(null, mergedDocument)
-        })
-      }
-
-      if (_.isArray(res.body)) {
-        async.map(res.body, extendDocument, function(err, documents) {
-          if (err) {
-            debug(err)
-            return reject(err)
-          }
-
-          res.body = documents
-
-          resolve()
-        })
-        return
-      }
-
-      if (_.isObject(res.body)) {
-        extendDocument(res.body, function(err, document) {
-          if (err) {
-            debug(err)
-            return reject(err)
-          }
-
-          res.body = document
-
-          resolve()
-        })
-        return
-      }
-
-      resolve()
-    })
-
+    return handle(res.body, req.user, collection, refField, userField, expand)
   }
 }
