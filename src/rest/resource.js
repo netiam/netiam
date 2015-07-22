@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import dbg from 'debug'
+import async from 'async'
 import filter from './odata/filter'
 import * as error from './error'
 
@@ -316,6 +317,44 @@ export default function resource(spec) {
     })
   }
 
+  function updateExpandedPath(document, path, payload) {
+    return new Promise((resolve, reject) => {
+      const data = document[path]
+      const update = payload[path]
+
+      if (_.isArray(data)) {
+        async.each(
+          data,
+          function(node, done) {
+            const index = data.indexOf(node)
+            node
+              .merge(update[index])
+              .save(done)
+          },
+          function(err) {
+            if (err) {
+              return reject(err)
+            }
+
+            return resolve()
+          })
+        return
+      }
+
+      if (_.isObject(data)) {
+        data
+          .merge(update)
+          .save(function(err) {
+            if (err) {
+              return reject(err)
+            }
+
+            resolve()
+          })
+      }
+    })
+  }
+
   /**
    * Modifies a single and existing document
    *
@@ -323,44 +362,116 @@ export default function resource(spec) {
    * @returns {Promise}
    */
   function update(req) {
-    return new Promise((resolve, reject) => {
-      // normalize
-      const query = normalize(req.query)
+    // normalize
+    const query = normalize(req.query)
 
-      // query
-      const qo = {[idField]: req.params[idParam]}
-
-      // Build query
-      const q = collection.findOne(qo)
-
-      // Execute query
-      q.exec(function(err, document) {
-        if (err) {
-          debug(err)
-          return reject(error.internalServerError(err.message))
-        }
-        if (!document) {
-          return reject(error.notFound('Document not found'))
-        }
-
-        document
-          .merge(req.body)
-          .save(function(err) {
-            if (err) {
-              debug(err)
-              return reject(error.internalServerError(err.message))
-            }
-
-            // Populate
-            if (req.query.expand) {
-              document.populate(query.expand.join(' '), function() {
-                resolve(document)
-              })
-            } else {
-              resolve(document)
-            }
-          })
+    function updateExpanded(document) {
+      if (!document) {
+        throw error.notFound('Document not found')
+      }
+      const ops = _.map(query.expand, function(path) {
+        return updateExpandedPath(document, path, req.body)
       })
+
+      return Promise
+        .all(ops)
+        .then(() => {
+          return document
+        })
+    }
+
+    return new Promise((resolve, reject) => {
+      // handle relationships
+      if (relationship === MANY_TO_ONE &&
+        relationshipField &&
+        relationshipCollection &&
+        map) {
+
+        const key = Object.keys(map)[0]
+        const val = req.params[map[key].substr(1)]
+
+        collection
+          .findOne({[key]: val})
+          .select(relationshipField).exec()
+          .then(doc => {
+            if (!doc) {
+              throw error.notFound('Document not found')
+            }
+
+            // query options
+            const qo = {[idField]: req.params[idParam]}
+
+            // query
+            let q = relationshipCollection.findOne(qo)
+
+            // populate
+            if (query.expand.length > 0) {
+              q = q.populate(query.expand.join(' '))
+            }
+
+            return q.exec()
+          })
+          .then(updateExpanded)
+          .then(document => {
+            return document
+              .merge(req.body)
+              .save()
+          })
+          .then(document => {
+            if (req.query.expand) {
+              return document
+                .populate(query.expand.join(' '), function(err) {
+                  if (err) {
+                    return reject(err)
+                  }
+                  resolve(document)
+                })
+            }
+            resolve(document)
+          })
+          .then(null, err => {
+            reject(err)
+          })
+        return
+      }
+
+      if (relationship === ONE_TO_MANY) {
+        // query
+        const qo = {[idField]: req.params[idParam]}
+
+        // Build query
+        const q = collection.findOne(qo)
+
+        // Execute query
+        q.exec(function(err, document) {
+          if (err) {
+            debug(err)
+            return reject(error.internalServerError(err.message))
+          }
+          if (!document) {
+            return reject(error.notFound('Document not found'))
+          }
+
+          document
+            .merge(req.body)
+            .save(function(err) {
+              if (err) {
+                debug(err)
+                return reject(error.internalServerError(err.message))
+              }
+
+              // populate
+              if (req.query.expand) {
+                document.populate(query.expand.join(' '), function() {
+                  resolve(document)
+                })
+              } else {
+                resolve(document)
+              }
+            })
+        })
+      }
+
     })
   }
 

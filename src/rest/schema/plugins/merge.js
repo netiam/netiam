@@ -8,11 +8,11 @@ import _ from 'lodash'
 function dbrefs(schema) {
   let refs = {}
 
-  schema.eachPath(function(name, path) {
+  _.forEach(schema.paths, (path, name) => {
     let caster = path.caster
-    let opt = path._opts
+    let opt = path.options
 
-    if (caster && caster._opts && caster._opts.ref) {
+    if (caster && caster.options && caster.options.ref) {
       refs[name] = name
     } else if (opt && opt.ref) {
       refs[name] = name
