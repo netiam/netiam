@@ -1,75 +1,75 @@
-{
-  "resource": {
-    "ALLOW": {
-      "ADMIN": "CRUD",
-      "USER": "R",
-      "GUEST": "R"
+export default {
+  'resource': {
+    'ALLOW': {
+      'ADMIN': 'CRUD',
+      'USER': 'R',
+      'GUEST': 'R'
     }
   },
-  "fields": {
-    "*": {
-      "ALLOW": {
-        "ADMIN": "CRUD"
+  'fields': {
+    '*': {
+      'ALLOW': {
+        'ADMIN': 'CRUD'
       }
     },
-    "_id": {
-      "ALLOW": {
-        "USER": "R",
-        "GUEST": "R"
+    '_id': {
+      'ALLOW': {
+        'USER': 'R',
+        'GUEST': 'R'
       },
-      "DENY": {
-        "GUEST": "R"
+      'DENY': {
+        'GUEST': 'R'
       }
     },
-    "name": {
-      "ALLOW": {
-        "USER": "RU",
-        "GUEST": "RU"
+    'name': {
+      'ALLOW': {
+        'USER': 'RU',
+        'GUEST': 'RU'
       }
     },
-    "description": {
-      "ALLOW": {
-        "USER": "RU",
-        "GUEST": "RU"
+    'description': {
+      'ALLOW': {
+        'USER': 'RU',
+        'GUEST': 'RU'
       }
     },
-    "email": {
-      "ALLOW": {
-        "USER": "RU",
-        "MANAGER": "RU"
+    'email': {
+      'ALLOW': {
+        'USER': 'RU',
+        'MANAGER': 'RU'
       }
     },
-    "password": {
-      "ALLOW": {
-        "OWNER": ""
+    'password': {
+      'ALLOW': {
+        'OWNER': ''
       }
     },
-    "firstname": {
-      "ALLOW": {
-        "USER": "RU",
-        "MANAGER": "RU"
+    'firstname': {
+      'ALLOW': {
+        'USER': 'RU',
+        'MANAGER': 'RU'
       }
     },
-    "lastname": {
-      "ALLOW": {
-        "USER": "RU",
-        "MANAGER": "RU"
+    'lastname': {
+      'ALLOW': {
+        'USER': 'RU',
+        'MANAGER': 'RU'
       }
     },
-    "location": {
-      "ALLOW": {
-        "USER": "RU",
-        "MANAGER": "RU"
+    'location': {
+      'ALLOW': {
+        'USER': 'RU',
+        'MANAGER': 'RU'
       }
     },
-    "created": {
-      "ALLOW": {
-        "OWNER": "R"
+    'created': {
+      'ALLOW': {
+        'OWNER': 'R'
       }
     },
-    "modified": {
-      "ALLOW": {
-        "OWNER": "R"
+    'modified': {
+      'ALLOW': {
+        'OWNER': 'R'
       }
     }
   }

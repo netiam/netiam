@@ -1,12 +1,11 @@
 import _ from 'lodash'
 import roles from './roles'
 
-export default function(spec) {
+export default function acl(spec) {
   const WILDCARD = '*'
   const ALLOW = 'ALLOW'
   const DENY = 'DENY'
   const {settings} = spec
-  const {schema} = spec
   let o = {}
 
   if (!settings) {
@@ -14,24 +13,37 @@ export default function(spec) {
   }
 
   /**
-   * Get all keys from collection
+   * Get all keys from resource and settings
    * @returns {[String]}
    */
-  function keys() {
-    return Object.keys(schema.paths)
+  function keys(resource) {
+    let fields = []
+
+    if (settings.fields && _.isObject(settings.fields)) {
+      fields = fields.concat(settings.fields)
+    }
+
+    if (_.isFunction(resource.toObject)) {
+      resource = resource.toObject()
+    }
+
+    return Object
+      .keys(resource)
+      .concat(fields)
+      .sort()
   }
 
   /**
    * Get all keys which a possible population
-   * @returns {[String]}
+   * @returns {Object}
    */
   function refs() {
     const paths = {}
 
-    if (schema && _.isObject(schema.paths)) {
-      _.forEach(schema.paths, function(path, key) {
-        if (path.options && path.options.ref) {
-          paths[key] = path.options.ref
+    if (settings.fields) {
+      _.forEach(settings.fields, function(field, key) {
+        if (field.ref) {
+          paths[key] = field.ref
         }
       })
     }
@@ -44,7 +56,8 @@ export default function(spec) {
    * @param {[String]} allKeys
    * @param {String} modelPath
    * @param {String} type
-   * @param {Role} role
+   * @param {Object} role
+   * @param {String} role.name
    * @param {String} privilege
    * @returns {[String]}
    */
@@ -61,6 +74,7 @@ export default function(spec) {
         }
       }
     }
+
     return []
   }
 
@@ -83,16 +97,17 @@ export default function(spec) {
 
   /**
    * Get allowed keys for a specific role
-   * @param {User} user
+   * @param {Document} user
    * @param {Object} resource
-   * @param {String|Object} role
+   * @param {Object} role
+   * @param {Boolean} role.superuser
    * @param {String} [privilege='R']
    * @param {Array} [asserts=[]]
    * @returns {[String]} A list of allowed keys for given collection
    */
   function allowedForRole(user, resource, role, privilege, asserts) {
     role = roles.get(role)
-    const allKeys = keys()
+    const allKeys = keys(resource)
     let allowedKeys = []
     let deniedKeys = []
 
@@ -139,7 +154,7 @@ export default function(spec) {
 
   /**
    * Get allowed keys for given resource
-   * @param {User} user
+   * @param {Document} user
    * @param {Document} resource
    * @param {String|Object} role
    * @param {String} [privilege='R']
@@ -168,6 +183,10 @@ export default function(spec) {
     return allowedKeys
   }
 
+  function isObjectID(obj) {
+    return _.isObject(obj) && obj.constructor.name === 'ObjectID'
+  }
+
   /**
    * Filters a resource object by ACL
    * @param {Document} user
@@ -192,25 +211,26 @@ export default function(spec) {
     // filter in populated paths
     const allRefs = refs()
     _.forEach(allRefs, function(ref, path) {
-      // list of documents
+      const subacl = acl({settings: ref})
+
       if (_.isArray(data[path]) && data[path].length > 0) {
         data[path] = data[path].map(function(nestedResource) {
-          if (nestedResource.getAcl) {
-            return o.filterByAcl(user, role, privilege, asserts)
+          if (_.isObject(nestedResource)) {
+            return subacl.filter(user, nestedResource, role, privilege, asserts)
           }
 
-          return o
+          return nestedResource
         })
         return
       }
 
-      // single document
+      // HACK Check for ObjectID objects -> lean does not convert them to String
+      if (isObjectID(data[path])) {
+        return
+      }
+
       if (_.isObject(data[path])) {
-        if (data[path].filterByAcl) {
-          data[path] = data[path].filterByAcl(user, role, privilege, asserts)
-          return
-        }
-        return data[path]
+        data[path] = subacl.filter(user, data[path], role, privilege, asserts)
       }
     })
 

@@ -26,7 +26,7 @@ describe('ACL', function() {
       '/users/:id',
       api()
         .rest({collection: User})
-        .acl.res({collection: User})
+        .acl.res({settings: require('../fixtures/user.acl')})
         .map.res({_id: 'id'})
         .json()
     )
@@ -36,7 +36,7 @@ describe('ACL', function() {
       api()
         .auth({collection: User})
         .rest({collection: User})
-        .acl.res({collection: User})
+        .acl.res({settings: require('../fixtures/user.acl')})
         .map.res({_id: 'id'})
         .json()
     )

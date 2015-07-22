@@ -1,9 +1,11 @@
 import User from '../models/user'
 import Project from '../models/project'
-import acl from '../../src/rest/acl'
+import aclRest from '../../src/rest/acl'
 import fixtures from '../fixtures'
 import roles from '../../src/rest/roles'
 import Role from '../../src/rest/models/role'
+
+const acl = aclRest({settings: require('../fixtures/user.acl')})
 
 describe('ACL', function() {
 
@@ -33,7 +35,7 @@ describe('ACL', function() {
         project: new Project({name: 'Project Nr. 1'})
       })
 
-      const data = user.filterByAcl(user, roles.get('USER'), 'R')
+      const data = acl.filter(user, user, roles.get('USER'), 'R')
       data.should.have.properties(['email', 'project', '_id'])
 
       const project = data.project

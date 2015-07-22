@@ -4,11 +4,11 @@ import asserts from '../../src/rest/asserts'
 import fixtures from '../fixtures'
 import roles from '../../src/rest/roles'
 import Role from '../../src/rest/models/role'
-import acl from '../../src/rest/acl'
+import aclRest from '../../src/rest/acl'
 
 const userFixture = require('./../fixtures/user.json')
 const projectFixture = require('./../fixtures/project.json')
-const acls = acl({settings: require('../fixtures/acl.json')})
+const acl = aclRest({settings: require('../fixtures/acl.js')})
 
 describe('ACL', function() {
 
@@ -36,7 +36,7 @@ describe('ACL', function() {
       const userFixtureWithId = new User(Object.assign(userFixture, {id: 'test1234'}))
       const projectFixtureWithOwner = new Project(Object.assign(projectFixture, {owner: userFixtureWithId}))
 
-      assert(userFixtureWithId, acls, projectFixtureWithOwner).should.eql([])
+      assert(userFixtureWithId, acl, projectFixtureWithOwner).should.eql([])
     })
 
     it('should check if user does not own resource', function() {
@@ -45,7 +45,7 @@ describe('ACL', function() {
       const userFixtureWithWrongId = new User(Object.assign(userFixture, {id: 'test12345'}))
       const projectFixtureWithOwner = new Project(Object.assign(projectFixture, {owner: userFixtureWithId}))
 
-      assert(userFixtureWithWrongId, acls, projectFixtureWithOwner).should.eql([])
+      assert(userFixtureWithWrongId, acl, projectFixtureWithOwner).should.eql([])
     })
 
   })
