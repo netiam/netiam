@@ -18,8 +18,8 @@ export default function owner(field) {
       return false
     }
 
-    if (_.isObject(acl.asserts) && acl.asserts.owner) {
-      field = acl.asserts.owner
+    if (_.isObject(acl.settings.asserts) && acl.settings.asserts.owner) {
+      field = acl.settings.asserts.owner
     }
 
     if (!field) {
