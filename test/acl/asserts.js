@@ -32,7 +32,7 @@ describe('ACL', function() {
   describe('asserts', function() {
 
     it('should check if user owns resource', function() {
-      const assert = asserts.owner('owner')
+      const assert = asserts.owner()
       const userFixtureWithId = new User(Object.assign(userFixture, {id: 'test1234'}))
       const projectFixtureWithOwner = new Project(Object.assign(projectFixture, {owner: userFixtureWithId}))
 
@@ -40,7 +40,7 @@ describe('ACL', function() {
     })
 
     it('should check if user does not own resource', function() {
-      const assert = asserts.owner('owner')
+      const assert = asserts.owner()
       const userFixtureWithId = new User(Object.assign(userFixture, {id: 'test1234'}))
       const userFixtureWithWrongId = new User(Object.assign(userFixture, {id: 'test12345'}))
       const projectFixtureWithOwner = new Project(Object.assign(projectFixture, {owner: userFixtureWithId}))

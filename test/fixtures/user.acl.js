@@ -1,6 +1,9 @@
 import project from './project.acl'
 
 export default {
+  'asserts': {
+    'owner': '_id'
+  },
   'resource': {
     'ALLOW': {
       'ADMIN': "CRUD",

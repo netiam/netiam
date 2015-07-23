@@ -3,18 +3,26 @@ import roles from '../roles'
 
 /**
  * Acl owner assertion
- * @param {String} field
  * @returns {Function} assertion function
  */
 export default function owner(field) {
 
   /**
    * @param {User} user
+   * @param {Object} acl
    * @param {Object} resource
    * @returns {Boolean} True if user is owner of resource, otherwise false
    */
-  function isOwner(user, resource) {
+  function isOwner(user, acl, resource) {
     if (!user || !user.id) {
+      return false
+    }
+
+    if (_.isObject(acl.asserts) && acl.asserts.owner) {
+      field = acl.asserts.owner
+    }
+
+    if (!field) {
       return false
     }
 
@@ -32,7 +40,7 @@ export default function owner(field) {
   }
 
   return function(user, acl, resource, role, privilege = 'R') {
-    if (!isOwner(user, resource)) {
+    if (!isOwner(user, acl, resource)) {
       return []
     }
 
