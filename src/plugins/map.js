@@ -39,6 +39,18 @@ function response(map, spec = {}) {
   }
 
   return function(req, res) {
+    let queryExpand = []
+    // Property expansion
+    if (_.isString(req.query.expand)) {
+      queryExpand = req.query.expand.split(',')
+    }
+
+    _.forEach(expand, function(map, key) {
+      if (queryExpand.indexOf(key) === -1) {
+        delete expand[key]
+      }
+    })
+
     if (_.isArray(res.body)) {
       res.body = _.map(res.body, function(document) {
         return mapFields(document, map)
