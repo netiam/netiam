@@ -217,7 +217,6 @@ export default function acl(spec) {
         data[path] = data[path].map(function(nestedResource) {
           // HACK Check for ObjectID objects -> lean does not convert them to String
           if (isObjectID(nestedResource)) {
-            console.log(nestedResource.toHexString())
             return nestedResource.toHexString()
           }
 
