@@ -6,9 +6,10 @@ function request() {
   }
 }
 
-function response(map) {
+function response(map, spec = {}) {
+  const {expand} = spec
 
-  function mapDocument(document) {
+  function mapFields(document, map) {
     const doc = {}
 
     if (_.isFunction(document.toObject)) {
@@ -20,17 +21,33 @@ function response(map) {
       doc[key] = val
     })
 
+    // expand
+    _.forEach(expand, function(map, path) {
+      if (_.isArray(doc[path])) {
+        doc[path] = _.map(doc[path], function(document) {
+          return mapFields(document, map)
+        })
+        return
+      }
+
+      if (_.isObject(doc[path])) {
+        doc[path] = mapFields(doc[path], map)
+      }
+    })
+
     return doc
   }
 
   return function(req, res) {
     if (_.isArray(res.body)) {
-      res.body = _.map(res.body, mapDocument)
+      res.body = _.map(res.body, function(document) {
+        return mapFields(document, map)
+      })
       return
     }
 
     if (_.isObject(res.body)) {
-      res.body = mapDocument(res.body)
+      res.body = mapFields(res.body, map)
     }
   }
 
