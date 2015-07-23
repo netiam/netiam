@@ -215,6 +215,12 @@ export default function acl(spec) {
 
       if (_.isArray(data[path]) && data[path].length > 0) {
         data[path] = data[path].map(function(nestedResource) {
+          // HACK Check for ObjectID objects -> lean does not convert them to String
+          if (isObjectID(nestedResource)) {
+            console.log(nestedResource.toHexString())
+            return nestedResource.toHexString()
+          }
+
           if (_.isObject(nestedResource)) {
             return subacl.filter(user, nestedResource, role, privilege, asserts)
           }
@@ -226,6 +232,7 @@ export default function acl(spec) {
 
       // HACK Check for ObjectID objects -> lean does not convert them to String
       if (isObjectID(data[path])) {
+        data[path] = data[path].toHexString()
         return
       }
 
@@ -288,6 +295,7 @@ export default function acl(spec) {
     return isAllowed
   }
 
+  o.settings = settings
   o.allowed = allowed
   o.filter = filter
   o.resource = resource
