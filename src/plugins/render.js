@@ -4,9 +4,11 @@ import jsdom from 'jsdom'
 export default function(opts = {}) {
   let {width} = opts
   let {height} = opts
+  let {ticks} = opts
 
   width = width || 400
   height = height || 400
+  ticks = ticks || 100
 
   return function(req, res) {
     if (!res.body) {
@@ -90,7 +92,7 @@ export default function(opts = {}) {
     })
 
     force.start()
-    for (let i = 0; i < 100; i += 1) {
+    for (let i = 0; i < ticks; i += 1) {
       force.tick()
     }
     force.stop()
