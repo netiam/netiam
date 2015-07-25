@@ -1,6 +1,6 @@
 engines:
   eslint:
     enabled: true
-exclude_paths: [
-  "src/rest/odata/parser.js"
-]
+exclude_paths:
+  src/rest/odata/parser.js
+
