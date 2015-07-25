@@ -4,16 +4,8 @@ import fileCache from '../../src/cache/file'
 
 describe('Cache', function() {
 
-  before(function(done) {
-    mkdirp('./tmp', done)
-  })
-
-  after(function(done) {
-    rimraf('./tmp', done)
-  })
-
   describe('file', function() {
-    const cache = fileCache({path: './tmp'})
+    const cache = fileCache({path: '.tmp/cache'})
 
     it('should create cache entry', function(done) {
       cache

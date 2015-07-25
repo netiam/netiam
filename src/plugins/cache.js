@@ -1,5 +1,8 @@
 import _ from 'lodash'
+import dbg from 'debug'
 import crypto from 'crypto'
+
+const debug = dbg('netiam:plugins:auth')
 
 const defaults = {
   passthrough: {
@@ -59,45 +62,59 @@ function hash(req, opts = {}) {
 }
 
 function request(opts) {
+  opts = Object.assign({}, defaults, opts)
 
-  opts = Object.assign(defaults, opts)
+  return function(req, res) {
+    return new Promise((resolve, reject) => {
+      // no cache?
+      if (req.query[opts.passthrough.param] &&
+        req.query[opts.passthrough.param] === opts.passthrough.secret) {
+        return resolve()
+      }
 
-  return async function(req, res) {
-    // no cache?
-    if (req.query[opts.passthrough.param] &&
-      req.query[opts.passthrough.param] === opts.passthrough.secret) {
-      return
-    }
+      const id = hash(req, opts)
+      opts.storage
+        .load(opts.PREFIX + id)
+        .then(data => {
+          if (!data) {
+            return resolve()
+          }
 
-    const id = hash(req, opts)
-    const data = await opts.storage.load(opts.PREFIX + id)
+          res.body = data
+          res
+            .set('Cache', id)
+            .json(JSON.parse(data))
 
-    if (data) {
-      res.body = data
-      res
-        .set('Cache', id)
-        .json(JSON.parse(data))
-
-      const err = new Error('Stop stack execution')
-      err.nonce = true
-      throw err
-    }
+          const err = new Error('Stop stack execution')
+          err.nonce = true
+          reject(err)
+        })
+        .catch(() => {
+          resolve()
+        })
+    })
   }
 }
 
 function response(opts) {
+  opts = Object.assign({}, defaults, opts)
 
-  opts = Object.assign(defaults, opts)
-
-  return async function(req, res) {
-    if (res.body) {
-      const id = hash(req, opts)
-      try {
-        await opts.storage.save(opts.PREFIX + id, JSON.stringify(res.body))
-      } catch (exc) {
-        console.warn('Cannot save cache entry: ' + id)
+  return function(req, res) {
+    return new Promise((resolve, reject) => {
+      if (res.body) {
+        const id = hash(req, opts)
+        opts.storage
+          .save(opts.PREFIX + id, JSON.stringify(res.body))
+          .then(resolve)
+          .catch(err => {
+            debug(err)
+            reject(err)
+          })
+        return
       }
-    }
+
+      resolve()
+    })
   }
 }
 

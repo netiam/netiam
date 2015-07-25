@@ -2,11 +2,11 @@ import request from 'supertest'
 import User from './models/user'
 import db from './utils/db.test'
 import api from '../src/netiam'
+import storage from '../src/cache/file'
 
 describe('cache', function() {
   const user = require('./fixtures/user.json')
   const app = require('./utils/app.test')()
-  const storage = require('../src/cache/file')
 
   this.timeout(10000)
 
