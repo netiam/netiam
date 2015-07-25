@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# author: Hannes Moser <hannes@impossiblearts.com>
+#
+
+# Clean lib
+rm -rf ./lib
