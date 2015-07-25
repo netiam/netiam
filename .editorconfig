@@ -12,6 +12,3 @@ max_line_length = 120
 
 [*.js]
 quote_type = single
-
-[*.json]
-quote_type = single
