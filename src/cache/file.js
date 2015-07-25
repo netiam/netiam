@@ -1,4 +1,7 @@
 import dbg from 'debug'
+import fs from 'fs'
+import path from 'path'
+import mkdirp from 'mkdirp'
 
 const debug = dbg('netiam:cache:file')
 
@@ -9,10 +12,11 @@ const debug = dbg('netiam:cache:file')
  * @returns {{has: has, load: load, save: save}}
  */
 export default function(config) {
-  let fs = require('fs')
-  let path = require('path')
-  let mkdirp = require('mkdirp')
-  let base = path.resolve(config.path)
+  if (!path.resolve) {
+    throw new Error('You must provide a cache directory as "path" option')
+  }
+
+  const base = path.resolve(config.path)
 
   // Create cache dir
   mkdirp(base, function(err) {
@@ -59,7 +63,7 @@ export default function(config) {
             return reject(new Error(`Cache entry does not exist: "${id}"`))
           }
 
-          fs.readFile(get(id), function(err, data) {
+          fs.readFile(get(id), 'utf8', function(err, data) {
             if (err) {
               debug(err)
               return reject(err)

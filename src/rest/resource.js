@@ -95,7 +95,7 @@ export default function resource(spec) {
   function params(parameters) {
     const newMap = _.clone(map)
 
-    return _.forOwn(newMap, function(val, key, obj) {
+    return _.forOwn(newMap, (val, key, obj) => {
       // handle route params
       if (val.charAt(0) === ':') {
         obj[key] = parameters[val.substring(1)]
@@ -108,6 +108,9 @@ export default function resource(spec) {
   }
 
   function listHandle(q, query, resolve, reject) {
+    // lean
+    q = q.lean()
+
     // populate
     if (query.expand.length > 0) {
       q = q.populate(query.expand.join(' '))
@@ -123,7 +126,7 @@ export default function resource(spec) {
     }
 
     // execute
-    q.exec(function(err, documents) {
+    q.exec((err, documents) => {
       if (err) {
         debug(err)
         return reject(error.internalServerError(err.message))
@@ -169,7 +172,7 @@ export default function resource(spec) {
         collection
           .findOne({[key]: val})
           .select(relationshipField)
-          .exec(function(err, doc) {
+          .exec((err, doc) => {
             if (err) {
               debug(err)
               return reject(err)
@@ -205,13 +208,16 @@ export default function resource(spec) {
   }
 
   function readHandle(q, query, resolve, reject) {
+    // lean
+    q = q.lean()
+
     // populate
     if (query.expand.length > 0) {
       q = q.populate(query.expand.join(' '))
     }
 
     // execute
-    q.exec(function(err, document) {
+    q.exec((err, document) => {
       if (err) {
         debug(err)
         return reject(error.internalServerError(err.message))
@@ -247,7 +253,7 @@ export default function resource(spec) {
         collection
           .findOne({[key]: val})
           .select(relationshipField)
-          .exec(function(err, doc) {
+          .exec((err, doc) => {
             if (err) {
               debug(err)
               return reject(err)
@@ -296,24 +302,25 @@ export default function resource(spec) {
       const query = normalize(req.query)
 
       // create model
-      collection.create(req.body, function(err, documents) {
-        if (err) {
-          debug(err)
-          return reject(error.internalServerError(err.message))
-        }
-        if (!documents) {
-          return reject(error.internalServerError('Document could not be created'))
-        }
+      collection
+        .create(req.body, (err, documents) => {
+          if (err) {
+            debug(err)
+            return reject(error.internalServerError(err.message))
+          }
+          if (!documents) {
+            return reject(error.internalServerError('Document could not be created'))
+          }
 
-        // populate
-        if (query.expand.length > 0) {
-          documents.populate(query.expand.join(' '), function() {
+          // populate
+          if (query.expand.length > 0) {
+            documents.populate(query.expand.join(' '), () => {
+              resolve(documents)
+            })
+          } else {
             resolve(documents)
-          })
-        } else {
-          resolve(documents)
-        }
-      })
+          }
+        })
     })
   }
 
@@ -325,13 +332,13 @@ export default function resource(spec) {
       if (_.isArray(data)) {
         async.each(
           data,
-          function(node, done) {
+          (node, done) => {
             const index = data.indexOf(node)
             node
               .merge(update[index])
               .save(done)
           },
-          function(err) {
+          (err) => {
             if (err) {
               return reject(err)
             }
@@ -344,7 +351,7 @@ export default function resource(spec) {
       if (_.isObject(data)) {
         data
           .merge(update)
-          .save(function(err) {
+          .save(err => {
             if (err) {
               return reject(err)
             }
@@ -369,7 +376,7 @@ export default function resource(spec) {
       if (!document) {
         throw error.notFound('Document not found')
       }
-      const ops = _.map(query.expand, function(path) {
+      const ops = _.map(query.expand, path => {
         return updateExpandedPath(document, path, req.body)
       })
 
@@ -420,10 +427,12 @@ export default function resource(spec) {
           .then(document => {
             if (req.query.expand) {
               return document
-                .populate(query.expand.join(' '), function(err) {
+                .populate(query.expand.join(' '))
+                .exec(err => {
                   if (err) {
                     return reject(err)
                   }
+
                   resolve(document)
                 })
             }
@@ -443,7 +452,7 @@ export default function resource(spec) {
         const q = collection.findOne(qo)
 
         // Execute query
-        q.exec(function(err, document) {
+        q.exec((err, document) => {
           if (err) {
             debug(err)
             return reject(error.internalServerError(err.message))
@@ -454,7 +463,7 @@ export default function resource(spec) {
 
           document
             .merge(req.body)
-            .save(function(err) {
+            .save(err => {
               if (err) {
                 debug(err)
                 return reject(error.internalServerError(err.message))
@@ -462,7 +471,7 @@ export default function resource(spec) {
 
               // populate
               if (req.query.expand) {
-                document.populate(query.expand.join(' '), function() {
+                document.populate(query.expand.join(' '), () => {
                   resolve(document)
                 })
               } else {
@@ -486,17 +495,19 @@ export default function resource(spec) {
       // query options
       const qo = {[idField]: req.params[idParam]}
 
-      collection.findOneAndRemove(qo, function(err, documents) {
-        if (err) {
-          debug(err)
-          return reject(error.internalServerError(err.message))
-        }
-        if (!documents) {
-          return reject(error.notFound('Document not found'))
-        }
+      collection
+        .findOneAndRemove(qo)
+        .exec((err, documents) => {
+          if (err) {
+            debug(err)
+            return reject(error.internalServerError(err.message))
+          }
+          if (!documents) {
+            return reject(error.notFound('Document not found'))
+          }
 
-        resolve()
-      })
+          resolve()
+        })
 
     })
   }

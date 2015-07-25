@@ -5,8 +5,10 @@
  * @returns {{has: has, load: load, save: save}}
  */
 export default function(config) {
-  let client = config.client
-  let PREFIX = config.PREFIX || 'cache:'
+  const {client} = config
+  let {PREFIX} = config
+
+  PREFIX = PREFIX || 'cache:'
 
   /**
    * Get KEY
@@ -23,7 +25,13 @@ export default function(config) {
    * @param {Function} cb
    */
   function has(id, cb) {
-    client.get(get(id), cb)
+    client.get(get(id), function(err, val) {
+      if (err) {
+        return cb(err)
+      }
+
+      cb(null, val ? true : false)
+    })
   }
 
   /**
