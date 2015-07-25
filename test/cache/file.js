@@ -1,5 +1,3 @@
-import mkdirp from 'mkdirp'
-import rimraf from 'rimraf'
 import fileCache from '../../src/cache/file'
 
 describe('Cache', function() {
