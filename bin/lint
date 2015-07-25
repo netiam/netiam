@@ -2,5 +2,5 @@
 # author: Hannes Moser <hannes@impossiblearts.com>
 #
 
-# Clean lib
-rm -rf ./lib
+# lint src
+eslint -c .eslintrc ./src

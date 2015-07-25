@@ -2,5 +2,5 @@
 # author: Hannes Moser <hannes@impossiblearts.com>
 #
 
-# Clean lib
+# clean lib
 rm -rf ./lib
