@@ -32,6 +32,16 @@ describe('Cache', function() {
         .catch(done)
     })
 
+    it('should verify that cache entry does not exist', function(done) {
+      cache
+        .has('does_not_exist')
+        .then(function(val) {
+          val.should.eql(false)
+          done()
+        })
+        .catch(done)
+    })
+
     it('should load a cache entry', function(done) {
       cache
         .load('test_id')
