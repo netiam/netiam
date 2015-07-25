@@ -16,6 +16,7 @@ node_js:
 - iojs-v2
 services:
 - mongodb
+- redis-server
 after_success:
 - npm run build
 - npm run test:coverage
