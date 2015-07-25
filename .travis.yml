@@ -19,7 +19,7 @@ services:
 after_success:
 - npm run build
 - npm run test:coverage
-- codeclimate < coverage/lcov.info
+- codeclimate-test-reporter < coverage/lcov.info
 addons:
   code_climate:
     repo_token:
