@@ -306,11 +306,9 @@ export default function resource(spec) {
         .create(req.body, (err, documents) => {
           if (err) {
             debug(err)
-
             if (err.code === 11000) {
               return reject(error.badRequest(err.message))
             }
-
             return reject(error.internalServerError(err.message))
           }
           if (!documents) {
