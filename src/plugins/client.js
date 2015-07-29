@@ -1,5 +1,5 @@
 import dbg from 'debug'
-import * as errors from '../rest/error'
+import * as errors from 'netiam-errors'
 
 const debug = dbg('netiam:plugins:client')
 

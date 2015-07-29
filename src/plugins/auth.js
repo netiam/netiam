@@ -8,7 +8,7 @@ import BearerStrategy from 'passport-http-bearer'
 import * as oauth from '../rest/schema/oauth/token'
 import Token from '../rest/models/token'
 import dbg from 'debug'
-import * as errors from '../rest/error'
+import * as errors from 'netiam-errors'
 
 const debug = dbg('netiam:plugins:auth')
 
