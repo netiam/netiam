@@ -183,7 +183,13 @@ export default function resource(spec) {
             }
 
             // query
-            let q = relationshipCollection.find(f.toObject())
+            let q
+            try {
+              q = relationshipCollection.find(f.toObject())
+            } catch (err) {
+              debug(err)
+              reject(errors.badRequest(err.message))
+            }
 
             // select only related
             q = q.where('_id').in(doc[relationshipField])
@@ -199,7 +205,13 @@ export default function resource(spec) {
         f = f.where(params(req.params))
 
         // query
-        const q = collection.find(f.toObject())
+        let q
+        try {
+          q = collection.find(f.toObject())
+        } catch (err) {
+          debug(err)
+          reject(errors.badRequest(err.message))
+        }
 
         // handle
         return listHandle(q, query, resolve, reject)
