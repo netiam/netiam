@@ -158,7 +158,12 @@ export default function resource(spec) {
       const query = normalize(req.query)
 
       // filter
-      let f = filter(query.filter)
+      let f
+      try {
+        f = filter(query.filter).toObject()
+      } catch (err) {
+        return reject(errors.badRequest(err.message))
+      }
 
       // handle relationships
       if (relationship === MANY_TO_ONE &&
