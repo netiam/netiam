@@ -1,7 +1,7 @@
 import redis from 'redis'
 import redisCache from '../../src/cache/redis'
 
-describe('cache', function() {
+describe('Cache', function() {
   let cache
 
   before(function(done) {

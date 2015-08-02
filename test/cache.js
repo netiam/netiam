@@ -1,33 +1,14 @@
 import request from 'supertest'
-import User from './models/user'
 import db from './utils/db.test'
-import api from '../src/netiam'
-import storage from '../src/cache/file'
+import routes from './utils/routes'
 
-describe('cache', function() {
+
+describe('Cache', function() {
   const user = require('./fixtures/user.json')
   const app = require('./utils/app.test')()
 
-  this.timeout(10000)
-
   before(function(done) {
-    app.post(
-      '/users',
-      api()
-        .rest({collection: User})
-        .map.res({_id: 'id'})
-        .json()
-    )
-
-    app.get(
-      '/users',
-      api()
-        .cache.req({storage: storage({path: '.tmp/cache'})})
-        .rest({collection: User})
-        .map.res({_id: 'id'})
-        .cache.res({storage: storage({path: '.tmp/cache'})})
-        .json()
-    )
+    routes.cache(app)
 
     db.connection.db.dropDatabase(function(err) {
       if (err) {

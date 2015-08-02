@@ -1,55 +1,16 @@
 import request from 'supertest'
-import User from '../models/user'
-import Project from '../models/project'
 import db from '../utils/db.test'
-import api from '../../src/netiam'
+import routes from '../utils/routes'
+import userFixture from '../fixtures/user.json'
+import projectFixture from '../fixtures/project.json'
 
-describe('rest', function() {
-  const userFixture = require('../fixtures/user.json')
-  const projectFixture = require('../fixtures/project.json')
+describe('REST', function() {
   const app = require('../utils/app.test')()
   let projectId
 
-  this.timeout(10000)
-
   before(function(done) {
-    app.post(
-      '/projects',
-      api()
-        .rest({collection: Project})
-        .map.res({_id: 'id'})
-        .json()
-    )
-
-    app.post(
-      '/users',
-      api()
-        .rest({collection: User})
-        .map.res({_id: 'id'})
-        .json()
-    )
-
-    app.get(
-      '/projects/:project/users',
-      api()
-        .rest({
-          collection: User,
-          map: {'project': ':project'}
-        })
-        .map.res({_id: 'id'})
-        .json()
-    )
-
-    app.get(
-      '/projects/:project/users/:id',
-      api()
-        .rest({
-          collection: User,
-          map: {'project': ':project'}
-        })
-        .map.res({_id: 'id'})
-        .json()
-    )
+    routes.users(app)
+    routes.projectsOneToMany(app)
 
     db.connection.db.dropDatabase(function(err) {
       if (err) {

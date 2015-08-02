@@ -1,6 +1,6 @@
 import Filter from '../src/rest/odata/filter'
 
-describe('odata', function() {
+describe('OData', function() {
 
   describe('filter', function() {
     it('should create "and" expression', function() {

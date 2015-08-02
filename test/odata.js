@@ -1,30 +1,13 @@
 import request from 'supertest'
-import User from './models/user'
 import db from './utils/db.test'
-import api from '../src/netiam'
+import routes from './utils/routes'
 
-describe('odata', function() {
+describe('OData', function() {
   const userFixture = require('./fixtures/user.json')
   const app = require('./utils/app.test')()
 
-  this.timeout(10000)
-
   before(function(done) {
-    app.post(
-      '/users',
-      api()
-        .rest({collection: User})
-        .map.res({_id: 'id'})
-        .json()
-    )
-
-    app.get(
-      '/users',
-      api()
-        .rest({collection: User})
-        .map.res({_id: 'id'})
-        .json()
-    )
+    routes.users(app)
 
     db.connection.db.dropDatabase(function(err) {
       if (err) {

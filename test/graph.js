@@ -1,22 +1,12 @@
 import request from 'supertest'
-import Graph from './models/graph'
 import db from './utils/db.test'
-import api from './../src/netiam'
-import nodesFixture from './fixtures/nodes.json'
+import routes from './utils/routes'
 
-describe('graph', function() {
+describe('Graph', function() {
   const app = require('./utils/app.test')()
 
-  this.timeout(10000)
-
   before(function(done) {
-    app.get(
-      '/graph',
-      api()
-        .data({nodes: nodesFixture})
-        .graph()
-        .render()
-    )
+    routes.graph(app)
 
     db.connection.db.dropDatabase(function(err) {
       if (err) {

@@ -1,56 +1,15 @@
 import _ from 'lodash'
 import request from 'supertest'
-import User from './models/user'
 import db from './utils/db.test'
-import api from '../src/netiam'
+import routes from './utils/routes'
 
-describe('rest', function() {
+describe('REST', function() {
   const userFixture = require('./fixtures/user.json')
   const app = require('./utils/app.test')()
   let userId
 
-  this.timeout(10000)
-
   before(function(done) {
-    app.post(
-      '/users',
-      api()
-        .rest({collection: User})
-        .map.res({_id: 'id'})
-        .json()
-    )
-
-    app.get(
-      '/users',
-      api()
-        .rest({collection: User})
-        .map.res({_id: 'id'})
-        .json()
-    )
-
-    app.get(
-      '/users/:id',
-      api()
-        .rest({collection: User})
-        .map.res({_id: 'id'})
-        .json()
-    )
-
-    app.put(
-      '/users/:id',
-      api()
-        .rest({collection: User})
-        .map.res({_id: 'id'})
-        .json()
-    )
-
-    app.delete(
-      '/users/:id',
-      api()
-        .rest({collection: User})
-        .map.res({_id: 'id'})
-        .json()
-    )
+    routes.users(app)
 
     db.connection.db.dropDatabase(function(err) {
       if (err) {

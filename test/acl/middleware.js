@@ -1,45 +1,16 @@
 import request from 'supertest'
-import User from '../models/user'
-import api from '../../src/netiam'
 import fixtures from '../fixtures'
 import roles from '../../src/rest/roles'
 import Role from '../../src/rest/models/role'
 import db from '../utils/db.test'
+import routes from '../utils/routes'
 import userFixture from '../fixtures/user.json'
 
 describe('ACL', function() {
   const app = require('../utils/app.test')()
 
-  this.timeout(10000)
-
   before(function(done) {
-
-    app.post(
-      '/users',
-      api()
-        .rest({collection: User})
-        .map.res({_id: 'id'})
-        .json()
-    )
-
-    app.get(
-      '/users/:id',
-      api()
-        .rest({collection: User})
-        .acl.res({settings: require('../fixtures/user.acl')})
-        .map.res({_id: 'id'})
-        .json()
-    )
-
-    app.get(
-      '/auth-users/:id',
-      api()
-        .auth({collection: User})
-        .rest({collection: User})
-        .acl.res({settings: require('../fixtures/user.acl')})
-        .map.res({_id: 'id'})
-        .json()
-    )
+    routes.aclUsers(app)
 
     fixtures(function(err) {
       if (err) {

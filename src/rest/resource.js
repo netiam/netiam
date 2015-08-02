@@ -234,6 +234,7 @@ export default function resource(spec) {
         debug(err)
         return reject(errors.internalServerError(err.message))
       }
+
       if (!document) {
         return reject(errors.notFound('Document not found'))
       }

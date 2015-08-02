@@ -2,8 +2,7 @@ import client from './client'
 import jsonapi from './jsonapi'
 import transform from './transform'
 
-describe('plugins', function() {
-  this.timeout(10000)
+describe('Plugins', function() {
   client()
   jsonapi()
   transform()
