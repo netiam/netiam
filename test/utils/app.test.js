@@ -11,17 +11,5 @@ export default function() {
   app.use(bodyParser.urlencoded({extended: true}))
   app.use(passport.initialize())
 
-  // Error handling
-  app.use(function(err, req, res, next) {
-    res
-      .status(500)
-      .json({
-        code: 500,
-        status: 'INTERNAL SERVER ERROR',
-        message: err.message,
-        data: err.stack
-      })
-  })
-
   return app
 }

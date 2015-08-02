@@ -6,9 +6,9 @@ export default {
   },
   'resource': {
     'ALLOW': {
-      'ADMIN': "CRUD",
-      'USER': "R",
-      'GUEST': "R"
+      'ADMIN': 'CRUD',
+      'USER': 'R',
+      'GUEST': 'R'
     }
   },
   'fields': {

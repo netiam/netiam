@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import request from 'supertest'
 import api from '../../src/netiam'
 
