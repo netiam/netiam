@@ -2,7 +2,7 @@ import _ from 'lodash'
 import dbg from 'debug'
 import async from 'async'
 import filter from './odata/filter'
-import * as error from './error'
+import * as errors from 'netiam-errors'
 
 const debug = dbg('netiam:rest:resource')
 
@@ -129,7 +129,7 @@ export default function resource(spec) {
     q.exec((err, documents) => {
       if (err) {
         debug(err)
-        return reject(error.internalServerError(err.message))
+        return reject(errors.internalServerError(err.message))
       }
 
       if (!_.isArray(documents)) {
@@ -183,7 +183,13 @@ export default function resource(spec) {
             }
 
             // query
-            let q = relationshipCollection.find(f.toObject())
+            let q
+            try {
+              q = relationshipCollection.find(f.toObject())
+            } catch (err) {
+              debug(err)
+              reject(errors.badRequest(err.message))
+            }
 
             // select only related
             q = q.where('_id').in(doc[relationshipField])
@@ -199,7 +205,13 @@ export default function resource(spec) {
         f = f.where(params(req.params))
 
         // query
-        const q = collection.find(f.toObject())
+        let q
+        try {
+          q = collection.find(f.toObject())
+        } catch (err) {
+          debug(err)
+          reject(errors.badRequest(err.message))
+        }
 
         // handle
         return listHandle(q, query, resolve, reject)
@@ -220,10 +232,10 @@ export default function resource(spec) {
     q.exec((err, document) => {
       if (err) {
         debug(err)
-        return reject(error.internalServerError(err.message))
+        return reject(errors.internalServerError(err.message))
       }
       if (!document) {
-        return reject(error.notFound('Document not found'))
+        return reject(errors.notFound('Document not found'))
       }
 
       resolve(document)
@@ -260,7 +272,7 @@ export default function resource(spec) {
             }
 
             if (!doc) {
-              return reject(error.notFound('Document not found'))
+              return reject(errors.notFound('Document not found'))
             }
 
             // query options
@@ -307,12 +319,14 @@ export default function resource(spec) {
           if (err) {
             debug(err)
             if (err.code === 11000) {
-              return reject(error.badRequest(err.message))
+              return reject(errors.badRequest(err.message))
             }
-            return reject(error.internalServerError(err.message))
+
+            return reject(errors.internalServerError(err.message))
           }
+
           if (!documents) {
-            return reject(error.internalServerError('Document could not be created'))
+            return reject(errors.internalServerError('Document could not be created'))
           }
 
           // populate
@@ -377,7 +391,7 @@ export default function resource(spec) {
 
     function updateExpanded(document) {
       if (!document) {
-        throw error.notFound('Document not found')
+        throw errors.notFound('Document not found')
       }
       const ops = _.map(query.expand, path => {
         return updateExpandedPath(document, path, req.body)
@@ -405,7 +419,7 @@ export default function resource(spec) {
           .select(relationshipField).exec()
           .then(doc => {
             if (!doc) {
-              throw error.notFound('Document not found')
+              throw errors.notFound('Document not found')
             }
 
             // query options
@@ -458,10 +472,10 @@ export default function resource(spec) {
         q.exec((err, document) => {
           if (err) {
             debug(err)
-            return reject(error.internalServerError(err.message))
+            return reject(errors.internalServerError(err.message))
           }
           if (!document) {
-            return reject(error.notFound('Document not found'))
+            return reject(errors.notFound('Document not found'))
           }
 
           document
@@ -469,7 +483,7 @@ export default function resource(spec) {
             .save(err => {
               if (err) {
                 debug(err)
-                return reject(error.internalServerError(err.message))
+                return reject(errors.internalServerError(err.message))
               }
 
               // populate
@@ -503,10 +517,10 @@ export default function resource(spec) {
         .exec((err, documents) => {
           if (err) {
             debug(err)
-            return reject(error.internalServerError(err.message))
+            return reject(errors.internalServerError(err.message))
           }
           if (!documents) {
-            return reject(error.notFound('Document not found'))
+            return reject(errors.notFound('Document not found'))
           }
 
           resolve()
