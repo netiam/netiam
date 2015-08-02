@@ -325,6 +325,7 @@ export default function resource(spec) {
 
             return reject(errors.internalServerError(err.message))
           }
+
           if (!documents) {
             return reject(errors.internalServerError('Document could not be created'))
           }
