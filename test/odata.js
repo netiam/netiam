@@ -87,6 +87,7 @@ describe('odata', function() {
           res.body.should
             .be.instanceOf(Array)
             .and.have.lengthOf(1)
+          res.body[0].email.should.be.eql(userFixture.email)
 
           done()
         })
