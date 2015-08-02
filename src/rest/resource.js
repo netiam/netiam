@@ -303,7 +303,7 @@ export default function resource(spec) {
   }
 
   /**
-   * Creates a new document and save it to the database.
+   * Creates a new document and saves it to the database.
    *
    * @param {Object} req The request object
    * @returns {Promise}
@@ -315,7 +315,7 @@ export default function resource(spec) {
 
       // create model
       collection
-        .create(req.body, (err, documents) => {
+        .create(req.body, (err, document) => {
           if (err) {
             debug(err)
             if (err.code === 11000) {
@@ -325,17 +325,17 @@ export default function resource(spec) {
             return reject(errors.internalServerError(err.message))
           }
 
-          if (!documents) {
+          if (!document) {
             return reject(errors.internalServerError('Document could not be created'))
           }
 
           // populate
           if (query.expand.length > 0) {
-            documents.populate(query.expand.join(' '), () => {
-              resolve(documents)
+            document.populate(query.expand.join(' '), () => {
+              resolve(document.toJSON())
             })
           } else {
-            resolve(documents)
+            resolve(document.toJSON())
           }
         })
     })
@@ -450,10 +450,10 @@ export default function resource(spec) {
                     return reject(err)
                   }
 
-                  resolve(document)
+                  resolve(document.toJSON())
                 })
             }
-            resolve(document)
+            resolve(document.toJSON())
           })
           .then(null, err => {
             reject(err)
@@ -489,10 +489,10 @@ export default function resource(spec) {
               // populate
               if (req.query.expand) {
                 document.populate(query.expand.join(' '), () => {
-                  resolve(document)
+                  resolve(document.toJSON())
                 })
               } else {
-                resolve(document)
+                resolve(document.toJSON())
               }
             })
         })
