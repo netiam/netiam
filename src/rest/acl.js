@@ -20,7 +20,7 @@ export default function acl(spec) {
     let fields = []
 
     if (settings.fields && _.isObject(settings.fields)) {
-      fields = fields.concat(settings.fields)
+      fields = fields.concat(Object.keys(settings.fields))
     }
 
     if (_.isFunction(resource.toObject)) {
@@ -108,6 +108,7 @@ export default function acl(spec) {
   function allowedForRole(user, resource, role, privilege, asserts) {
     role = roles.get(role)
     const allKeys = keys(resource)
+
     let allowedKeys = []
     let deniedKeys = []
 
@@ -183,6 +184,12 @@ export default function acl(spec) {
     return allowedKeys
   }
 
+  /**
+   * Test wheter a given parameter is of type object and has a constructor
+   * of ObjectID
+   * @param {*} obj
+   * @returns {Boolean}
+   */
   function isObjectID(obj) {
     return _.isObject(obj) && obj.constructor.name === 'ObjectID'
   }
