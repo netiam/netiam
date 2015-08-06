@@ -124,9 +124,15 @@ function handle(data, collection, refField, expand) {
 export default function merge(spec) {
   const {collection} = spec
   const {refField} = spec
-  const {expand} = spec
+  let {expand} = spec
 
   return function(req, res) {
+    // property expansion
+    if (_.isString(req.query.expand)) {
+      var queryExpand = req.query.expand.split(',')
+    }
+    expand = _.pick(expand, queryExpand)
+
     return handle(res.body, collection, refField, expand)
       .then(docs => {
         res.body = docs
