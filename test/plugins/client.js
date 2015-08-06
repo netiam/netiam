@@ -104,7 +104,7 @@ export default function() {
       request(app)
         .get('/clients/' + clientId)
         .set('Accept', 'application/json')
-        .expect(403)
+        .expect(400)
         .end(function(err) {
           if (err) {
             return done(err)

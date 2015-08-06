@@ -15,6 +15,10 @@ export default function(spec) {
     return new Promise((resolve, reject) => {
       const clientId = req.get(API_CLIENT_ID)
 
+      if (!clientId) {
+        return reject(errors.badRequest('You must provide a "api-client-id" header.'))
+      }
+
       collection
         .findOne({
           [idField]: clientId
