@@ -127,13 +127,14 @@ export default function merge(spec) {
   let {expand} = spec
 
   return function(req, res) {
+    let queryExpand
     // property expansion
     if (_.isString(req.query.expand)) {
-      var queryExpand = req.query.expand.split(',')
+      queryExpand = req.query.expand.split(',')
     }
-    expand = _.pick(expand, queryExpand)
+    let expandedPaths = _.pick(expand, queryExpand)
 
-    return handle(res.body, collection, refField, expand)
+    return handle(res.body, collection, refField, expandedPaths)
       .then(docs => {
         res.body = docs
       })
