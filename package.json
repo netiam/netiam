@@ -27,7 +27,7 @@
     "mmmagic": "^0.3.14",
     "mongoose": "=4.0.3",
     "netiam-errors": "^1.0.1",
-    "passport": "^0.2.2",
+    "passport": "=0.2.2",
     "passport-http": "^0.2.2",
     "passport-http-bearer": "^1.0.1",
     "passport-local": "^1.0.0",
