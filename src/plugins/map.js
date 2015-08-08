@@ -9,7 +9,7 @@ function request() {
 function response(map, spec = {}) {
   const {expand} = spec
 
-  function mapFields(document, map) {
+  function mapFields(document, map, expand) {
     const doc = {}
 
     if (_.isFunction(document.toObject)) {
@@ -39,27 +39,22 @@ function response(map, spec = {}) {
   }
 
   return function(req, res) {
-    let queryExpand = []
-    // Property expansion
+    let queryExpand
+    // property expansion
     if (_.isString(req.query.expand)) {
       queryExpand = req.query.expand.split(',')
     }
-
-    _.forEach(expand, function(map, key) {
-      if (queryExpand.indexOf(key) === -1) {
-        delete expand[key]
-      }
-    })
+    let expandedPaths = _.pick(expand, queryExpand)
 
     if (_.isArray(res.body)) {
       res.body = _.map(res.body, function(document) {
-        return mapFields(document, map)
+        return mapFields(document, map, expandedPaths)
       })
       return
     }
 
     if (_.isObject(res.body)) {
-      res.body = mapFields(res.body, map)
+      res.body = mapFields(res.body, map, expandedPaths)
     }
   }
 
