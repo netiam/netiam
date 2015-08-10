@@ -334,6 +334,7 @@ export default function resource(spec) {
           if (query.expand.length > 0) {
             document.populate(query.expand.join(' '), err => {
               if (err) {
+                debug(err)
                 return reject(errors.internalServerError(err.message))
               }
 
@@ -362,6 +363,7 @@ export default function resource(spec) {
           },
           (err) => {
             if (err) {
+              debug(err)
               return reject(err)
             }
 
@@ -460,6 +462,7 @@ export default function resource(spec) {
             resolve(document.toJSON())
           })
           .then(null, err => {
+            debug(err)
             reject(err)
           })
         return
