@@ -332,7 +332,11 @@ export default function resource(spec) {
 
           // populate
           if (query.expand.length > 0) {
-            document.populate(query.expand.join(' '), () => {
+            document.populate(query.expand.join(' '), err => {
+              if (err) {
+                return reject(errors.internalServerError(err.message))
+              }
+
               resolve(document.toJSON())
             })
           } else {
@@ -445,8 +449,7 @@ export default function resource(spec) {
           .then(document => {
             if (req.query.expand) {
               return document
-                .populate(query.expand.join(' '))
-                .exec(err => {
+                .populate(query.expand.join(' '), err => {
                   if (err) {
                     return reject(err)
                   }
@@ -489,7 +492,11 @@ export default function resource(spec) {
 
               // populate
               if (req.query.expand) {
-                document.populate(query.expand.join(' '), () => {
+                document.populate(query.expand.join(' '), err => {
+                  if (err) {
+                    return reject(errors.internalServerError(err.message))
+                  }
+
                   resolve(document.toJSON())
                 })
               } else {
