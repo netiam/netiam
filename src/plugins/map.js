@@ -6,10 +6,6 @@ function request(map, spec = {}) {
   function mapFields(document, map, expand) {
     const doc = {}
 
-    if (_.isFunction(document.toObject)) {
-      document = document.toObject()
-    }
-
     _.forEach(document, function(val, key) {
       key = map[key] || key
       doc[key] = val
