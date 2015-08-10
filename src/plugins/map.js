@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-function request() {
+function request(map, spec = {}) {
   const {expand} = spec
 
   function mapFields(document, map, expand) {
