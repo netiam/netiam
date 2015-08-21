@@ -108,9 +108,6 @@ export default function resource(spec) {
   }
 
   function listHandle(q, query, resolve, reject) {
-    // lean
-    q = q.lean()
-
     // populate
     if (query.expand.length > 0) {
       q = q.populate(query.expand.join(' '))
@@ -136,7 +133,9 @@ export default function resource(spec) {
         return resolve([])
       }
 
-      resolve(documents)
+      resolve(_.map(documents, document => {
+        return document.toObject()
+      }))
     })
   }
 
@@ -220,9 +219,6 @@ export default function resource(spec) {
   }
 
   function readHandle(q, query, resolve, reject) {
-    // lean
-    q = q.lean()
-
     // populate
     if (query.expand.length > 0) {
       q = q.populate(query.expand.join(' '))
@@ -239,7 +235,7 @@ export default function resource(spec) {
         return reject(errors.notFound('Document not found'))
       }
 
-      resolve(document)
+      resolve(document.toObject())
     })
   }
 
