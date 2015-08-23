@@ -11,6 +11,7 @@
     "postpublish": "semantic-release post",
     "start": "npm run watch",
     "test": "npm run test:unit",
+    "test:debug": "DEBUG=netiam:* npm test",
     "test:unit": "mocha",
     "test:coverage": "istanbul cover _mocha --report lcovonly -- -R spec",
     "watch": "./bin/watch"
