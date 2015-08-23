@@ -30,7 +30,10 @@ export default function() {
           itemsPerPage: 1
         })
         .map.res({_id: 'id'})
-        .jsonapi.res({collection: User})
+        .jsonapi.res({
+          collection: User,
+          itemsPerPage: 1
+        })
     )
 
     app.get(

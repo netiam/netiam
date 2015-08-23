@@ -1,9 +1,13 @@
 import _ from 'lodash'
 import {Schema} from 'mongoose'
 import errors from 'netiam-errors'
-import url from 'url'
-import resource,{normalize, params, ONE_TO_MANY, MANY_TO_ONE} from '../rest/resource'
+import resource,{ONE_TO_MANY, MANY_TO_ONE} from '../rest/resource'
+import jsonapi from '../rest/jsonapi'
+import {normalize, params} from '../rest/query'
 import filter from '../rest/odata/filter'
+import dbg from 'debug'
+
+const debug = dbg('netiam:plugins:jsonapi')
 
 function dbrefs(collection) {
   const schema = collection.schema
@@ -38,11 +42,11 @@ function response(spec) {
 
   idField = idField || '_id'
   relationship = relationship || ONE_TO_MANY
-  itemsPerPage = itemsPerPage || 1
+  itemsPerPage = itemsPerPage || 10
 
   const refs = dbrefs(collection)
 
-  function count(req, query) {
+  function numTotalDocuments(req, query) {
     return new Promise((resolve, reject) => {
 
       // filter
@@ -83,13 +87,13 @@ function response(spec) {
             q = q.where('_id').in(doc[relationshipField])
 
             // execute
-            q.exec((err, cnt) => {
+            q.exec((err, count) => {
               if (err) {
                 debug(err)
                 return reject(errors.internalServerError(err.message))
               }
 
-              resolve(cnt)
+              resolve(count)
             })
           })
 
@@ -97,7 +101,10 @@ function response(spec) {
       }
 
       if (relationship === ONE_TO_MANY) {
-        f = f.where(params(req.params))
+        f = f.where(params({
+          req,
+          map
+        }))
 
         // query
         let q
@@ -109,13 +116,13 @@ function response(spec) {
         }
 
         // execute
-        q.exec((err, cnt) => {
+        q.exec((err, count) => {
           if (err) {
             debug(err)
             return reject(errors.internalServerError(err.message))
           }
 
-          resolve(cnt)
+          resolve(count)
         })
       }
     })
@@ -159,55 +166,6 @@ function response(spec) {
       }
       return rels
     }, {})
-  }
-
-  function links(req, body, cnt) {
-    const base = req.protocol + '://' + req.get('host')
-    const self = url.parse(base + req.originalUrl, true)
-    const page = Number(req.query.page) || 1
-
-    self.search = undefined
-    self.query.page = page
-
-    const _links = {self: url.format(self)}
-
-    if (_.isArray(body)) {
-      const first = url.parse(base + req.originalUrl, true)
-      first.search = undefined
-      first.query.page = 1
-
-      const next = url.parse(base + req.originalUrl, true)
-      next.search = undefined
-      next.query.page = page + 1
-
-      const prev = url.parse(base + req.originalUrl, true)
-      prev.search = undefined
-      prev.query.page = page - 1
-
-      const last = url.parse(base + req.originalUrl, true)
-      last.search = undefined
-      last.query.page = Math.max(1, Math.ceil(cnt / itemsPerPage))
-
-      if (first.query.page < self.query.page) {
-        _links.first = url.format(first)
-      }
-
-      if (prev.query.page > first.query.page && prev.query.page < self.query.page) {
-        _links.prev = url.format(prev)
-      }
-
-      if (next.query.page < last.query.page) {
-        _links.next = url.format(next)
-      }
-
-      if (last.query.page > self.query.page) {
-        _links.last = url.format(last)
-      }
-
-      return _links
-    }
-
-    return _links
   }
 
   function data(body, type) {
@@ -292,12 +250,20 @@ function response(spec) {
     }
 
     return new Promise((resolve, reject) => {
-      const query = normalize(req.query, idField)
+      const query = normalize({
+        req,
+        idField
+      })
 
-      count(req, query)
-        .then(cnt => {
+      numTotalDocuments(req, query)
+        .then(count => {
           res.json({
-            links: links(req, res.body, cnt),
+            links: jsonapi.links({
+              req,
+              res,
+              count,
+              itemsPerPage
+            }),
             data: data(res.body, collection.modelName),
             included: included(res.body, query, refs)
           })
