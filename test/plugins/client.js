@@ -16,7 +16,7 @@ export default function() {
       api()
         .rest({collection: Client})
         .map.res({_id: 'id'})
-        .jsonapi({collection: Client})
+        .json()
     )
 
     app.get(
@@ -25,7 +25,7 @@ export default function() {
         .client({collection: Client})
         .rest({collection: Client})
         .map.res({_id: 'id'})
-        .jsonapi({collection: Client})
+        .json()
     )
 
     db.connection.db.dropDatabase(function(err) {
@@ -58,18 +58,12 @@ export default function() {
             return done(err)
           }
 
-          try {
-            let response = JSON.parse(res.text)
-            response.should.have.property('data')
-            response.data.should.have.properties({
-              key: 'BXqJjCNvro0AZvuO5ur8F1j3UPXxI4pf5RcSdXFs8m4AYe3NHFcwow6LW29dUCkz+XzSzTPZ+M2LSFymtFCVtQ==',
-              secret: 'Gw6TIPGWpxx+IzHrDQXR/X+4OHxg2XfCbo7wlyjyJjFl94gJ2rgKP5BdJwOPcnwnUnSkM5rv7EFXQqnGDEhr6Q=='
-            })
-            clientId = response.data.id
-            clientKey = response.data.key
-          } catch (err) {
-            return done(err)
-          }
+          res.body.should.have.properties({
+            key: 'BXqJjCNvro0AZvuO5ur8F1j3UPXxI4pf5RcSdXFs8m4AYe3NHFcwow6LW29dUCkz+XzSzTPZ+M2LSFymtFCVtQ==',
+            secret: 'Gw6TIPGWpxx+IzHrDQXR/X+4OHxg2XfCbo7wlyjyJjFl94gJ2rgKP5BdJwOPcnwnUnSkM5rv7EFXQqnGDEhr6Q=='
+          })
+          clientId = res.body.id
+          clientKey = res.body.key
 
           done()
         })
@@ -88,13 +82,7 @@ export default function() {
             return done(err)
           }
 
-          try {
-            let response = JSON.parse(res.text)
-            response.should.have.property('data')
-            response.data.should.have.properties(['key', 'secret'])
-          } catch (err) {
-            return done(err)
-          }
+          res.body.should.have.properties(['key', 'secret'])
 
           done()
         })
