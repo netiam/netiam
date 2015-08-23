@@ -9,6 +9,92 @@ const debug = dbg('netiam:rest:resource')
 export const MANY_TO_ONE = Symbol('many-to-one')
 export const ONE_TO_MANY = Symbol('one-to-many')
 
+/**
+ * Normalize the request query. The resource routes do access certain query
+ * parameters, neither they are set or not.
+ * @param {Object} query The original query object
+ * @param {String} idField The ID field
+ * @returns {Object} The normalized query object
+ * @private
+ */
+export function normalize(query, idField) {
+  // Clone query object
+  query = _.clone(query)
+
+  // Filter
+  if (!query.filter) {
+    query.filter = ''
+  }
+
+  // Property expansion
+  if (_.isString(query.expand)) {
+    query.expand = query.expand.split(',')
+  } else {
+    query.expand = []
+  }
+
+  // Order
+  if (!query.sort) {
+    query.sort = idField
+  }
+
+  // Pagination
+  if (!query.offset) {
+    query.offset = 0
+  } else {
+    query.offset = Number(query.offset)
+  }
+  if (!query.limit) {
+    query.limit = 10
+  } else {
+    query.limit = Number(query.limit)
+  }
+
+  return query
+}
+
+/**
+ * Maps request parameters to a properties hash object which can be
+ * used to create a filter expression for database queries. This method
+ * is also used to constraint requests to subresources.
+ *
+ * The following example tries to fetch messages from a specific user.
+ * In order to reduce the messages within the database, there must be some
+ * kind of 1:n relationship between a user and its messages.
+ *
+ * The mapping allows you to define a dynamic relationship between a parameter
+ * and a specific document property. Internal this mapping is used to reduce
+ * the resultset of documents by adding a $where statement to the database
+ * query.
+ *
+ * Example:
+ * // Request
+ * GET /users/:user/messages
+ *
+ * // Mapping
+ * {
+   *  'owner': ':user'
+   * }
+ *
+ * @param {Object} parameters
+ * @returns {Object}
+ * @private
+ */
+export function params(parameters, map) {
+  const newMap = _.clone(map)
+
+  return _.forOwn(newMap, (val, key, obj) => {
+    // handle route params
+    if (val.charAt(0) === ':') {
+      obj[key] = parameters[val.substring(1)]
+      return
+    }
+
+    // Static value
+    obj[key] = val
+  })
+}
+
 export default function resource(spec) {
   const {collection} = spec
   const {relationshipField} = spec
@@ -21,91 +107,6 @@ export default function resource(spec) {
   idParam = idParam || 'id'
   idField = idField || '_id'
   relationship = relationship || ONE_TO_MANY
-
-  /**
-   * Normalize the request query. The resource routes do access certain query
-   * parameters, neither they are set or not.
-   * @param {Object} query The original query object
-   * @returns {Object} The normalized query object
-   * @private
-   */
-  function normalize(query) {
-    // Clone query object
-    query = _.clone(query)
-
-    // Filter
-    if (!query.filter) {
-      query.filter = ''
-    }
-
-    // Property expansion
-    if (_.isString(query.expand)) {
-      query.expand = query.expand.split(',')
-    } else {
-      query.expand = []
-    }
-
-    // Order
-    if (!query.sort) {
-      query.sort = idField
-    }
-
-    // Pagination
-    if (!query.offset) {
-      query.offset = 0
-    } else {
-      query.offset = Number(query.offset)
-    }
-    if (!query.limit) {
-      query.limit = 10
-    } else {
-      query.limit = Number(query.limit)
-    }
-
-    return query
-  }
-
-  /**
-   * Maps request parameters to a properties hash object which can be
-   * used to create a filter expression for database queries. This method
-   * is also used to constraint requests to subresources.
-   *
-   * The following example tries to fetch messages from a specific user.
-   * In order to reduce the messages within the database, there must be some
-   * kind of 1:n relationship between a user and its messages.
-   *
-   * The mapping allows you to define a dynamic relationship between a parameter
-   * and a specific document property. Internal this mapping is used to reduce
-   * the resultset of documents by adding a $where statement to the database
-   * query.
-   *
-   * Example:
-   * // Request
-   * GET /users/:user/messages
-   *
-   * // Mapping
-   * {
-   *  'owner': ':user'
-   * }
-   *
-   * @param {Object} parameters
-   * @returns {Object}
-   * @private
-   */
-  function params(parameters) {
-    const newMap = _.clone(map)
-
-    return _.forOwn(newMap, (val, key, obj) => {
-      // handle route params
-      if (val.charAt(0) === ':') {
-        obj[key] = parameters[val.substring(1)]
-        return
-      }
-
-      // Static value
-      obj[key] = val
-    })
-  }
 
   function listHandle(q, query, resolve, reject) {
     // populate
@@ -154,7 +155,7 @@ export default function resource(spec) {
   function list(req) {
     return new Promise((resolve, reject) => {
       // normalize
-      const query = normalize(req.query)
+      const query = normalize(req.query, idField)
 
       // filter
       let f = filter(query.filter)
@@ -201,7 +202,7 @@ export default function resource(spec) {
       }
 
       if (relationship === ONE_TO_MANY) {
-        f = f.where(params(req.params))
+        f = f.where(params(req.params, map))
 
         // query
         let q
@@ -248,7 +249,7 @@ export default function resource(spec) {
   function read(req) {
     return new Promise((resolve, reject) => {
       // normalize
-      const query = normalize(req.query)
+      const query = normalize(req.query, idField)
 
       // handle relationships
       if (relationship === MANY_TO_ONE &&
@@ -308,7 +309,7 @@ export default function resource(spec) {
   function create(req) {
     return new Promise((resolve, reject) => {
       // normalize
-      const query = normalize(req.query)
+      const query = normalize(req.query, idField)
 
       // create model
       collection
@@ -390,7 +391,7 @@ export default function resource(spec) {
    */
   function update(req) {
     // normalize
-    const query = normalize(req.query)
+    const query = normalize(req.query, idField)
 
     function updateExpanded(document) {
       if (!document) {
