@@ -1,6 +1,10 @@
 import _ from 'lodash'
 import request from 'supertest'
+import util from 'util'
 import User from './../models/user'
+import fixtures from '../fixtures'
+import roles from '../../src/rest/roles'
+import Role from '../../src/rest/models/role'
 import db from './../utils/db.test.js'
 import api from '../../src/netiam'
 
@@ -16,7 +20,7 @@ export default function() {
       api()
         .rest({collection: User})
         .map.res({_id: 'id'})
-        .jsonapi({collection: User})
+        .jsonapi.res({collection: User})
     )
 
     app.get(
@@ -24,7 +28,7 @@ export default function() {
       api()
         .rest({collection: User})
         .map.res({_id: 'id'})
-        .jsonapi({collection: User})
+        .jsonapi.res({collection: User})
     )
 
     app.get(
@@ -32,7 +36,7 @@ export default function() {
       api()
         .rest({collection: User})
         .map.res({_id: 'id'})
-        .jsonapi({collection: User})
+        .jsonapi.res({collection: User})
     )
 
     app.put(
@@ -40,14 +44,22 @@ export default function() {
       api()
         .rest({collection: User})
         .map.res({_id: 'id'})
-        .jsonapi({collection: User})
+        .jsonapi.res({collection: User})
     )
 
-    db.connection.db.dropDatabase(function(err) {
+    fixtures(function(err) {
       if (err) {
         return done(err)
       }
-      done()
+
+      Role.find({}, function(err, docs) {
+        if (err) {
+          return done(err)
+        }
+
+        roles.set(docs)
+        done()
+      })
     })
   })
 
@@ -73,24 +85,53 @@ export default function() {
             return done(err)
           }
 
-          try {
-            let response = JSON.parse(res.text)
-            response.should.have.property('data')
-            response.data.should.have.properties({
-              'name': 'eliias',
-              'description': 'Hey, ich bin der Hannes.',
-              'email': 'hannes@impossiblearts.com',
-              'firstname': 'Hannes',
-              'lastname': 'Moser',
-              'location': [
-                13.0406998,
-                47.822352
-              ]
-            })
-            userId = response.data.id
-          } catch (err) {
+          res.body.should.have.property('links')
+          res.body.should.have.property('data')
+          res.body.should.have.property('included')
+
+          res.body.links.should.be.an.Object()
+
+          res.body.data.should.be.an.Object()
+          res.body.data.should.have.property('id')
+          res.body.data.should.have.property('type')
+          res.body.data.should.have.property('attributes')
+          res.body.data.should.have.property('relationships')
+
+          res.body.included.should.be.an.Array()
+
+          userId = res.body.data.id
+
+          done()
+        })
+    })
+
+    it('should create a second user', function(done) {
+      request(app)
+        .post('/users')
+        .send(userFixture)
+        .set('Accept', 'application/json')
+        .expect(201)
+        .expect('Content-Type', /json/)
+        .end(function(err, res) {
+          if (err) {
             return done(err)
           }
+
+          res.body.should.have.property('links')
+          res.body.should.have.property('data')
+          res.body.should.have.property('included')
+
+          res.body.links.should.be.an.Object()
+
+          res.body.data.should.be.an.Object()
+          res.body.data.should.have.property('id')
+          res.body.data.should.have.property('type')
+          res.body.data.should.have.property('attributes')
+          res.body.data.should.have.property('relationships')
+
+          res.body.included.should.be.an.Array()
+
+          userId = res.body.data.id
 
           done()
         })
@@ -98,7 +139,7 @@ export default function() {
 
     it('should get users', function(done) {
       request(app)
-        .get('/users')
+        .get('/users?expand=role')
         .set('Accept', 'application/json')
         .expect(200)
         .expect('Content-Type', /json/)
@@ -107,15 +148,21 @@ export default function() {
             return done(err)
           }
 
-          try {
-            let response = JSON.parse(res.text)
-            response.should.have.property('data')
-            response.data.should
-              .be.instanceOf(Array)
-              .and.have.lengthOf(1)
-          } catch (err) {
-            return done(err)
-          }
+          res.body.should.have.property('links')
+          res.body.should.have.property('data')
+          res.body.should.have.property('included')
+
+          res.body.links.should.be.an.Object()
+
+          res.body.data.should.be.an.Array()
+          res.body.data.should.have.length(2)
+          res.body.data[0].should.have.property('id')
+          res.body.data[0].should.have.property('type')
+          res.body.data[0].should.have.property('attributes')
+          res.body.data[0].should.have.property('relationships')
+
+          res.body.included.should.be.an.Array()
+          res.body.included.should.have.length(1)
 
           done()
         })
@@ -123,7 +170,7 @@ export default function() {
 
     it('should get a user', function(done) {
       request(app)
-        .get('/users/' + userId)
+        .get('/users/' + userId + '?expand=role')
         .set('Accept', 'application/json')
         .expect(200)
         .expect('Content-Type', /json/)
@@ -132,23 +179,19 @@ export default function() {
             return done(err)
           }
 
-          try {
-            let response = JSON.parse(res.text)
-            response.should.have.property('data')
-            response.data.should.have.properties({
-              'name': 'eliias',
-              'description': 'Hey, ich bin der Hannes.',
-              'email': 'hannes@impossiblearts.com',
-              'firstname': 'Hannes',
-              'lastname': 'Moser',
-              'location': [
-                13.0406998,
-                47.822352
-              ]
-            })
-          } catch (err) {
-            return done(err)
-          }
+          res.body.should.have.property('links')
+          res.body.should.have.property('data')
+          res.body.should.have.property('included')
+
+          res.body.links.should.be.an.Object()
+
+          res.body.data.should.be.an.Object()
+          res.body.data.should.have.property('id')
+          res.body.data.should.have.property('type')
+          res.body.data.should.have.property('attributes')
+          res.body.data.should.have.property('relationships')
+
+          res.body.included.should.be.an.Array()
 
           done()
         })
@@ -169,23 +212,19 @@ export default function() {
             return done(err)
           }
 
-          try {
-            let response = JSON.parse(res.text)
-            response.should.have.property('data')
-            response.data.should.have.properties({
-              'name': 'modified name',
-              'description': 'Hey, ich bin der Hannes.',
-              'email': 'hannes@impossiblearts.com',
-              'firstname': 'Hannes',
-              'lastname': 'Moser',
-              'location': [
-                13.0406998,
-                47.822352
-              ]
-            })
-          } catch (err) {
-            return done(err)
-          }
+          res.body.should.have.property('links')
+          res.body.should.have.property('data')
+          res.body.should.have.property('included')
+
+          res.body.links.should.be.an.Object()
+
+          res.body.data.should.be.an.Object()
+          res.body.data.should.have.property('id')
+          res.body.data.should.have.property('type')
+          res.body.data.should.have.property('attributes')
+          res.body.data.should.have.property('relationships')
+
+          res.body.included.should.be.an.Array()
 
           done()
         })
