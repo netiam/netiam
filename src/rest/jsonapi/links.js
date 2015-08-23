@@ -3,7 +3,7 @@ import url from 'url'
 
 export default function links(spec) {
   const base = spec.req.protocol + '://' + spec.req.get('host')
-  const self = url.parse(base + spec.req.originalUrl, true)
+  let self = url.parse(base + spec.req.originalUrl, true)
   const page = Number(spec.req.query.page) || 1
 
   self.search = undefined
@@ -48,9 +48,12 @@ export default function links(spec) {
   }
 
   if (spec.isRelated) {
-    // TODO
+    self = url.parse(base + spec.req.originalUrl, true)
+    self.pathname += '/relationships/' + spec.type
+    _links.self = url.format(self)
+
     const related = url.parse(base + spec.req.originalUrl, true)
-    related.pathname += '/id/role'
+    related.pathname += '/' + spec.type
     _links.related = url.format(related)
   }
 

@@ -14,6 +14,7 @@ export default function relationships(spec) {
           type: _.camelCase(spec.collection.schema.paths[key].options.ref),
           links: links({
             req: spec.req,
+            type: _.camelCase(spec.collection.schema.paths[key].options.ref),
             isRelated: true
           })
         }
