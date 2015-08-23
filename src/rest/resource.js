@@ -115,7 +115,6 @@ export default function resource(spec) {
             // select only related
             q = q.where('_id').in(doc[relationshipField])
 
-            // handle
             listHandle(q, query, resolve, reject)
           })
 
@@ -137,7 +136,6 @@ export default function resource(spec) {
           reject(errors.badRequest(err.message))
         }
 
-        // handle
         return listHandle(q, query, resolve, reject)
       }
     })
