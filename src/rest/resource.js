@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import dbg from 'debug'
 import async from 'async'
+import {params, normalize} from './query'
 import filter from './odata/filter'
 import * as errors from 'netiam-errors'
 
@@ -10,99 +11,6 @@ export const MANY_TO_ONE = Symbol('many-to-one')
 export const ONE_TO_MANY = Symbol('one-to-many')
 
 let itemsPerPage = 10
-
-/**
- * Normalize the request query. The resource routes do access certain query
- * parameters, neither they are set or not.
- * @param {Object} query The original query object
- * @param {String} idField The ID field
- * @returns {Object} The normalized query object
- * @private
- */
-export function normalize(query, idField) {
-  // Clone query object
-  query = _.clone(query)
-
-  // Filter
-  if (!query.filter) {
-    query.filter = ''
-  }
-
-  // Property expansion
-  if (_.isString(query.expand)) {
-    query.expand = query.expand.split(',')
-  } else {
-    query.expand = []
-  }
-
-  // Order
-  if (!query.sort) {
-    query.sort = idField
-  }
-
-  // Pagination
-  if (!query.offset) {
-    query.offset = 0
-  } else {
-    query.offset = Number(query.offset)
-  }
-
-  if (!query.limit) {
-    query.limit = itemsPerPage
-  } else {
-    query.limit = Number(query.limit)
-  }
-
-  if (query.page) {
-    query.page = query.page ? Number(query.page) : 1
-    query.limit = itemsPerPage
-    query.offset = Math.max(0, (query.page - 1) * itemsPerPage)
-  }
-
-  return query
-}
-
-/**
- * Maps request parameters to a properties hash object which can be
- * used to create a filter expression for database queries. This method
- * is also used to constraint requests to subresources.
- *
- * The following example tries to fetch messages from a specific user.
- * In order to reduce the messages within the database, there must be some
- * kind of 1:n relationship between a user and its messages.
- *
- * The mapping allows you to define a dynamic relationship between a parameter
- * and a specific document property. Internal this mapping is used to reduce
- * the resultset of documents by adding a $where statement to the database
- * query.
- *
- * Example:
- * // Request
- * GET /users/:user/messages
- *
- * // Mapping
- * {
-   *  'owner': ':user'
-   * }
- *
- * @param {Object} parameters
- * @returns {Object}
- * @private
- */
-export function params(parameters, map) {
-  const newMap = _.clone(map)
-
-  return _.forOwn(newMap, (val, key, obj) => {
-    // handle route params
-    if (val.charAt(0) === ':') {
-      obj[key] = parameters[val.substring(1)]
-      return
-    }
-
-    // Static value
-    obj[key] = val
-  })
-}
 
 export default function resource(spec) {
   const {collection} = spec
@@ -164,8 +72,11 @@ export default function resource(spec) {
    */
   function list(req) {
     return new Promise((resolve, reject) => {
-      // normalize
-      const query = normalize(req.query, idField)
+      const query = normalize({
+        req,
+        idField,
+        itemsPerPage
+      })
 
       // filter
       let f = filter(query.filter)
@@ -212,7 +123,10 @@ export default function resource(spec) {
       }
 
       if (relationship === ONE_TO_MANY) {
-        f = f.where(params(req.params, map))
+        f = f.where(params({
+          req,
+          map
+        }))
 
         // query
         let q
@@ -258,8 +172,11 @@ export default function resource(spec) {
    */
   function read(req) {
     return new Promise((resolve, reject) => {
-      // normalize
-      const query = normalize(req.query, idField)
+      const query = normalize({
+        req,
+        idField,
+        itemsPerPage
+      })
 
       // handle relationships
       if (relationship === MANY_TO_ONE &&
@@ -319,7 +236,11 @@ export default function resource(spec) {
   function create(req) {
     return new Promise((resolve, reject) => {
       // normalize
-      const query = normalize(req.query, idField)
+      const query = normalize({
+        req,
+        idField,
+        itemsPerPage
+      })
 
       // create model
       collection
@@ -400,8 +321,11 @@ export default function resource(spec) {
    * @returns {Promise}
    */
   function update(req) {
-    // normalize
-    const query = normalize(req.query, idField)
+    const query = normalize({
+      req,
+      idField,
+      itemsPerPage
+    })
 
     function updateExpanded(document) {
       if (!document) {
