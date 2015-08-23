@@ -131,6 +131,7 @@ function response(spec) {
           }))
         })
         .catch(err => {
+          debug(err)
           reject(err)
         })
     })
