@@ -10,6 +10,7 @@ function data(spec) {
       return document({
         req: spec.req,
         res: spec.res,
+        collection: spec.collection,
         data: node,
         type: spec.type,
         refs: spec.refs
@@ -21,6 +22,7 @@ function data(spec) {
     return document({
       req: spec.req,
       res: spec.res,
+      collection: spec.collection,
       data: spec.body,
       type: spec.type,
       refs: spec.refs
@@ -45,6 +47,7 @@ function transform(spec) {
       req: spec.req,
       res: spec.res,
       body: spec.res.body,
+      collection: spec.collection,
       type: spec.collection.modelName,
       refs
     }),

@@ -288,7 +288,7 @@ export default function() {
             'type',
             'attributes'
           ])
-
+          console.log(util.inspect(res.body, {depth: null}))
           done()
         })
     })

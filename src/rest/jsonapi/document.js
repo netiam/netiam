@@ -28,10 +28,10 @@ export default function document(spec) {
 
   if (_.isArray(spec.refs)) {
     doc.relationships = relationships({
+      collection: spec.collection,
       req: spec.req,
       data: spec.data,
-      refs: spec.refs,
-      type: spec.type
+      refs: spec.refs
     })
   }
 
