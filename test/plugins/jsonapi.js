@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import request from 'supertest'
+import util from 'util'
 import User from './../models/user'
 import fixtures from '../fixtures'
 import roles from '../../src/rest/roles'
@@ -92,7 +93,7 @@ export default function() {
 
           res.body.should.have.property('links')
           res.body.should.have.property('data')
-          res.body.should.have.property('included')
+          res.body.should.not.have.property('included')
 
           res.body.links.should.be.an.Object()
 
@@ -101,8 +102,6 @@ export default function() {
           res.body.data.should.have.property('type')
           res.body.data.should.have.property('attributes')
           res.body.data.should.have.property('relationships')
-
-          res.body.included.should.be.an.Array()
 
           userId = res.body.data.id
 
@@ -124,7 +123,7 @@ export default function() {
 
           res.body.should.have.property('links')
           res.body.should.have.property('data')
-          res.body.should.have.property('included')
+          res.body.should.not.have.property('included')
 
           res.body.links.should.be.an.Object()
 
@@ -133,8 +132,6 @@ export default function() {
           res.body.data.should.have.property('type')
           res.body.data.should.have.property('attributes')
           res.body.data.should.have.property('relationships')
-
-          res.body.included.should.be.an.Array()
 
           userId = res.body.data.id
 
@@ -156,7 +153,7 @@ export default function() {
 
           res.body.should.have.property('links')
           res.body.should.have.property('data')
-          res.body.should.have.property('included')
+          res.body.should.not.have.property('included')
 
           res.body.links.should.be.an.Object()
 
@@ -165,8 +162,6 @@ export default function() {
           res.body.data.should.have.property('type')
           res.body.data.should.have.property('attributes')
           res.body.data.should.have.property('relationships')
-
-          res.body.included.should.be.an.Array()
 
           userId = res.body.data.id
 
@@ -188,7 +183,7 @@ export default function() {
 
           res.body.should.have.property('links')
           res.body.should.have.property('data')
-          res.body.should.have.property('included')
+          res.body.should.not.have.property('included')
 
           res.body.links.should.be.an.Object()
 
@@ -197,8 +192,6 @@ export default function() {
           res.body.data.should.have.property('type')
           res.body.data.should.have.property('attributes')
           res.body.data.should.have.property('relationships')
-
-          res.body.included.should.be.an.Array()
 
           userId = res.body.data.id
 
@@ -220,7 +213,7 @@ export default function() {
 
           res.body.should.have.property('links')
           res.body.should.have.property('data')
-          res.body.should.have.property('included')
+          res.body.should.not.have.property('included')
 
           res.body.links.should.be.an.Object()
 
@@ -230,8 +223,6 @@ export default function() {
           res.body.data.should.have.property('attributes')
           res.body.data.should.have.property('relationships')
 
-          res.body.included.should.be.an.Array()
-
           userId = res.body.data.id
 
           done()
@@ -239,6 +230,34 @@ export default function() {
     })
 
     it('should get users - default page', function(done) {
+      request(app)
+        .get('/users')
+        .set('Accept', 'application/json')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end(function(err, res) {
+          if (err) {
+            return done(err)
+          }
+
+          res.body.should.have.property('links')
+          res.body.should.have.property('data')
+          res.body.should.not.have.property('included')
+
+          res.body.links.should.be.an.Object()
+
+          res.body.data.should.be.an.Array()
+          res.body.data.should.have.length(1)
+          res.body.data[0].should.have.property('id')
+          res.body.data[0].should.have.property('type')
+          res.body.data[0].should.have.property('attributes')
+          res.body.data[0].should.have.property('relationships')
+
+          done()
+        })
+    })
+
+    it('should get users + expanded role - default page', function(done) {
       request(app)
         .get('/users?expand=role')
         .set('Accept', 'application/json')
@@ -264,12 +283,17 @@ export default function() {
 
           res.body.included.should.be.an.Array()
           res.body.included.should.have.length(1)
+          res.body.included[0].should.have.properties([
+            'id',
+            'type',
+            'attributes'
+          ])
 
           done()
         })
     })
 
-    it('should get users - page1', function(done) {
+    it('should get users + expanded role - page1', function(done) {
       request(app)
         .get('/users?expand=role&page=1')
         .set('Accept', 'application/json')
@@ -301,12 +325,17 @@ export default function() {
 
           res.body.included.should.be.an.Array()
           res.body.included.should.have.length(1)
+          res.body.included[0].should.have.properties([
+            'id',
+            'type',
+            'attributes'
+          ])
 
           done()
         })
     })
 
-    it('should get users - page2', function(done) {
+    it('should get users + expanded role - page2', function(done) {
       request(app)
         .get('/users?expand=role&page=2')
         .set('Accept', 'application/json')
@@ -339,12 +368,17 @@ export default function() {
 
           res.body.included.should.be.an.Array()
           res.body.included.should.have.length(1)
+          res.body.included[0].should.have.properties([
+            'id',
+            'type',
+            'attributes'
+          ])
 
           done()
         })
     })
 
-    it('should get users - page3', function(done) {
+    it('should get users + expanded role - page3', function(done) {
       request(app)
         .get('/users?expand=role&page=3')
         .set('Accept', 'application/json')
@@ -377,12 +411,17 @@ export default function() {
 
           res.body.included.should.be.an.Array()
           res.body.included.should.have.length(1)
+          res.body.included[0].should.have.properties([
+            'id',
+            'type',
+            'attributes'
+          ])
 
           done()
         })
     })
 
-    it('should get users - page4', function(done) {
+    it('should get users + expanded role - page4', function(done) {
       request(app)
         .get('/users?expand=role&page=4')
         .set('Accept', 'application/json')
@@ -415,6 +454,11 @@ export default function() {
 
           res.body.included.should.be.an.Array()
           res.body.included.should.have.length(1)
+          res.body.included[0].should.have.properties([
+            'id',
+            'type',
+            'attributes'
+          ])
 
           done()
         })
@@ -444,6 +488,11 @@ export default function() {
           res.body.data.should.have.property('relationships')
 
           res.body.included.should.be.an.Array()
+          res.body.included[0].should.have.properties([
+            'id',
+            'type',
+            'attributes'
+          ])
 
           done()
         })
@@ -466,7 +515,7 @@ export default function() {
 
           res.body.should.have.property('links')
           res.body.should.have.property('data')
-          res.body.should.have.property('included')
+          res.body.should.not.have.property('included')
 
           res.body.links.should.be.an.Object()
 
@@ -475,8 +524,6 @@ export default function() {
           res.body.data.should.have.property('type')
           res.body.data.should.have.property('attributes')
           res.body.data.should.have.property('relationships')
-
-          res.body.included.should.be.an.Array()
 
           done()
         })
