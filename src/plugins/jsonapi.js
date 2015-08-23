@@ -32,13 +32,13 @@ function response(spec) {
   const {relationshipField} = spec
   const {relationshipCollection} = spec
   const {map} = spec
-  let {relationship} = spec
-  let {idParam} = spec
   let {idField} = spec
+  let {relationship} = spec
+  let {itemsPerPage} = spec
 
-  idParam = idParam || 'id'
   idField = idField || '_id'
   relationship = relationship || ONE_TO_MANY
+  itemsPerPage = itemsPerPage || 1
 
   const refs = dbrefs(collection)
 
@@ -164,18 +164,50 @@ function response(spec) {
   function links(req, body, cnt) {
     const base = req.protocol + '://' + req.get('host')
     const self = url.parse(base + req.originalUrl, true)
-    const page = req.query.page || 1
+    const page = Number(req.query.page) || 1
 
     self.search = undefined
     self.query.page = page
 
-    const lnks = {self: url.format(self)}
+    const _links = {self: url.format(self)}
 
     if (_.isArray(body)) {
-      return lnks
+      const first = url.parse(base + req.originalUrl, true)
+      first.search = undefined
+      first.query.page = 1
+
+      const next = url.parse(base + req.originalUrl, true)
+      next.search = undefined
+      next.query.page = page + 1
+
+      const prev = url.parse(base + req.originalUrl, true)
+      prev.search = undefined
+      prev.query.page = page - 1
+
+      const last = url.parse(base + req.originalUrl, true)
+      last.search = undefined
+      last.query.page = Math.max(1, Math.ceil(cnt / itemsPerPage))
+
+      if (first.query.page < self.query.page) {
+        _links.first = url.format(first)
+      }
+
+      if (prev.query.page > first.query.page && prev.query.page < self.query.page) {
+        _links.prev = url.format(prev)
+      }
+
+      if (next.query.page < last.query.page) {
+        _links.next = url.format(next)
+      }
+
+      if (last.query.page > self.query.page) {
+        _links.last = url.format(last)
+      }
+
+      return _links
     }
 
-    return lnks
+    return _links
   }
 
   function data(body, type) {

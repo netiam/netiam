@@ -9,6 +9,8 @@ const debug = dbg('netiam:rest:resource')
 export const MANY_TO_ONE = Symbol('many-to-one')
 export const ONE_TO_MANY = Symbol('one-to-many')
 
+let itemsPerPage = 10
+
 /**
  * Normalize the request query. The resource routes do access certain query
  * parameters, neither they are set or not.
@@ -44,10 +46,17 @@ export function normalize(query, idField) {
   } else {
     query.offset = Number(query.offset)
   }
+
   if (!query.limit) {
-    query.limit = 10
+    query.limit = itemsPerPage
   } else {
     query.limit = Number(query.limit)
+  }
+
+  if (query.page) {
+    query.page = query.page ? Number(query.page) : 1
+    query.limit = itemsPerPage
+    query.offset = Math.max(0, (query.page - 1) * itemsPerPage)
   }
 
   return query
@@ -107,6 +116,7 @@ export default function resource(spec) {
   idParam = idParam || 'id'
   idField = idField || '_id'
   relationship = relationship || ONE_TO_MANY
+  itemsPerPage = spec.itemsPerPage ? spec.itemsPerPage : itemsPerPage
 
   function listHandle(q, query, resolve, reject) {
     // populate
