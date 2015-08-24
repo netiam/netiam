@@ -93,108 +93,105 @@ export default function() {
     })
   })
 
-  describe('json', function() {
-    it('should create a user', function(done) {
-      request(app)
-        .post('/users')
-        .send(userFixture)
-        .set('Accept', 'application/json')
-        .expect(201)
-        .expect('Content-Type', /json/)
-        .end(function(err, res) {
-          if (err) {
-            return done(err)
-          }
+  it('should create a user', function(done) {
+    request(app)
+      .post('/users')
+      .send(userFixture)
+      .set('Accept', 'application/json')
+      .expect(201)
+      .expect('Content-Type', /json/)
+      .end(function(err, res) {
+        if (err) {
+          return done(err)
+        }
 
-          res.body.should.have.property('user')
-          res.body.user.should.be.an.Object()
+        res.body.should.have.property('user')
+        res.body.user.should.be.an.Object()
 
-          userId = res.body.user.id
+        userId = res.body.user.id
 
-          done()
-        })
-    })
+        done()
+      })
+  })
 
-    it('should get users - plain', function(done) {
-      request(app)
-        .get('/users-plain')
-        .set('Accept', 'application/json')
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .end(function(err, res) {
-          if (err) {
-            return done(err)
-          }
+  it('should get users - plain', function(done) {
+    request(app)
+      .get('/users-plain')
+      .set('Accept', 'application/json')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(function(err, res) {
+        if (err) {
+          return done(err)
+        }
 
-          res.body.should.be.an.Array()
-          res.body.should.have.length(1)
+        res.body.should.be.an.Array()
+        res.body.should.have.length(1)
 
-          done()
-        })
-    })
+        done()
+      })
+  })
 
-    it('should get users - typed', function(done) {
-      request(app)
-        .get('/users')
-        .set('Accept', 'application/json')
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .end(function(err, res) {
-          if (err) {
-            return done(err)
-          }
+  it('should get users - typed', function(done) {
+    request(app)
+      .get('/users')
+      .set('Accept', 'application/json')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(function(err, res) {
+        if (err) {
+          return done(err)
+        }
 
-          res.body.should.be.an.Object()
-          res.body.should.have.property('user')
-          res.body.user.should.be.an.Array()
-          res.body.user.should.have.length(1)
+        res.body.should.be.an.Object()
+        res.body.should.have.property('user')
+        res.body.user.should.be.an.Array()
+        res.body.user.should.have.length(1)
 
-          done()
-        })
-    })
+        done()
+      })
+  })
 
-    it('should get a user - plain', function(done) {
-      request(app)
-        .get('/users-plain/' + userId)
-        .set('Accept', 'application/json')
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .end(function(err, res) {
-          if (err) {
-            return done(err)
-          }
+  it('should get a user - plain', function(done) {
+    request(app)
+      .get('/users-plain/' + userId)
+      .set('Accept', 'application/json')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(function(err, res) {
+        if (err) {
+          return done(err)
+        }
 
-          res.body.should.be.an.Object()
-          res.body.should.have.property('id')
+        res.body.should.be.an.Object()
+        res.body.should.have.property('id')
 
-          done()
-        })
-    })
+        done()
+      })
+  })
 
-    it('should modify a user', function(done) {
-      let modifiedUser = _.clone(userFixture)
-      modifiedUser.name = 'modified name'
+  it('should modify a user', function(done) {
+    let modifiedUser = _.clone(userFixture)
+    modifiedUser.name = 'modified name'
 
-      request(app)
-        .put('/users/' + userId)
-        .send(modifiedUser)
-        .set('Accept', 'application/json')
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .end(function(err, res) {
-          if (err) {
-            return done(err)
-          }
+    request(app)
+      .put('/users/' + userId)
+      .send(modifiedUser)
+      .set('Accept', 'application/json')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(function(err, res) {
+        if (err) {
+          return done(err)
+        }
 
-          res.body.should.be.an.Object()
-          res.body.should.have.property('user')
-          res.body.user.should.be.an.Object()
-          res.body.user.should.have.property('id')
+        res.body.should.be.an.Object()
+        res.body.should.have.property('user')
+        res.body.user.should.be.an.Object()
+        res.body.user.should.have.property('id')
 
-          done()
-        })
-    })
-
+        done()
+      })
   })
 
 }

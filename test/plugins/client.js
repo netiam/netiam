@@ -38,63 +38,60 @@ export default function() {
     })
   })
 
-  describe('client', () => {
+  it('should create a client', done => {
+    request(app)
+      .post('/clients')
+      .send(clientFixture)
+      .set('Accept', 'application/json')
+      .expect(201)
+      .expect('Content-Type', /json/)
+      .end(function(err, res) {
+        if (err) {
+          return done(err)
+        }
 
-    it('should create a client', done => {
-      request(app)
-        .post('/clients')
-        .send(clientFixture)
-        .set('Accept', 'application/json')
-        .expect(201)
-        .expect('Content-Type', /json/)
-        .end(function(err, res) {
-          if (err) {
-            return done(err)
-          }
-
-          res.body.should.have.properties({
-            key: 'BXqJjCNvro0AZvuO5ur8F1j3UPXxI4pf5RcSdXFs8m4AYe3NHFcwow6LW29dUCkz+XzSzTPZ+M2LSFymtFCVtQ==',
-            secret: 'Gw6TIPGWpxx+IzHrDQXR/X+4OHxg2XfCbo7wlyjyJjFl94gJ2rgKP5BdJwOPcnwnUnSkM5rv7EFXQqnGDEhr6Q=='
-          })
-          clientId = res.body.id
-          clientKey = res.body.key
-
-          done()
+        res.body.should.have.properties({
+          key: 'BXqJjCNvro0AZvuO5ur8F1j3UPXxI4pf5RcSdXFs8m4AYe3NHFcwow6LW29dUCkz+XzSzTPZ+M2LSFymtFCVtQ==',
+          secret: 'Gw6TIPGWpxx+IzHrDQXR/X+4OHxg2XfCbo7wlyjyJjFl94gJ2rgKP5BdJwOPcnwnUnSkM5rv7EFXQqnGDEhr6Q=='
         })
-    })
+        clientId = res.body.id
+        clientKey = res.body.key
 
-    it('should get a client', function(done) {
-      request(app)
-        .get('/clients/' + clientId)
-        .set('Accept', 'application/json')
-        .set('api-client-id', clientKey)
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .expect('Api-Client-Id', clientKey)
-        .end(function(err, res) {
-          if (err) {
-            return done(err)
-          }
-
-          res.body.should.have.properties(['key', 'secret'])
-
-          done()
-        })
-    })
-
-    it('should not get a client', function(done) {
-      request(app)
-        .get('/clients/' + clientId)
-        .set('Accept', 'application/json')
-        .expect(400)
-        .end(function(err) {
-          if (err) {
-            return done(err)
-          }
-
-          done()
-        })
-    })
-
+        done()
+      })
   })
+
+  it('should get a client', function(done) {
+    request(app)
+      .get('/clients/' + clientId)
+      .set('Accept', 'application/json')
+      .set('api-client-id', clientKey)
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .expect('Api-Client-Id', clientKey)
+      .end(function(err, res) {
+        if (err) {
+          return done(err)
+        }
+
+        res.body.should.have.properties(['key', 'secret'])
+
+        done()
+      })
+  })
+
+  it('should not get a client', function(done) {
+    request(app)
+      .get('/clients/' + clientId)
+      .set('Accept', 'application/json')
+      .expect(400)
+      .end(function(err) {
+        if (err) {
+          return done(err)
+        }
+
+        done()
+      })
+  })
+
 }
