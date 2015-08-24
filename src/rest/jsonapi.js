@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import errors from 'netiam-errors'
 import dbrefs from './jsonapi/dbrefs'
 import document from './jsonapi/document'
 import included from './jsonapi/included'

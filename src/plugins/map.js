@@ -28,7 +28,7 @@ function request(map, spec = {}) {
     return doc
   }
 
-  return function(req, res) {
+  return function(req) {
     let queryExpand
     // property expansion
     if (_.isString(req.query.expand)) {

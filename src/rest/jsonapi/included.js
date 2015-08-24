@@ -2,8 +2,6 @@ import _ from 'lodash'
 import document from './document'
 import {normalize} from '../query'
 
-const defaultExcludeIds = ['id', '_id']
-
 export default function included(spec) {
   const query = normalize({
     req: spec.req,
