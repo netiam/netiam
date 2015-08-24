@@ -3,14 +3,13 @@ import Client from './../models/client'
 import db from './../utils/db.test.js'
 import api from '../../src/netiam'
 
+const clientFixture = require('./../fixtures/client.json')
+const app = require('./../utils/app.test.js')()
+let clientId
+let clientKey
+
 export default function() {
-
-  const clientFixture = require('./../fixtures/client.json')
-  const app = require('./../utils/app.test.js')()
-  let clientId
-  let clientKey
-
-  before(function(done) {
+  before(() => {
     app.post(
       '/clients',
       api()
@@ -28,7 +27,10 @@ export default function() {
         .json()
     )
 
-    db.connection.db.dropDatabase(function(err) {
+  })
+
+  after(done => {
+    db.connection.db.dropDatabase(err => {
       if (err) {
         return done(err)
       }
@@ -36,17 +38,9 @@ export default function() {
     })
   })
 
-  after(function(done) {
-    db.connection.db.dropDatabase(function(err) {
-      if (err) {
-        return done(err)
-      }
-      done()
-    })
-  })
+  describe('client', () => {
 
-  describe('client', function() {
-    it('should create a client', function(done) {
+    it('should create a client', done => {
       request(app)
         .post('/clients')
         .send(clientFixture)

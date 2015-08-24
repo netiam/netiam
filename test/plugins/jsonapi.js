@@ -53,12 +53,12 @@ export default function() {
         .jsonapi.res({collection: User})
     )
 
-    fixtures(function(err) {
+    fixtures(err => {
       if (err) {
         return done(err)
       }
 
-      Role.find({}, function(err, docs) {
+      Role.find({}, (err, docs) => {
         if (err) {
           return done(err)
         }
@@ -70,7 +70,7 @@ export default function() {
   })
 
   after(function(done) {
-    db.connection.db.dropDatabase(function(err) {
+    db.connection.db.dropDatabase(err => {
       if (err) {
         return done(err)
       }
@@ -288,7 +288,7 @@ export default function() {
             'type',
             'attributes'
           ])
-          console.log(util.inspect(res.body, {depth: null}))
+
           done()
         })
     })
