@@ -11,7 +11,7 @@ export default function(spec) {
     const cnt = await collection.count()
     const base = req.protocol + '://' + req.get('host')
     const self = url.parse(base + req.originalUrl, true)
-    const page = req.query.page || 1
+    const page = Number(req.query.page || 1)
 
     self.search = undefined
     self.query.page = page
