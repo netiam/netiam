@@ -18,6 +18,14 @@ export default function(spec) {
     const o = {self: url.format(self)}
 
     if (_.isArray(res.body)) {
+      const first = url.parse(base + req.originalUrl, true)
+      first.search = undefined
+      first.query.page = 1
+
+      const prev = url.parse(base + req.originalUrl, true)
+      prev.search = undefined
+      prev.query.page = page - 1
+
       const next = url.parse(base + req.originalUrl, true)
       next.search = undefined
       next.query.page = page + 1
@@ -26,11 +34,19 @@ export default function(spec) {
       last.search = undefined
       last.query.page = Math.max(1, Math.ceil(cnt / itemsPerPage))
 
-      if (url.format(next) < url.format(last)) {
+      if (first.query.page < self.query.page) {
+        o.first = url.format(first)
+      }
+
+      if (prev.query.page > first.query.page && prev.query.page < self.query.page) {
+        o.prev = url.format(prev)
+      }
+
+      if (next.query.page < last.query.page && next.query.page > self.query.page) {
         o.next = url.format(next)
       }
 
-      if (url.format(last) !== o.self) {
+      if (last.query.page > self.query.page) {
         o.last = url.format(last)
       }
     }
