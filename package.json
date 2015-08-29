@@ -26,7 +26,7 @@
     "lodash": "^3.8.0",
     "mmmagic": "^0.3.14",
     "mongoose": "^4",
-    "netiam-errors": "^1.0.1",
+    "netiam-errors": "^1.1.0",
     "passport": "=0.2.2",
     "passport-http": "^0.2.2",
     "passport-http-bearer": "^1.0.1",
