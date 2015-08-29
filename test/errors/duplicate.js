@@ -39,10 +39,15 @@ describe('Errors', () => {
         .set('Accept', 'application/json')
         .expect(400)
         .expect('Content-Type', /json/)
-        .end(err => {
+        .end((err, res) => {
           if (err) {
             return done(err)
           }
+
+          res.body.should.have.property('errors')
+          res.body.errors.should.be.an.Array()
+          res.body.errors.should.have.length(1)
+          res.body.errors[0].should.have.properties(['code', 'message'])
 
           done()
         })
