@@ -1,5 +1,5 @@
 import request from 'supertest'
-import db,{setup,tearDown} from '../utils/db.test'
+import db,{setup,teardown} from '../utils/db.test'
 import routes from '../utils/routes'
 import userFixture from '../fixtures/user'
 
@@ -12,7 +12,7 @@ describe('Errors', () => {
     setup(done)
   })
 
-  after(tearDown)
+  after(teardown)
 
   describe('duplicate', () => {
 

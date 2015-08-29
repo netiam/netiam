@@ -36,6 +36,6 @@ export function setup(done) {
   dropDatabase(done)
 }
 
-export function tearDown(done) {
+export function teardown(done) {
   dropDatabase(done)
 }

@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import request from 'supertest'
 import User from './../models/user'
-import db,{tearDown} from './../utils/db.test.js'
+import db,{teardown} from './../utils/db.test.js'
 import api from '../../src/netiam'
 
 export default function() {
@@ -44,7 +44,7 @@ export default function() {
     )
   })
 
-  after(tearDown)
+  after(teardown)
 
   describe('jsonapi', function() {
     it('should create a user', function(done) {

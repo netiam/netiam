@@ -1,5 +1,5 @@
 import request from 'supertest'
-import db,{tearDown} from '../utils/db.test'
+import db,{teardown} from '../utils/db.test'
 import routes from '../utils/routes'
 import userFixture from '../fixtures/user'
 import projectFixture from '../fixtures/project'
@@ -13,7 +13,7 @@ describe('REST', function() {
     routes.projectsManyToOne(app)
   })
 
-  after(tearDown)
+  after(teardown)
 
   describe('subresource - many to one', function() {
     let projectWithUsers

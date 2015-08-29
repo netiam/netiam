@@ -1,5 +1,5 @@
 import request from 'supertest'
-import db,{tearDown} from './utils/db.test'
+import db,{teardown} from './utils/db.test'
 import routes from './utils/routes'
 
 describe('OData', function() {
@@ -10,7 +10,7 @@ describe('OData', function() {
     routes.users(app)
   })
 
-  after(tearDown)
+  after(teardown)
 
   describe('filter', function() {
 

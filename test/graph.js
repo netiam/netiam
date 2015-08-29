@@ -1,5 +1,5 @@
 import request from 'supertest'
-import db,{tearDown} from './utils/db.test'
+import db,{teardown} from './utils/db.test'
 import routes from './utils/routes'
 
 describe('Graph', function() {
@@ -9,7 +9,7 @@ describe('Graph', function() {
     routes.graph(app)
   })
 
-  after(tearDown)
+  after(teardown)
 
   describe('SVG', function() {
 

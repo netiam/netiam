@@ -2,7 +2,7 @@ import request from 'supertest'
 import fixtures from '../fixtures'
 import roles from '../../src/rest/roles'
 import Role from '../../src/rest/models/role'
-import db,{tearDown} from '../utils/db.test'
+import db,{teardown} from '../utils/db.test'
 import routes from '../utils/routes'
 import userFixture from '../fixtures/user.json'
 
@@ -28,7 +28,7 @@ describe('ACL', function() {
     })
   })
 
-  after(tearDown)
+  after(teardown)
 
   describe('middleware', function() {
     let userId
