@@ -43,7 +43,6 @@
     "pow-mongoose-fixtures": "^0.3.0",
     "redis": "^0.12.1",
     "rimraf": "^2.4.2",
-    "sails-disk": "^0.10.8",
     "semantic-release": "^4.3.4",
     "should": "^7.0.2",
     "supertest": "^1.0.1"
