@@ -324,12 +324,7 @@ export default function resource(spec) {
           if (err) {
             debug(err)
             if (err.code === 11000) {
-              return reject(
-                errors.badRequest(
-                  err.message,
-                  [errors.code(errors.Codes.E1001)]
-                )
-              )
+              return reject(errors.badRequest(err.message, [errors.Codes.E1001]))
             }
 
             return reject(errors.internalServerError(err.message))
