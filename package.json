@@ -1,19 +1,17 @@
 {
   "name": "netiam",
-  "version": "3.3.1",
   "description": "REST API library",
   "main": "index.js",
   "scripts": {
     "build": "./bin/build",
     "clean": "./bin/clean",
     "lint": "./bin/lint",
-    "prepublish": "semantic-release pre",
-    "postpublish": "semantic-release post",
     "start": "npm run watch",
     "test": "npm run test:unit",
     "test:unit": "mocha",
     "test:coverage": "istanbul cover _mocha --report lcovonly -- -R spec",
-    "watch": "./bin/watch"
+    "watch": "./bin/watch",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "dependencies": {
     "async": "^1.4.2",
@@ -29,7 +27,8 @@
     "passport": "=0.2.2",
     "passport-http": "^0.2.2",
     "passport-http-bearer": "^1.0.1",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "semantic-release": "^4.3.4"
   },
   "devDependencies": {
     "babel": "^5",
@@ -45,7 +44,7 @@
     "redis": "^0.12.1",
     "rimraf": "^2.4.2",
     "sails-disk": "^0.10.8",
-    "semantic-release": "^3.3.2",
+    "semantic-release": "^4.3.4",
     "should": "^7.0.2",
     "supertest": "^1.0.1"
   },
