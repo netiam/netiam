@@ -1,29 +1,15 @@
 import request from 'supertest'
-import db from './utils/db.test'
+import db,{tearDown} from './utils/db.test'
 import routes from './utils/routes'
 
 describe('Graph', function() {
   const app = require('./utils/app.test')()
 
-  before(function(done) {
+  before(() => {
     routes.graph(app)
-
-    db.connection.db.dropDatabase(function(err) {
-      if (err) {
-        return done(err)
-      }
-      done()
-    })
   })
 
-  after(function(done) {
-    db.connection.db.dropDatabase(function(err) {
-      if (err) {
-        return done(err)
-      }
-      done()
-    })
-  })
+  after(tearDown)
 
   describe('SVG', function() {
 

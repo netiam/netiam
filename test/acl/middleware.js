@@ -2,7 +2,7 @@ import request from 'supertest'
 import fixtures from '../fixtures'
 import roles from '../../src/rest/roles'
 import Role from '../../src/rest/models/role'
-import db from '../utils/db.test'
+import db,{tearDown} from '../utils/db.test'
 import routes from '../utils/routes'
 import userFixture from '../fixtures/user.json'
 
@@ -28,14 +28,7 @@ describe('ACL', function() {
     })
   })
 
-  after(function(done) {
-    db.connection.db.dropDatabase(function(err) {
-      if (err) {
-        return done(err)
-      }
-      done()
-    })
-  })
+  after(tearDown)
 
   describe('middleware', function() {
     let userId

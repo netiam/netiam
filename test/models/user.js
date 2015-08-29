@@ -4,7 +4,7 @@ import {
   created,
   merge,
   modified
-  } from '../../src/rest/schema/plugins'
+} from '../../src/rest/schema/plugins'
 
 const schema = new Schema({
   name: String,

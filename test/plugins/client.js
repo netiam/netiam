@@ -1,6 +1,6 @@
 import request from 'supertest'
 import Client from './../models/client'
-import db from './../utils/db.test.js'
+import db,{tearDown} from './../utils/db.test.js'
 import api from '../../src/netiam'
 
 export default function() {
@@ -10,7 +10,7 @@ export default function() {
   let clientId
   let clientKey
 
-  before(function(done) {
+  before(() => {
     app.post(
       '/clients',
       api()
@@ -27,23 +27,9 @@ export default function() {
         .map.res({_id: 'id'})
         .jsonapi({collection: Client})
     )
-
-    db.connection.db.dropDatabase(function(err) {
-      if (err) {
-        return done(err)
-      }
-      done()
-    })
   })
 
-  after(function(done) {
-    db.connection.db.dropDatabase(function(err) {
-      if (err) {
-        return done(err)
-      }
-      done()
-    })
-  })
+  after(tearDown)
 
   describe('client', function() {
     it('should create a client', function(done) {

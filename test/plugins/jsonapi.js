@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import request from 'supertest'
 import User from './../models/user'
-import db from './../utils/db.test.js'
+import db,{tearDown} from './../utils/db.test.js'
 import api from '../../src/netiam'
 
 export default function() {
@@ -10,7 +10,7 @@ export default function() {
   const app = require('./../utils/app.test.js')()
   let userId
 
-  before(function(done) {
+  before(() => {
     app.post(
       '/users',
       api()
@@ -42,23 +42,9 @@ export default function() {
         .map.res({_id: 'id'})
         .jsonapi({collection: User})
     )
-
-    db.connection.db.dropDatabase(function(err) {
-      if (err) {
-        return done(err)
-      }
-      done()
-    })
   })
 
-  after(function(done) {
-    db.connection.db.dropDatabase(function(err) {
-      if (err) {
-        return done(err)
-      }
-      done()
-    })
-  })
+  after(tearDown)
 
   describe('jsonapi', function() {
     it('should create a user', function(done) {

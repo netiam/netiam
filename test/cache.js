@@ -1,31 +1,16 @@
 import request from 'supertest'
-import db from './utils/db.test'
+import db,{tearDown} from './utils/db.test'
 import routes from './utils/routes'
-
 
 describe('Cache', function() {
   const user = require('./fixtures/user.json')
   const app = require('./utils/app.test')()
 
-  before(function(done) {
+  before(() => {
     routes.cache(app)
-
-    db.connection.db.dropDatabase(function(err) {
-      if (err) {
-        return done(err)
-      }
-      done()
-    })
   })
 
-  after(function(done) {
-    db.connection.db.dropDatabase(function(err) {
-      if (err) {
-        return done(err)
-      }
-      done()
-    })
-  })
+  after(tearDown)
 
   describe('users', function() {
     it('should create a user', function(done) {
