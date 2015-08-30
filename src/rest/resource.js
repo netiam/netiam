@@ -349,7 +349,7 @@ export default function resource(spec) {
             if (err.code === 11000) {
               return reject(
                 errors.badRequest(
-                  err.message,
+                  err,
                   [errors.Codes.E1001]))
             }
 
