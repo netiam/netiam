@@ -134,7 +134,10 @@ export default function resource(spec) {
     q.exec((err, documents) => {
       if (err) {
         debug(err)
-        return reject(errors.internalServerError(err.message))
+        return reject(
+          errors.internalServerError(
+            err,
+            [errors.Codes.E3000]))
       }
 
       if (!_.isArray(documents)) {
@@ -182,7 +185,10 @@ export default function resource(spec) {
           .exec((err, doc) => {
             if (err) {
               debug(err)
-              return reject(err)
+              return reject(
+                errors.internalServerError(
+                  err,
+                  [errors.Codes.E3000]))
             }
 
             if (!doc) {
@@ -195,7 +201,9 @@ export default function resource(spec) {
               q = relationshipCollection.find(f.toObject())
             } catch (err) {
               debug(err)
-              reject(errors.badRequest(err.message))
+              reject(
+                errors.badRequest(
+                  err, [errors.Codes.E3000]))
             }
 
             // select only related
@@ -217,7 +225,10 @@ export default function resource(spec) {
           q = collection.find(f.toObject())
         } catch (err) {
           debug(err)
-          reject(errors.badRequest(err.message))
+          reject(
+            errors.badRequest(
+              err,
+              [errors.Codes.E3000]))
         }
 
         // handle
@@ -236,11 +247,17 @@ export default function resource(spec) {
     q.exec((err, document) => {
       if (err) {
         debug(err)
-        return reject(errors.internalServerError(err.message))
+        return reject(
+          errors.internalServerError(
+            err,
+            [errors.Codes.E3000]))
       }
 
       if (!document) {
-        return reject(errors.notFound('Document not found'))
+        return reject(
+          errors.notFound(
+            'Document not found',
+            [errors.Codes.E3000]))
       }
 
       resolve(document.toObject())
@@ -273,11 +290,17 @@ export default function resource(spec) {
           .exec((err, doc) => {
             if (err) {
               debug(err)
-              return reject(err)
+              return reject(
+                errors.internalServerError(
+                  err,
+                  [errors.Codes.E3000]))
             }
 
             if (!doc) {
-              return reject(errors.notFound('Document not found'))
+              return reject(
+                errors.notFound(
+                  'Document not found',
+                  [errors.Codes.E3000]))
             }
 
             // query options
@@ -324,14 +347,23 @@ export default function resource(spec) {
           if (err) {
             debug(err)
             if (err.code === 11000) {
-              return reject(errors.badRequest(err.message, [errors.Codes.E1001]))
+              return reject(
+                errors.badRequest(
+                  err.message,
+                  [errors.Codes.E1001]))
             }
 
-            return reject(errors.internalServerError(err.message))
+            return reject(
+              errors.internalServerError(
+                err,
+                [errors.Codes.E3000]))
           }
 
           if (!document) {
-            return reject(errors.internalServerError('Document could not be created'))
+            return reject(
+              errors.internalServerError(
+                'Document could not be created',
+                [errors.Codes.E3000]))
           }
 
           // populate
@@ -339,7 +371,10 @@ export default function resource(spec) {
             document.populate(query.expand.join(' '), err => {
               if (err) {
                 debug(err)
-                return reject(errors.internalServerError(err.message))
+                return reject(
+                  errors.internalServerError(
+                    err,
+                    [errors.Codes.E3000]))
               }
 
               resolve(document.toJSON())
@@ -368,7 +403,10 @@ export default function resource(spec) {
           (err) => {
             if (err) {
               debug(err)
-              return reject(err)
+              return reject(
+                errors.internalServerError(
+                  err,
+                  [errors.Codes.E3000]))
             }
 
             return resolve()
@@ -381,7 +419,10 @@ export default function resource(spec) {
           .merge(update)
           .save(err => {
             if (err) {
-              return reject(err)
+              return reject(
+                errors.internalServerError(
+                  err,
+                  [errors.Codes.E3000]))
             }
 
             resolve()
@@ -457,7 +498,10 @@ export default function resource(spec) {
               return document
                 .populate(query.expand.join(' '), err => {
                   if (err) {
-                    return reject(err)
+                    return reject(
+                      errors.internalServerError(
+                        err,
+                        [errors.Codes.E3000]))
                   }
 
                   resolve(document.toJSON())
@@ -467,7 +511,11 @@ export default function resource(spec) {
           })
           .then(null, err => {
             debug(err)
-            reject(err)
+            reject(
+              errors.internalServerError(
+                err,
+                [errors.Codes.E3000])
+            )
           })
         return
       }
@@ -483,10 +531,16 @@ export default function resource(spec) {
         q.exec((err, document) => {
           if (err) {
             debug(err)
-            return reject(errors.internalServerError(err.message))
+            return reject(
+              errors.internalServerError(
+                err,
+                [errors.Codes.E3000]))
           }
           if (!document) {
-            return reject(errors.notFound('Document not found'))
+            return reject(
+              errors.notFound(
+                'Document not found',
+                [errors.Codes.E3000]))
           }
 
           document
@@ -494,14 +548,20 @@ export default function resource(spec) {
             .save(err => {
               if (err) {
                 debug(err)
-                return reject(errors.internalServerError(err.message))
+                return reject(
+                  errors.internalServerError(
+                    err,
+                    [errors.Codes.E3000]))
               }
 
               // populate
               if (req.query.expand) {
                 document.populate(query.expand.join(' '), err => {
                   if (err) {
-                    return reject(errors.internalServerError(err.message))
+                    return reject(
+                      errors.internalServerError(
+                        err,
+                        [errors.Codes.E3000]))
                   }
 
                   resolve(document.toJSON())
@@ -532,10 +592,16 @@ export default function resource(spec) {
         .exec((err, documents) => {
           if (err) {
             debug(err)
-            return reject(errors.internalServerError(err.message))
+            return reject(
+              errors.internalServerError(
+                err,
+                [errors.Codes.E3000]))
           }
           if (!documents) {
-            return reject(errors.notFound('Document not found'))
+            return reject(
+              errors.notFound(
+                'Document not found',
+                [errors.Codes.E3000]))
           }
 
           resolve()
