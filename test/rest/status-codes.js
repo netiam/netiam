@@ -26,7 +26,7 @@ describe('REST', function() {
           if (err) {
             return done(err)
           }
-          console.log(res.body)
+
           done()
         })
     })
