@@ -529,6 +529,25 @@ export default function resource(spec) {
           })
           .then(null, err => {
             debug(err)
+
+            if (err.name === 'ValidationError') {
+              const errList = []
+
+              _.forEach(err.errors, error => {
+                const modError = Object.assign({
+                  path: error.path,
+                  value: error.value
+                }, errors.Codes.E3002)
+
+                errList.push(modError)
+              })
+
+              return reject(
+                errors.badRequest(
+                  err,
+                  errList))
+            }
+
             reject(
               errors.internalServerError(
                 err,
@@ -566,6 +585,25 @@ export default function resource(spec) {
             .save(err => {
               if (err) {
                 debug(err)
+
+                if (err.name === 'ValidationError') {
+                  const errList = []
+
+                  _.forEach(err.errors, error => {
+                    const modError = Object.assign({
+                      path: error.path,
+                      value: error.value
+                    }, errors.Codes.E3002)
+
+                    errList.push(modError)
+                  })
+
+                  return reject(
+                    errors.badRequest(
+                      err,
+                      errList))
+                }
+
                 return reject(
                   errors.internalServerError(
                     err,
