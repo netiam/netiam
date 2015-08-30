@@ -1,4 +1,5 @@
 import mongoose, {Schema} from 'mongoose'
+import validator from 'validator'
 import {
   auth,
   created,
@@ -12,7 +13,8 @@ const schema = new Schema({
   email: {
     type: String,
     unique: true,
-    sparse: true
+    sparse: true,
+    validate: [validator.isEmail, 'invalid email']
   },
   role: {
     type: Schema.Types.ObjectId,
