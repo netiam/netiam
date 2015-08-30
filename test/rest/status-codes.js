@@ -13,8 +13,11 @@ describe('REST', function() {
 
   describe('Status Codes', () => {
 
-    it('should create user', done => {
-      const invalidUser = Object.assign({}, userFixture, {email: 'wrong@user'})
+    it('should fail creating a user', done => {
+      const invalidUser = Object.assign(
+        {},
+        userFixture,
+        {email: 'wrong@user'})
 
       request(app)
         .post('/users')
@@ -22,7 +25,7 @@ describe('REST', function() {
         .set('Accept', 'application/json')
         .expect(400)
         .expect('Content-Type', /json/)
-        .end((err, res) => {
+        .end(err => {
           if (err) {
             return done(err)
           }

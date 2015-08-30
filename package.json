@@ -23,7 +23,7 @@
     "jsdom": "^5.6.1",
     "lodash": "^3.8.0",
     "mongoose": "^4",
-    "netiam-errors": "^1.10.0",
+    "netiam-errors": "^1.10.1",
     "passport": "^0.3.0",
     "passport-http": "^0.3.0",
     "passport-http-bearer": "^1.0.1",
