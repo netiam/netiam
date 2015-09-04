@@ -114,5 +114,11 @@ export function normalize(spec) {
     query.offset = Math.max(0, (query.page - 1) * itemsPerPage)
   }
 
+  if (query.itemsPerPage) {
+    query.itemsPerPage = Number(query.itemsPerPage)
+  } else {
+    query.itemsPerPage = 10
+  }
+
   return query
 }
