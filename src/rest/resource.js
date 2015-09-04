@@ -10,8 +10,6 @@ const debug = dbg('netiam:rest:resource')
 export const MANY_TO_ONE = Symbol('many-to-one')
 export const ONE_TO_MANY = Symbol('one-to-many')
 
-let itemsPerPage = 10
-
 export default function resource(spec) {
   const {collection} = spec
   const {relationshipField} = spec
@@ -24,7 +22,7 @@ export default function resource(spec) {
   idParam = idParam || 'id'
   idField = idField || '_id'
   relationship = relationship || ONE_TO_MANY
-  itemsPerPage = spec.itemsPerPage ? spec.itemsPerPage : itemsPerPage
+  const itemsPerPage = spec.itemsPerPage ? spec.itemsPerPage : itemsPerPage
 
   function listHandle(q, query, resolve, reject) {
     // populate
