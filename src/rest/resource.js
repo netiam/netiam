@@ -60,21 +60,17 @@ export default function resource(spec) {
   relationship = relationship || ONE_TO_MANY
 
   function listHandle(q, query, resolve, reject) {
-    // populate
     if (query.expand.length > 0) {
       q = q.populate(query.expand.join(' '))
     }
 
-    // sort
     q = q.sort(query.sort)
 
-    // pagination
     q = q.skip(query.offset)
     if (query.limit && query.limit !== -1) {
       q = q.limit(query.limit)
     }
 
-    // execute
     q.exec((err, documents) => {
       if (err) {
         debug(err)
@@ -113,10 +109,8 @@ export default function resource(spec) {
         idField
       })
 
-      // filter
       let f = filter(query.filter)
 
-      // handle relationships
       if (relationship === MANY_TO_ONE &&
         relationshipField &&
         relationshipCollection &&
@@ -141,7 +135,6 @@ export default function resource(spec) {
               return resolve([])
             }
 
-            // query
             let q
             try {
               q = relationshipCollection.find(f.toObject())
@@ -152,7 +145,6 @@ export default function resource(spec) {
                   err, [errors.Codes.E3000]))
             }
 
-            // select only related
             q = q.where('_id').in(doc[relationshipField])
 
             listHandle(q, query, resolve, reject)
@@ -167,7 +159,6 @@ export default function resource(spec) {
           map
         }))
 
-        // query
         let q
         try {
           q = collection.find(f.toObject())
@@ -185,12 +176,10 @@ export default function resource(spec) {
   }
 
   function readHandle(q, query, resolve, reject) {
-    // populate
     if (query.expand.length > 0) {
       q = q.populate(query.expand.join(' '))
     }
 
-    // execute
     q.exec((err, document) => {
       if (err) {
         debug(err)
@@ -224,7 +213,6 @@ export default function resource(spec) {
         idField
       })
 
-      // handle relationships
       if (relationship === MANY_TO_ONE &&
         relationshipField &&
         relationshipCollection &&
@@ -252,13 +240,10 @@ export default function resource(spec) {
                   [errors.Codes.E3000]))
             }
 
-            // query options
-            const qo = {[idField]: req.params[idParam]}
+            const queryOptions = {[idField]: req.params[idParam]}
 
-            // query
-            const q = relationshipCollection.findOne(qo)
+            const q = relationshipCollection.findOne(queryOptions)
 
-            // handle
             readHandle(q, query, resolve, reject)
           })
 
@@ -266,13 +251,10 @@ export default function resource(spec) {
       }
 
       if (relationship === ONE_TO_MANY) {
-        // query options
-        const qo = {[idField]: req.params[idParam]}
+        const queryOptions = {[idField]: req.params[idParam]}
 
-        // query
-        const q = collection.findOne(qo)
+        const q = collection.findOne(queryOptions)
 
-        // handle
         return readHandle(q, query, resolve, reject)
       }
 
@@ -287,13 +269,8 @@ export default function resource(spec) {
    */
   function create(req) {
     return new Promise((resolve, reject) => {
-      // normalize
-      const query = normalize({
-        req,
-        idField
-      })
+      const query = normalize({req, idField})
 
-      // create model
       collection
         .create(req.body, (err, document) => {
           if (err) {
@@ -336,7 +313,6 @@ export default function resource(spec) {
                 [errors.Codes.E3000]))
           }
 
-          // populate
           if (query.expand.length > 0) {
             document.populate(query.expand.join(' '), err => {
               if (err) {
@@ -429,7 +405,6 @@ export default function resource(spec) {
     }
 
     return new Promise((resolve, reject) => {
-      // handle relationships
       if (relationship === MANY_TO_ONE &&
         relationshipField &&
         relationshipCollection &&
@@ -446,13 +421,10 @@ export default function resource(spec) {
               throw errors.notFound('Document not found')
             }
 
-            // query options
-            const qo = {[idField]: req.params[idParam]}
+            const queryOptions = {[idField]: req.params[idParam]}
 
-            // query
-            let q = relationshipCollection.findOne(qo)
+            let q = relationshipCollection.findOne(queryOptions)
 
-            // populate
             if (query.expand.length > 0) {
               q = q.populate(query.expand.join(' '))
             }
@@ -512,13 +484,10 @@ export default function resource(spec) {
       }
 
       if (relationship === ONE_TO_MANY) {
-        // query
-        const qo = {[idField]: req.params[idParam]}
+        const queryOptions = {[idField]: req.params[idParam]}
 
-        // Build query
-        const q = collection.findOne(qo)
+        const q = collection.findOne(queryOptions)
 
-        // Execute query
         q.exec((err, document) => {
           if (err) {
             debug(err)
@@ -564,7 +533,6 @@ export default function resource(spec) {
                     [errors.Codes.E3000]))
               }
 
-              // populate
               if (req.query.expand) {
                 document.populate(query.expand.join(' '), err => {
                   if (err) {
