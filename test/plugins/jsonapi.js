@@ -1,11 +1,10 @@
 import _ from 'lodash'
 import request from 'supertest'
-import util from 'util'
 import User from './../models/user'
 import fixtures from '../fixtures'
 import roles from '../../src/rest/roles'
 import Role from '../../src/rest/models/role'
-import db from './../utils/db.test.js'
+import db,{teardown} from './../utils/db.test.js'
 import api from '../../src/netiam'
 
 export default function() {
@@ -14,7 +13,7 @@ export default function() {
   const app = require('./../utils/app.test.js')()
   let userId
 
-  before(function(done) {
+  before(done => {
     app.post(
       '/users',
       api()
@@ -69,14 +68,7 @@ export default function() {
     })
   })
 
-  after(function(done) {
-    db.connection.db.dropDatabase(err => {
-      if (err) {
-        return done(err)
-      }
-      done()
-    })
-  })
+  after(teardown)
 
   it('should create a user', function(done) {
     request(app)
@@ -272,7 +264,6 @@ export default function() {
         res.body.should.have.property('included')
 
         res.body.links.should.be.an.Object()
-
         res.body.data.should.be.an.Array()
         res.body.data.should.have.length(1)
         res.body.data[0].should.have.property('id')

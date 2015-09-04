@@ -18,11 +18,11 @@ export default function resource(spec) {
   let {relationship} = spec
   let {idParam} = spec
   let {idField} = spec
+  const itemsPerPage = spec.itemsPerPage ? spec.itemsPerPage : 10
 
   idParam = idParam || 'id'
   idField = idField || '_id'
   relationship = relationship || ONE_TO_MANY
-  const itemsPerPage = spec.itemsPerPage ? spec.itemsPerPage : itemsPerPage
 
   function listHandle(q, query, resolve, reject) {
     // populate
@@ -43,7 +43,10 @@ export default function resource(spec) {
     q.exec((err, documents) => {
       if (err) {
         debug(err)
-        return reject(errors.internalServerError(err.message))
+        return reject(
+          errors.internalServerError(
+            err,
+            [errors.Codes.E3000]))
       }
 
       if (!_.isArray(documents)) {
@@ -94,7 +97,10 @@ export default function resource(spec) {
           .exec((err, doc) => {
             if (err) {
               debug(err)
-              return reject(err)
+              return reject(
+                errors.internalServerError(
+                  err,
+                  [errors.Codes.E3000]))
             }
 
             if (!doc) {
@@ -107,7 +113,9 @@ export default function resource(spec) {
               q = relationshipCollection.find(f.toObject())
             } catch (err) {
               debug(err)
-              reject(errors.badRequest(err.message))
+              reject(
+                errors.badRequest(
+                  err, [errors.Codes.E3000]))
             }
 
             // select only related
@@ -131,7 +139,10 @@ export default function resource(spec) {
           q = collection.find(f.toObject())
         } catch (err) {
           debug(err)
-          reject(errors.badRequest(err.message))
+          reject(
+            errors.badRequest(
+              err,
+              [errors.Codes.E3000]))
         }
 
         return listHandle(q, query, resolve, reject)
@@ -149,11 +160,17 @@ export default function resource(spec) {
     q.exec((err, document) => {
       if (err) {
         debug(err)
-        return reject(errors.internalServerError(err.message))
+        return reject(
+          errors.internalServerError(
+            err,
+            [errors.Codes.E3000]))
       }
 
       if (!document) {
-        return reject(errors.notFound('Document not found'))
+        return reject(
+          errors.notFound(
+            'Document not found',
+            [errors.Codes.E3000]))
       }
 
       resolve(document.toObject())
@@ -189,11 +206,17 @@ export default function resource(spec) {
           .exec((err, doc) => {
             if (err) {
               debug(err)
-              return reject(err)
+              return reject(
+                errors.internalServerError(
+                  err,
+                  [errors.Codes.E3000]))
             }
 
             if (!doc) {
-              return reject(errors.notFound('Document not found'))
+              return reject(
+                errors.notFound(
+                  'Document not found',
+                  [errors.Codes.E3000]))
             }
 
             // query options
@@ -244,14 +267,41 @@ export default function resource(spec) {
           if (err) {
             debug(err)
             if (err.code === 11000) {
-              return reject(errors.badRequest(err.message))
+              return reject(
+                errors.badRequest(
+                  err,
+                  [errors.Codes.E1001]))
             }
 
-            return reject(errors.internalServerError(err.message))
+            if (err.name === 'ValidationError') {
+              const errList = []
+
+              _.forEach(err.errors, error => {
+                const modError = Object.assign({
+                  path: error.path,
+                  value: error.value
+                }, errors.Codes.E3002)
+
+                errList.push(modError)
+              })
+
+              return reject(
+                errors.badRequest(
+                  err,
+                  errList))
+            }
+
+            return reject(
+              errors.internalServerError(
+                err,
+                [errors.Codes.E3000]))
           }
 
           if (!document) {
-            return reject(errors.internalServerError('Document could not be created'))
+            return reject(
+              errors.internalServerError(
+                'Document could not be created',
+                [errors.Codes.E3000]))
           }
 
           // populate
@@ -259,7 +309,10 @@ export default function resource(spec) {
             document.populate(query.expand.join(' '), err => {
               if (err) {
                 debug(err)
-                return reject(errors.internalServerError(err.message))
+                return reject(
+                  errors.internalServerError(
+                    err,
+                    [errors.Codes.E3000]))
               }
 
               resolve(document.toJSON())
@@ -288,7 +341,10 @@ export default function resource(spec) {
           (err) => {
             if (err) {
               debug(err)
-              return reject(err)
+              return reject(
+                errors.internalServerError(
+                  err,
+                  [errors.Codes.E3000]))
             }
 
             return resolve()
@@ -301,7 +357,10 @@ export default function resource(spec) {
           .merge(update)
           .save(err => {
             if (err) {
-              return reject(err)
+              return reject(
+                errors.internalServerError(
+                  err,
+                  [errors.Codes.E3000]))
             }
 
             resolve()
@@ -380,7 +439,10 @@ export default function resource(spec) {
               return document
                 .populate(query.expand.join(' '), err => {
                   if (err) {
-                    return reject(err)
+                    return reject(
+                      errors.internalServerError(
+                        err,
+                        [errors.Codes.E3000]))
                   }
 
                   resolve(document.toJSON())
@@ -390,7 +452,30 @@ export default function resource(spec) {
           })
           .then(null, err => {
             debug(err)
-            reject(err)
+
+            if (err.name === 'ValidationError') {
+              const errList = []
+
+              _.forEach(err.errors, error => {
+                const modError = Object.assign({
+                  path: error.path,
+                  value: error.value
+                }, errors.Codes.E3002)
+
+                errList.push(modError)
+              })
+
+              return reject(
+                errors.badRequest(
+                  err,
+                  errList))
+            }
+
+            reject(
+              errors.internalServerError(
+                err,
+                [errors.Codes.E3000])
+            )
           })
         return
       }
@@ -406,10 +491,16 @@ export default function resource(spec) {
         q.exec((err, document) => {
           if (err) {
             debug(err)
-            return reject(errors.internalServerError(err.message))
+            return reject(
+              errors.internalServerError(
+                err,
+                [errors.Codes.E3000]))
           }
           if (!document) {
-            return reject(errors.notFound('Document not found'))
+            return reject(
+              errors.notFound(
+                'Document not found',
+                [errors.Codes.E3000]))
           }
 
           document
@@ -417,14 +508,39 @@ export default function resource(spec) {
             .save(err => {
               if (err) {
                 debug(err)
-                return reject(errors.internalServerError(err.message))
+
+                if (err.name === 'ValidationError') {
+                  const errList = []
+
+                  _.forEach(err.errors, error => {
+                    const modError = Object.assign({
+                      path: error.path,
+                      value: error.value
+                    }, errors.Codes.E3002)
+
+                    errList.push(modError)
+                  })
+
+                  return reject(
+                    errors.badRequest(
+                      err,
+                      errList))
+                }
+
+                return reject(
+                  errors.internalServerError(
+                    err,
+                    [errors.Codes.E3000]))
               }
 
               // populate
               if (req.query.expand) {
                 document.populate(query.expand.join(' '), err => {
                   if (err) {
-                    return reject(errors.internalServerError(err.message))
+                    return reject(
+                      errors.internalServerError(
+                        err,
+                        [errors.Codes.E3000]))
                   }
 
                   resolve(document.toJSON())
@@ -447,18 +563,23 @@ export default function resource(spec) {
    */
   function remove(req) {
     return new Promise((resolve, reject) => {
-      // query options
-      const qo = {[idField]: req.params[idParam]}
+      const queryOptions = {[idField]: req.params[idParam]}
 
       collection
-        .findOneAndRemove(qo)
+        .findOneAndRemove(queryOptions)
         .exec((err, documents) => {
           if (err) {
             debug(err)
-            return reject(errors.internalServerError(err.message))
+            return reject(
+              errors.internalServerError(
+                err,
+                [errors.Codes.E3000]))
           }
           if (!documents) {
-            return reject(errors.notFound('Document not found'))
+            return reject(
+              errors.notFound(
+                'Document not found',
+                [errors.Codes.E3000]))
           }
 
           resolve()

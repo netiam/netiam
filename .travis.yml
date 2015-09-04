@@ -1,30 +1,20 @@
-language: node_js
 sudo: false
+language: node_js
 cache:
   directories:
-  - node_modules
-deploy:
-  provider: npm
-  email: hannes@impossiblearts.com
-  skip_cleanup: true
-  api_key:
-    secure: JVhlHd54xgvDx1ZWeqW6s66iRJE8C3yhg3qNyPfSa/rRTbbDmbD6Ae3aXbUztBiZEJ2Ti7cBYLTp733xgS0zCxQvOsdJUvTwj6fBxY3oSCLqaPsruSGYbgQ1CWx3x4LoZDoLEKiIGJStdwIJ1EDjvAF+IrqWfPP2h1V3vSgVtmI=
-  on:
-    branch: master
-    repo: netiam/netiam
+    - node_modules
+notifications:
+  email: false
 node_js:
-- iojs-v2
+  - iojs-v2
 services:
-- mongodb
-- redis-server
+  - mongodb
+  - redis-server
+before_script:
+  - npm prune
 after_success:
-- npm run build
-- npm run test:coverage
-- codeclimate-test-reporter < coverage/lcov.info
-addons:
-  code_climate:
-    repo_token:
-      secure: fiPhvy4r3erfWdNNKC3YfyJ2npIjtLXI480NaV3MlI/PAvFEQXO0SgqQEZy9gyKEOcAJXOwO/IG7yvC4oip6y6a+Vy6DIXKDGW43+2B3re7RJ8vY5cALp0ra6axWEopJ5Q55tiQtj6Ys/sBqRVLwu+px5SeATlGncfSmA2qKA/k=
-env:
-  global:
-    secure: Pi2hUWJm01OCsJugGtjgotiG+BxQPWwkNqQLsWS0BV4UyIP6Cp3FnFUi0snkLcFkXC1cf7uVRboFyOYMeDxlsvedi9BEpPF/1+8AMLd7c6iyEBMNDrk4zffNA7xg+wuFRfTESpDrPQmTPilXxjr1+MajJWKdiFunnvjzWKKX4TM=
+  - npm run build
+  - npm run test:coverage
+  - codeclimate-test-reporter < coverage/lcov.info
+  - npm run semantic-release
+

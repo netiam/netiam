@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/netiam/netiam.svg)](https://travis-ci.org/netiam/netiam)
 [![Dependencies](https://david-dm.org/netiam/netiam.svg)](https://david-dm.org/netiam/netiam)
+[![npm version](https://badge.fury.io/js/netiam.svg)](http://badge.fury.io/js/netiam)
 
 > A pure REST library
 

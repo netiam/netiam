@@ -29,7 +29,7 @@ export default function netiam() {
           .json({
             status: err.status || 'INTERNAL SERVER ERROR',
             message: err.message || 'Undefined Error',
-            data: err.data || undefined
+            errors: _.isObject(err.data) ? err.data : undefined
           })
       })
   }

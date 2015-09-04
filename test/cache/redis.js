@@ -10,7 +10,6 @@ describe('Cache', function() {
     client.on('ready', done)
 
     cache = redisCache({client})
-
   })
 
   describe('redis', function() {

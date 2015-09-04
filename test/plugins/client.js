@@ -1,14 +1,15 @@
 import request from 'supertest'
 import Client from './../models/client'
-import db from './../utils/db.test.js'
+import db,{teardown} from './../utils/db.test.js'
 import api from '../../src/netiam'
 
-const clientFixture = require('./../fixtures/client.json')
-const app = require('./../utils/app.test.js')()
-let clientId
-let clientKey
-
 export default function() {
+
+  const clientFixture = require('./../fixtures/client.json')
+  const app = require('./../utils/app.test.js')()
+  let clientId
+  let clientKey
+
   before(() => {
     app.post(
       '/clients',
@@ -26,17 +27,9 @@ export default function() {
         .map.res({_id: 'id'})
         .json()
     )
-
   })
 
-  after(done => {
-    db.connection.db.dropDatabase(err => {
-      if (err) {
-        return done(err)
-      }
-      done()
-    })
-  })
+  after(teardown)
 
   it('should create a client', done => {
     request(app)

@@ -1,5 +1,5 @@
 import request from 'supertest'
-import db from '../utils/db.test'
+import db,{teardown} from '../utils/db.test'
 import routes from '../utils/routes'
 import userFixture from '../fixtures/user.json'
 import projectFixture from '../fixtures/project.json'
@@ -8,26 +8,12 @@ describe('REST', function() {
   const app = require('../utils/app.test')()
   let projectId
 
-  before(function(done) {
+  before(() => {
     routes.users(app)
     routes.projectsOneToMany(app)
-
-    db.connection.db.dropDatabase(function(err) {
-      if (err) {
-        return done(err)
-      }
-      done()
-    })
   })
 
-  after(function(done) {
-    db.connection.db.dropDatabase(function(err) {
-      if (err) {
-        return done(err)
-      }
-      done()
-    })
-  })
+  after(teardown)
 
   describe('subresource - one to many', function() {
     let userId

@@ -24,7 +24,7 @@ export default function rest(spec) {
       return res.status(200)
     }
 
-    if (method === 'PUT') {
+    if (method === 'PUT' || method === 'PATCH') {
       res.body = await resource.update(req, res)
       return res.status(200)
     }
