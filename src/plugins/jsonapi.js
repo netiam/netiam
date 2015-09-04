@@ -18,11 +18,9 @@ function response(spec) {
   const {map} = spec
   let {idField} = spec
   let {relationship} = spec
-  let {itemsPerPage} = spec
 
   idField = idField || '_id'
   relationship = relationship || ONE_TO_MANY
-  itemsPerPage = itemsPerPage || 10
 
   function numTotalDocuments(req, query) {
     return new Promise((resolve, reject) => {
@@ -125,7 +123,7 @@ function response(spec) {
             req,
             res,
             count,
-            itemsPerPage,
+            itemsPerPage: query.itemsPerPage,
             collection
           }))
         })

@@ -25,15 +25,9 @@ export default function() {
     app.get(
       '/users',
       api()
-        .rest({
-          collection: User,
-          itemsPerPage: 1
-        })
+        .rest({collection: User})
         .map.res({_id: 'id'})
-        .jsonapi.res({
-          collection: User,
-          itemsPerPage: 1
-        })
+        .jsonapi.res({collection: User})
     )
 
     app.get(
@@ -222,7 +216,7 @@ export default function() {
 
   it('should get users - default page', function(done) {
     request(app)
-      .get('/users')
+      .get('/users?itemsPerPage=1')
       .set('Accept', 'application/json')
       .expect(200)
       .expect('Content-Type', /json/)
@@ -250,7 +244,7 @@ export default function() {
 
   it('should get users + expanded role - default page', function(done) {
     request(app)
-      .get('/users?expand=role')
+      .get('/users?expand=role&itemsPerPage=1')
       .set('Accept', 'application/json')
       .expect(200)
       .expect('Content-Type', /json/)
@@ -285,7 +279,7 @@ export default function() {
 
   it('should get users + expanded role - page1', function(done) {
     request(app)
-      .get('/users?expand=role&page=1')
+      .get('/users?expand=role&page=1&itemsPerPage=1')
       .set('Accept', 'application/json')
       .expect(200)
       .expect('Content-Type', /json/)
@@ -327,7 +321,7 @@ export default function() {
 
   it('should get users + expanded role - page2', function(done) {
     request(app)
-      .get('/users?expand=role&page=2')
+      .get('/users?expand=role&page=2&itemsPerPage=1')
       .set('Accept', 'application/json')
       .expect(200)
       .expect('Content-Type', /json/)
@@ -370,7 +364,7 @@ export default function() {
 
   it('should get users + expanded role - page3', function(done) {
     request(app)
-      .get('/users?expand=role&page=3')
+      .get('/users?expand=role&page=3&itemsPerPage=1')
       .set('Accept', 'application/json')
       .expect(200)
       .expect('Content-Type', /json/)
@@ -413,7 +407,7 @@ export default function() {
 
   it('should get users + expanded role - page4', function(done) {
     request(app)
-      .get('/users?expand=role&page=4')
+      .get('/users?expand=role&page=4&itemsPerPage=1')
       .set('Accept', 'application/json')
       .expect(200)
       .expect('Content-Type', /json/)
