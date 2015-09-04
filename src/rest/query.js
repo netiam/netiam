@@ -60,13 +60,11 @@ export function params(spec) {
  * parameters, neither they are set or not.
  * @param {Object} spec Options
  * @param {Object} spec.req The request object
- * @param {Object} spec.itemsPerPage Number of items for each page
  * @param {String} [spec.idField="id"] The ID field
  * @returns {Object} The normalized query object
  */
 export function normalize(spec) {
   const req = spec.req
-  const itemsPerPage = spec.itemsPerPage
   const idField = spec.idField
 
   if (!req || !req.query) {
@@ -96,6 +94,12 @@ export function normalize(spec) {
   }
 
   // Pagination
+  if (query.itemsPerPage) {
+    query.itemsPerPage = Number(query.itemsPerPage)
+  } else {
+    query.itemsPerPage = 10
+  }
+
   if (!query.offset) {
     query.offset = 0
   } else {
@@ -103,21 +107,15 @@ export function normalize(spec) {
   }
 
   if (!query.limit) {
-    query.limit = itemsPerPage
+    query.limit = query.itemsPerPage
   } else {
     query.limit = Number(query.limit)
   }
 
   if (query.page) {
     query.page = query.page ? Number(query.page) : 1
-    query.limit = itemsPerPage
-    query.offset = Math.max(0, (query.page - 1) * itemsPerPage)
-  }
-
-  if (query.itemsPerPage) {
-    query.itemsPerPage = Number(query.itemsPerPage)
-  } else {
-    query.itemsPerPage = 10
+    query.limit = query.itemsPerPage
+    query.offset = Math.max(0, (query.page - 1) * query.itemsPerPage)
   }
 
   return query

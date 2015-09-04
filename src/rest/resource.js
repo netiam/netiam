@@ -54,7 +54,6 @@ export default function resource(spec) {
   let {relationship} = spec
   let {idParam} = spec
   let {idField} = spec
-  const itemsPerPage = spec.itemsPerPage ? spec.itemsPerPage : 10
 
   idParam = idParam || 'id'
   idField = idField || '_id'
@@ -111,8 +110,7 @@ export default function resource(spec) {
     return new Promise((resolve, reject) => {
       const query = normalize({
         req,
-        idField,
-        itemsPerPage
+        idField
       })
 
       // filter
@@ -223,8 +221,7 @@ export default function resource(spec) {
     return new Promise((resolve, reject) => {
       const query = normalize({
         req,
-        idField,
-        itemsPerPage
+        idField
       })
 
       // handle relationships
@@ -293,8 +290,7 @@ export default function resource(spec) {
       // normalize
       const query = normalize({
         req,
-        idField,
-        itemsPerPage
+        idField
       })
 
       // create model
@@ -414,8 +410,7 @@ export default function resource(spec) {
   function update(req) {
     const query = normalize({
       req,
-      idField,
-      itemsPerPage
+      idField
     })
 
     function updateExpanded(document) {
