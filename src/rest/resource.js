@@ -7,8 +7,44 @@ import * as errors from 'netiam-errors'
 
 const debug = dbg('netiam:rest:resource')
 
-export const MANY_TO_ONE = Symbol('many-to-one')
+/**
+ * A main resource has a list of subresources.
+ *
+ * Example:
+ *
+ * ```javascript
+ * app.get('/users/:user/projects'
+ *   api()
+ *    .rest({
+ *      idParam: 'user',
+ *      collection: User
+ *      relationship: hasMany(Project, {field: 'projects'})
+ *    })
+ * )
+ * ```
+ *
+ * @type {Symbol}
+ */
 export const ONE_TO_MANY = Symbol('one-to-many')
+
+/**
+ * A subresource has a reference to a main resource.
+ *
+ * Example:
+ *
+ * ```javascript
+ * app.get('/projects/:project/campaigns'
+ *   api()
+ *    .rest({
+ *      collection: Campaign
+ *      relationship: belongsTo(Project, {field: 'project', param: 'project'})
+ *    })
+ * )
+ * ```
+ *
+ * @type {Symbol}
+ */
+export const MANY_TO_ONE = Symbol('many-to-one')
 
 export default function resource(spec) {
   const {collection} = spec
