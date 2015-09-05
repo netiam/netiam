@@ -132,7 +132,7 @@ netiam
   .get('/users/:user/projects')
   .rest({
     collection: Project,
-    relationship: belongsTo(User, {field: 'owner', param: 'user'})
+    relationship: belongsTo(User, {field: 'owner', idParam: 'user'})
   })
   .json();
 ```
@@ -145,7 +145,7 @@ netiam
   .rest({
     idField: 'project',
     collection: Project,
-    relationship: belongsTo(User, {field: 'owner', param: 'user'})
+    relationship: belongsTo(User, {field: 'owner', idParam: 'user'})
   })
   .json();
 ```
