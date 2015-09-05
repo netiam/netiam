@@ -96,9 +96,9 @@ netiam
 
 ### Many-To-One
 
-From a users perspective, there is no difference between a *One-To-Many* or
+From user perspective, there is no difference between a *One-To-Many* or
 a *Many-To-One* relationship. But for the API developer, a lot of things
-are different. The most important part, is the way you are modelling your
+are different. The most important part, is the way you are modeling your
 data.
 
 **The User model:**
