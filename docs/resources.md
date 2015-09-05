@@ -85,7 +85,7 @@ netiam
 
 ```js
 netiam
-  .get('/users/:user/projects/:project')
+  .get('/users/:user/projects/:id')
   .rest({
     idParam: 'user'
     collection: User,
