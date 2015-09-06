@@ -38,17 +38,15 @@ npm test
 
 ## What can it do for you
 
-* Authentication (all the sugar is provided by [passportjs](http://passportjs.org/))
+* Authentication (with [passportjs](http://passportjs.org/) and [OAuth 2.0](https://github.com/netiam/oauth))
 * Authorization (with ACLs, inheritance support for roles, assertions and wildcards)
-* Query language (effective and powerful filters)
+* Relationships(on resource level)
+* Query language (effective and powerful filters with [OData](http://www.odata.org/))
 * Completely stateless (except cookie based sessions for authentication in browser apps)
-* Profiles (e.g. mobile-friendly API responses)
-
-## Specification
-
-* [Execution flow](docs/flow.md)
-* [Plugin](docs/plugins.md)
-* [Resources](docs/resources.md)
+* Support for the [JSONAPI](http://jsonapi.org/) specification
+* Auto response format detection
+* Graph representation and rendering(as SVG)
+* Extensible with plugins
 
 ## Getting started
 
