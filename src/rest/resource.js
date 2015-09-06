@@ -46,6 +46,7 @@ export function hasMany(Model, spec) {
 
   return Object.assign({
     idField: '_id',
+    idParam: 'id',
     type: ONE_TO_MANY,
     Model: Model
   }, spec)
@@ -83,6 +84,7 @@ export function belongsTo(Model, spec) {
 
   return Object.assign({
     idField: '_id',
+    idParam: 'id',
     type: MANY_TO_ONE,
     Model: Model
   }, spec)
