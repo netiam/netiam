@@ -129,7 +129,7 @@ class Filter {
     }
 
     // Apply AND operation for each key/value pair
-    if (_.isObject(q)) {
+    if (_.isObject(q) && !_.isEmpty(q)) {
       let ext = ''
       _.forEach(q, function(val, key) {
         ext += key + ' EQ \'' + val + '\''
