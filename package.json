@@ -15,10 +15,7 @@
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
 	"publishConfig": {
-	  "tag": "canary"
-  },
-  "release": {
-    "branch": "v6"
+	  "tag": "next"
   },
   "dependencies": {
     "async": "^1.4.2",
