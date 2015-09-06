@@ -13,6 +13,14 @@ useful. It works as *connect* [middleware](https://github.com/senchalabs/connect
 and you should be able to use it with any compatible infrastructure
 (e.g. [express](http://expressjs.com/)).
 
+## TOC
+
+* [ACL](./docs/acl.md)
+* [Dispatch Flow](./docs/flow.md)
+* [Models](./docs/models.md)
+* [Plugins](./docs/plugins.md)
+* [Resources](./docs/resources.md)
+
 ## Get it
 
 ```bash
