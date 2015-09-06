@@ -12,6 +12,8 @@ Gruntfile.js
 
 # dirs
 .tmp/
+bin/
 coverage/
 docs/
 test/
+
