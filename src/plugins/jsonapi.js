@@ -1,4 +1,4 @@
-import errors from 'netiam-errors'
+import * as errors from 'netiam-errors'
 import {ONE_TO_MANY, MANY_TO_ONE} from '../rest/resource'
 import jsonapi from '../rest/jsonapi'
 import {normalize, params} from '../rest/query'
