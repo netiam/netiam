@@ -45,7 +45,7 @@ npm test
 * Completely stateless (except cookie based sessions for authentication in browser apps)
 * Support for the [JSONAPI](http://jsonapi.org/) specification
 * Auto response format detection
-* Graph representation and rendering(as SVG)
+* Graph representation and rendering (as SVG)
 * Extensible with plugins
 
 ## Getting started
