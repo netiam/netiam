@@ -1,5 +1,6 @@
 import acl from './acl'
 import auth from './auth'
+import auto from './auto'
 import cache from './cache'
 import client from './client'
 import data from './data'
@@ -17,6 +18,7 @@ import transform from './transform'
 export default {
   acl,
   auth,
+  auto,
   cache,
   client,
   data,

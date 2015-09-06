@@ -7,6 +7,22 @@ import nodesFixture from '../fixtures/nodes'
 
 export default Object.freeze({
 
+  auto(router) {
+    router.post(
+      '/users',
+      api()
+        .rest({collection: User})
+        .auto.res({jsonapi: {collection: User}})
+    )
+
+    router.get(
+      '/users',
+      api()
+        .rest({collection: User})
+        .auto.res({jsonapi: {collection: User}})
+    )
+  },
+
   users(router) {
     router.get(
       '/users',
