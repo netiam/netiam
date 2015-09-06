@@ -4,7 +4,8 @@ import jsonPlugin from './json'
 import jsonapiPlugin from './jsonapi'
 
 function request() {
-  return (req, res) => {
+  return () => {
+    throw errors.notImplemented('"auto.req" is not implemented')
   }
 }
 

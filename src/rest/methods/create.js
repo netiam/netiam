@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import dbg from 'debug'
 import * as errors from 'netiam-errors'
-import {params, normalize} from '../query'
+import {normalize} from '../query'
 import {ONE_TO_MANY, MANY_TO_ONE} from '../relationships'
 
 const debug = dbg('netiam:rest:resource:create')

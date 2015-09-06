@@ -1,9 +1,5 @@
-import _ from 'lodash'
 import dbg from 'debug'
-import async from 'async'
-import {params, normalize} from './query'
 import {ONE_TO_MANY, MANY_TO_ONE} from './relationships'
-import filter from './odata/filter'
 import * as errors from 'netiam-errors'
 import list from './methods/list'
 import create from './methods/create'
@@ -35,11 +31,13 @@ const debug = dbg('netiam:rest:resource')
  */
 export function hasMany(Model, spec) {
   if (!Model) {
+    debug('A "hasMany" relationship must must define a target "Model"')
     throw errors.internalServerError(
       'A "hasMany" relationship must must define a target "Model"')
   }
 
   if (!spec.field) {
+    debug('A "hasMany" relationship must define option "field"')
     throw errors.internalServerError(
       'A "hasMany" relationship must define option "field"')
   }
@@ -73,11 +71,13 @@ export function hasMany(Model, spec) {
  */
 export function belongsTo(Model, spec) {
   if (!Model) {
+    debug('A "belongsTo" relationship must must define a base "Model"')
     throw errors.internalServerError(
       'A "belongsTo" relationship must must define a base "Model"')
   }
 
   if (!spec.field) {
+    debug('A "belongsTo" relationship must define option "field"')
     throw errors.internalServerError(
       'A "belongsTo" relationship must define option "field"')
   }
