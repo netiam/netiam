@@ -14,6 +14,9 @@
     "watch": "./bin/watch",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
+	"publishConfig": {
+	  "tag": "canary"
+  },
   "release": {
     "branch": "v6"
   },
