@@ -112,7 +112,7 @@ data.
 
 **The Project model:**
 
-```
+```js
 {
   "id": "project123",
   "name": "myproject",
