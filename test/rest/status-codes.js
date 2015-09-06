@@ -3,7 +3,7 @@ import db,{teardown} from '../utils/db.test'
 import routes from '../utils/routes'
 import userFixture from '../fixtures/user.json'
 
-describe('REST', function() {
+export default function() {
   const app = require('../utils/app.test')()
 
   before(() => {
@@ -11,28 +11,25 @@ describe('REST', function() {
   })
   after(teardown)
 
-  describe('Status Codes', () => {
+  it('should fail creating a user', done => {
+    const invalidUser = Object.assign(
+      {},
+      userFixture,
+      {email: 'wrong@user'})
 
-    it('should fail creating a user', done => {
-      const invalidUser = Object.assign(
-        {},
-        userFixture,
-        {email: 'wrong@user'})
+    request(app)
+      .post('/users')
+      .send(invalidUser)
+      .set('Accept', 'application/json')
+      .expect(400)
+      .expect('Content-Type', /json/)
+      .end(err => {
+        if (err) {
+          return done(err)
+        }
 
-      request(app)
-        .post('/users')
-        .send(invalidUser)
-        .set('Accept', 'application/json')
-        .expect(400)
-        .expect('Content-Type', /json/)
-        .end(err => {
-          if (err) {
-            return done(err)
-          }
-
-          done()
-        })
-    })
-
+        done()
+      })
   })
-})
+
+}

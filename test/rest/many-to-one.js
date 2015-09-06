@@ -4,7 +4,7 @@ import routes from '../utils/routes'
 import userFixture from '../fixtures/user'
 import projectFixture from '../fixtures/project'
 
-describe('REST', function() {
+export default function() {
   const app = require('../utils/app.test')()
   let projectId
 
@@ -12,123 +12,256 @@ describe('REST', function() {
     routes.users(app)
     routes.projectsManyToOne(app)
   })
-
   after(teardown)
 
-  describe('subresource - many to one', function() {
-    let projectWithUsers
-    let userId
+  let userId
 
-    it('should create user', function(done) {
-      request(app)
-        .post('/users')
-        .send(userFixture)
-        .set('Accept', 'application/json')
-        .expect(201)
-        .expect('Content-Type', /json/)
-        .end(function(err, res) {
-          if (err) {
-            return done(err)
-          }
+  it('should create a project', done => {
+    request(app)
+      .post('/projects')
+      .send(projectFixture)
+      .set('Accept', 'application/json')
+      .expect(201)
+      .expect('Content-Type', /json/)
+      .end((err, res) => {
+        if (err) {
+          return done(err)
+        }
 
-          userId = res.body.id
-          projectWithUsers = Object.assign(
-            {},
-            projectFixture,
-            {users: [userId]}
-          )
-
-          done()
+        res.body.should.have.properties({
+          'name': 'testproject'
         })
-    })
 
-    it('should create a project', function(done) {
-      request(app)
-        .post('/projects')
-        .send(projectWithUsers)
-        .set('Accept', 'application/json')
-        .expect(201)
-        .expect('Content-Type', /json/)
-        .end(function(err, res) {
-          if (err) {
-            return done(err)
-          }
+        projectId = res.body.id
 
-          res.body.should.have.properties({
-            'name': 'testproject'
-          })
-
-          projectId = res.body.id
-
-          done()
-        })
-    })
-
-    it('should get projects', function(done) {
-      request(app)
-        .get('/projects')
-        .set('Accept', 'application/json')
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .end(function(err, res) {
-          if (err) {
-            return done(err)
-          }
-
-          res.body.should
-            .be.instanceOf(Array)
-            .and.have.lengthOf(1)
-
-          done()
-        })
-    })
-
-    it('should get users', function(done) {
-      request(app)
-        .get('/projects/' + projectId + '/users')
-        .set('Accept', 'application/json')
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .end(function(err, res) {
-          if (err) {
-            return done(err)
-          }
-
-          res.body.should
-            .be.instanceOf(Array)
-            .and.have.lengthOf(1)
-
-          done()
-        })
-    })
-
-    it('should get a user', function(done) {
-      request(app)
-        .get('/projects/' + projectId + '/users/' + userId)
-        .set('Accept', 'application/json')
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .end(function(err, res) {
-          if (err) {
-            return done(err)
-          }
-
-          res.body.should.have.properties({
-            'name': 'eliias',
-            'description': 'Hey, ich bin der Hannes.',
-            'email': 'hannes@impossiblearts.com',
-            'firstname': 'Hannes',
-            'lastname': 'Moser',
-            'location': [
-              13.0406998,
-              47.822352
-            ]
-          })
-
-          done()
-        })
-    })
-
+        done()
+      })
   })
 
-})
+  it('should get projects', done => {
+    request(app)
+      .get('/projects')
+      .set('Accept', 'application/json')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end((err, res) => {
+        if (err) {
+          return done(err)
+        }
+
+        res.body.should
+          .be.instanceOf(Array)
+          .and.have.lengthOf(1)
+
+        done()
+      })
+  })
+
+  it('should create a user', done => {
+    request(app)
+      .post('/projects/' + projectId + '/users')
+      .send(userFixture)
+      .set('Accept', 'application/json')
+      .expect(201)
+      .expect('Content-Type', /json/)
+      .end((err, res) => {
+        if (err) {
+          return done(err)
+        }
+
+        userId = res.body.id
+
+        done()
+      })
+  })
+
+  it('should get users', done => {
+    request(app)
+      .get('/projects/' + projectId + '/users')
+      .set('Accept', 'application/json')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end((err, res) => {
+        if (err) {
+          return done(err)
+        }
+
+        res.body.should
+          .be.instanceOf(Array)
+          .and.have.lengthOf(1)
+
+        done()
+      })
+  })
+
+  it('should get a user', done => {
+    request(app)
+      .get('/projects/' + projectId + '/users/' + userId)
+      .set('Accept', 'application/json')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end((err, res) => {
+        if (err) {
+          return done(err)
+        }
+
+        res.body.should.have.properties({
+          'name': 'eliias',
+          'description': 'Hey, ich bin der Hannes.',
+          'email': 'hannes@impossiblearts.com',
+          'firstname': 'Hannes',
+          'lastname': 'Moser',
+          'location': [
+            13.0406998,
+            47.822352
+          ]
+        })
+
+        done()
+      })
+  })
+
+  it('should get a user - idParam', done => {
+    request(app)
+      .get('/projects/' + projectId + '/users-idParam/' + userId)
+      .set('Accept', 'application/json')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end((err, res) => {
+        if (err) {
+          return done(err)
+        }
+
+        res.body.should.have.properties({
+          'name': 'eliias',
+          'description': 'Hey, ich bin der Hannes.',
+          'email': 'hannes@impossiblearts.com',
+          'firstname': 'Hannes',
+          'lastname': 'Moser',
+          'location': [
+            13.0406998,
+            47.822352
+          ]
+        })
+
+        done()
+      })
+  })
+
+  it('should modify a user', done => {
+    const modifiedUser = Object.assign(
+      {}, userFixture, {name: 'modified user'}
+    )
+
+    request(app)
+      .put('/projects/' + projectId + '/users/' + userId)
+      .send(modifiedUser)
+      .set('Accept', 'application/json')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end((err, res) => {
+        if (err) {
+          return done(err)
+        }
+
+        res.body.should.have.properties({
+          'name': 'modified user',
+          'description': 'Hey, ich bin der Hannes.',
+          'email': 'hannes@impossiblearts.com',
+          'firstname': 'Hannes',
+          'lastname': 'Moser',
+          'location': [
+            13.0406998,
+            47.822352
+          ]
+        })
+
+        done()
+      })
+  })
+
+  it('should modify a user - idParam', done => {
+    const modifiedUser = Object.assign(
+      {}, userFixture, {name: 'modified user 2'}
+    )
+
+    request(app)
+      .put('/projects/' + projectId + '/users-idParam/' + userId)
+      .send(modifiedUser)
+      .set('Accept', 'application/json')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end((err, res) => {
+        if (err) {
+          return done(err)
+        }
+
+        res.body.should.have.properties({
+          'name': 'modified user 2',
+          'description': 'Hey, ich bin der Hannes.',
+          'email': 'hannes@impossiblearts.com',
+          'firstname': 'Hannes',
+          'lastname': 'Moser',
+          'location': [
+            13.0406998,
+            47.822352
+          ]
+        })
+
+        done()
+      })
+  })
+
+  it('should delete a user', done => {
+    request(app)
+      .delete('/projects/' + projectId + '/users/' + userId)
+      .set('Accept', 'application/json')
+      .expect(204)
+      .end(done)
+  })
+
+  it('should not get a user', done => {
+    request(app)
+      .get('/projects/' + projectId + '/users/' + userId)
+      .set('Accept', 'application/json')
+      .expect(404)
+      .expect('Content-Type', /json/)
+      .end(done)
+  })
+
+  it('should create a user', done => {
+    request(app)
+      .post('/projects/' + projectId + '/users')
+      .send(userFixture)
+      .set('Accept', 'application/json')
+      .expect(201)
+      .expect('Content-Type', /json/)
+      .end((err, res) => {
+        if (err) {
+          return done(err)
+        }
+
+        userId = res.body.id
+
+        done()
+      })
+  })
+
+  it('should delete a user - idParam', done => {
+    request(app)
+      .delete('/projects/' + projectId + '/users/' + userId)
+      .set('Accept', 'application/json')
+      .expect(204)
+      .end(done)
+  })
+
+  it('should not get a user - idParam', done => {
+    request(app)
+      .get('/projects/' + projectId + '/users/' + userId)
+      .set('Accept', 'application/json')
+      .expect(404)
+      .expect('Content-Type', /json/)
+      .end(done)
+  })
+
+}

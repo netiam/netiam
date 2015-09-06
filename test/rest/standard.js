@@ -1,46 +1,22 @@
+import _ from 'lodash'
 import request from 'supertest'
-import db,{teardown} from '../utils/db.test'
-import routes from '../utils/routes'
-import userFixture from '../fixtures/user.json'
-import projectFixture from '../fixtures/project.json'
+import db,{teardown} from './../utils/db.test.js'
+import routes from './../utils/routes'
 
 export default function() {
-
-  const app = require('../utils/app.test')()
-  let projectId
+  const userFixture = require('./../fixtures/user.json')
+  const app = require('./../utils/app.test.js')()
   let userId
 
   before(() => {
     routes.users(app)
-    routes.projectsOneToMany(app)
   })
+
   after(teardown)
-
-  it('should create a project', done => {
-    request(app)
-      .post('/projects')
-      .send(projectFixture)
-      .set('Accept', 'application/json')
-      .expect(201)
-      .expect('Content-Type', /json/)
-      .end((err, res) => {
-        if (err) {
-          return done(err)
-        }
-
-        res.body.should.have.properties({
-          'name': 'testproject'
-        })
-
-        projectId = res.body.id
-
-        done()
-      })
-  })
 
   it('should create a user', done => {
     request(app)
-      .post('/projects/' + projectId + '/users')
+      .post('/users')
       .send(userFixture)
       .set('Accept', 'application/json')
       .expect(201)
@@ -50,6 +26,18 @@ export default function() {
           return done(err)
         }
 
+        res.body.should.have.properties({
+          'name': 'eliias',
+          'description': 'Hey, ich bin der Hannes.',
+          'email': 'hannes@impossiblearts.com',
+          'firstname': 'Hannes',
+          'lastname': 'Moser',
+          'location': [
+            13.0406998,
+            47.822352
+          ]
+        })
+
         userId = res.body.id
 
         done()
@@ -58,7 +46,7 @@ export default function() {
 
   it('should get users', done => {
     request(app)
-      .get('/projects/' + projectId + '/users')
+      .get('/users')
       .set('Accept', 'application/json')
       .expect(200)
       .expect('Content-Type', /json/)
@@ -77,7 +65,7 @@ export default function() {
 
   it('should get a user', done => {
     request(app)
-      .get('/projects/' + projectId + '/users/' + userId)
+      .get('/users/' + userId)
       .set('Accept', 'application/json')
       .expect(200)
       .expect('Content-Type', /json/)
@@ -104,7 +92,7 @@ export default function() {
 
   it('should get a user - idParam', done => {
     request(app)
-      .get('/projects/' + projectId + '/users-idParam/' + userId)
+      .get('/users-idParam/' + userId)
       .set('Accept', 'application/json')
       .expect(200)
       .expect('Content-Type', /json/)
@@ -130,14 +118,11 @@ export default function() {
   })
 
   it('should modify a user', done => {
-    const modifiedUser = Object.assign(
-      {},
-      userFixture,
-      {name: 'modified user'}
-    )
+    let modifiedUser = _.clone(userFixture)
+    modifiedUser.name = 'modified name'
 
     request(app)
-      .put('/projects/' + projectId + '/users/' + userId)
+      .put('/users/' + userId)
       .send(modifiedUser)
       .set('Accept', 'application/json')
       .expect(200)
@@ -148,7 +133,7 @@ export default function() {
         }
 
         res.body.should.have.properties({
-          'name': 'modified user',
+          'name': 'modified name',
           'description': 'Hey, ich bin der Hannes.',
           'email': 'hannes@impossiblearts.com',
           'firstname': 'Hannes',
@@ -164,14 +149,11 @@ export default function() {
   })
 
   it('should modify a user - idParam', done => {
-    const modifiedUser = Object.assign(
-      {},
-      userFixture,
-      {name: 'modified user 2'}
-    )
+    let modifiedUser = _.clone(userFixture)
+    modifiedUser.name = 'modified name 2'
 
     request(app)
-      .put('/projects/' + projectId + '/users-idParam/' + userId)
+      .put('/users-idParam/' + userId)
       .send(modifiedUser)
       .set('Accept', 'application/json')
       .expect(200)
@@ -182,7 +164,7 @@ export default function() {
         }
 
         res.body.should.have.properties({
-          'name': 'modified user 2',
+          'name': 'modified name 2',
           'description': 'Hey, ich bin der Hannes.',
           'email': 'hannes@impossiblearts.com',
           'firstname': 'Hannes',
@@ -199,34 +181,13 @@ export default function() {
 
   it('should delete a user', done => {
     request(app)
-      .delete('/projects/' + projectId + '/users/' + userId)
+      .delete('/users/' + userId)
       .set('Accept', 'application/json')
       .expect(204)
-      .end(err => {
-        if (err) {
-          return done(err)
-        }
-
-        done()
-      })
+      .end(done)
   })
 
-  it('should not get a user', done => {
-    request(app)
-      .get('/projects/' + projectId + '/users/' + userId)
-      .set('Accept', 'application/json')
-      .expect(404)
-      .expect('Content-Type', /json/)
-      .end(err => {
-        if (err) {
-          return done(err)
-        }
-
-        done()
-      })
-  })
-
-  it('should create user', done => {
+  it('should create a user', done => {
     request(app)
       .post('/users')
       .send(userFixture)
@@ -238,35 +199,19 @@ export default function() {
           return done(err)
         }
 
-        userId = res.body.id
-
-        done()
-      })
-  })
-
-  it('should create a project', done => {
-    const projectWithUser = Object.assign(
-      {},
-      projectFixture,
-      {users: userId}
-    )
-
-    request(app)
-      .post('/projects')
-      .send(projectWithUser)
-      .set('Accept', 'application/json')
-      .expect(201)
-      .expect('Content-Type', /json/)
-      .end((err, res) => {
-        if (err) {
-          return done(err)
-        }
-
         res.body.should.have.properties({
-          'name': 'testproject'
+          'name': 'eliias',
+          'description': 'Hey, ich bin der Hannes.',
+          'email': 'hannes@impossiblearts.com',
+          'firstname': 'Hannes',
+          'lastname': 'Moser',
+          'location': [
+            13.0406998,
+            47.822352
+          ]
         })
 
-        projectId = res.body.id
+        userId = res.body.id
 
         done()
       })
@@ -274,31 +219,19 @@ export default function() {
 
   it('should delete a user - idParam', done => {
     request(app)
-      .delete('/projects/' + projectId + '/users-idParam/' + userId)
+      .delete('/users-idParam/' + userId)
       .set('Accept', 'application/json')
       .expect(204)
-      .end(err => {
-        if (err) {
-          return done(err)
-        }
-
-        done()
-      })
+      .end(done)
   })
 
-  it('should not get a user - idParam', done => {
+  it('should not get a user', done => {
     request(app)
-      .get('/projects/' + projectId + '/users-idParam/' + userId)
+      .get('/users/' + userId)
       .set('Accept', 'application/json')
       .expect(404)
       .expect('Content-Type', /json/)
-      .end(err => {
-        if (err) {
-          return done(err)
-        }
-
-        done()
-      })
+      .end(done)
   })
 
 }

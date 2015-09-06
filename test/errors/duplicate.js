@@ -14,7 +14,7 @@ describe('Errors', () => {
 
   after(teardown)
 
-  describe('duplicate', () => {
+  describe('Duplicate', () => {
 
     it('should create user', done => {
       request(app)
