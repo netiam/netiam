@@ -11,20 +11,23 @@ export default function() {
   })
   after(teardown)
 
-  it('should return a JSON response', done => {
+  it('should create a user', done => {
     request(app)
       .post('/users')
       .send(userFixture)
       .set('Accept', 'application/json')
       .expect(201)
       .expect('Content-Type', /application\/json/)
-      .end(err => {
-        if (err) {
-          return done(err)
-        }
+      .end(done)
+  })
 
-        done()
-      })
+  it('should return a JSON response', done => {
+    request(app)
+      .get('/users')
+      .set('Accept', 'application/json')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+      .end(done)
   })
 
   it('should return a JSONAPI response', done => {
@@ -33,13 +36,7 @@ export default function() {
       .set('Accept', 'application/vnd.api+json')
       .expect(200)
       .expect('Content-Type', /application\/vnd\.api\+json/)
-      .end(err => {
-        if (err) {
-          return done(err)
-        }
-
-        done()
-      })
+      .end(done)
   })
 
 }
