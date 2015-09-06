@@ -13,9 +13,9 @@ const debug = dbg('netiam:rest:query')
  * kind of 1:n relationship between a user and its messages.
  *
  * The mapping allows you to define a dynamic relationship between a parameter
- * and a specific document property. Internal this mapping is used to reduce
- * the resultset of documents by adding a $where statement to the database
- * query.
+ * and a specific document property. Within the lib this mapping function is
+ * used to reduce the resultset of documents by adding a $where statement to
+ * the database query.
  *
  * Example:
  * // Request
@@ -33,7 +33,7 @@ const debug = dbg('netiam:rest:query')
  */
 export function params(spec) {
   const req = spec.req
-  const _map = _.clone(spec.map)
+  const _map = _.isObject(spec.map) ? _.clone(spec.map) : {}
 
   if (!req || !req.params) {
     const err = new Error('Either the request object itself or the request.params object does not exist')
