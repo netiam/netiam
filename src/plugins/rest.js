@@ -35,6 +35,11 @@ export default function rest(spec) {
       return res.status(201)
     }
 
+    if (method === 'HEAD') {
+      await resource.read(req, res)
+      return res.status(200)
+    }
+
     if (method === 'GET') {
       res.body = await resource.read(req, res)
       return res.status(200)
