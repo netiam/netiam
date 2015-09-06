@@ -112,20 +112,22 @@ function response(spec) {
     }
 
     return new Promise((resolve, reject) => {
-      const query = normalize({
+      const queryNormalized = normalize({
         req,
         idField
       })
 
-      numTotalDocuments(req, query)
+      numTotalDocuments(req, queryNormalized)
         .then(count => {
-          res.json(jsonapi.transform({
-            req,
-            res,
-            count,
-            itemsPerPage: query.itemsPerPage,
-            collection
-          }))
+          res
+            .set('Content-Type', 'application/vnd.api+json')
+            .json(jsonapi.transform({
+              req,
+              res,
+              count,
+              itemsPerPage: queryNormalized.itemsPerPage,
+              collection
+            }))
         })
         .catch(err => {
           debug(err)
