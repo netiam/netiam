@@ -270,6 +270,8 @@ export default function acl(spec) {
 
     role = roles.get(role)
 
+    const roleHierarchy = hierarchy(role).reverse()
+
     // wildcard allow
     if (settings.resource[ALLOW] && settings.resource[ALLOW][WILDCARD]) {
       if (settings.resource[ALLOW][WILDCARD].indexOf(privilege) !== -1) {
@@ -278,11 +280,13 @@ export default function acl(spec) {
     }
 
     // allow
-    if (settings.resource[ALLOW] && settings.resource[ALLOW][role.name]) {
-      if (settings.resource[ALLOW][role.name].indexOf(privilege) !== -1) {
-        isAllowed = true
+    roleHierarchy.forEach(r => {
+      if (settings.resource[ALLOW] && settings.resource[ALLOW][r.name]) {
+        if (settings.resource[ALLOW][r.name].indexOf(privilege) !== -1) {
+          isAllowed = true
+        }
       }
-    }
+    })
 
     // wildcard deny
     if (settings.resource[DENY] && settings.resource[DENY][WILDCARD]) {
@@ -292,11 +296,13 @@ export default function acl(spec) {
     }
 
     // deny
-    if (settings.resource[DENY] && settings.resource[DENY][role.name]) {
-      if (settings.resource[DENY][role.name].indexOf(privilege) !== -1) {
-        isAllowed = false
+    roleHierarchy.forEach(r => {
+      if (settings.resource[DENY] && settings.resource[DENY][r.name]) {
+        if (settings.resource[DENY][r.name].indexOf(privilege) !== -1) {
+          isAllowed = false
+        }
       }
-    }
+    })
 
     return isAllowed
   }
