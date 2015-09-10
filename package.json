@@ -13,6 +13,9 @@
     "watch": "./bin/watch",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
+	"release": {
+    "branch": "v5"
+	},
   "dependencies": {
     "async": "^1.4.2",
     "babel-runtime": "^5",
