@@ -14,9 +14,6 @@
     "watch": "./bin/watch",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
-  "publishConfig": {
-    "tag": "next"
-  },
   "dependencies": {
     "async": "^1.4.2",
     "babel-runtime": "^5",
@@ -25,12 +22,10 @@
     "debug": "^2.2.0",
     "jsdom": "^6.3.0",
     "lodash": "^3.10.1",
-    "mongoose": "^4",
     "netiam-errors": "^1.10.1",
-    "passport": "^0.3.0",
-    "passport-http": "^0.3.0",
-    "passport-http-bearer": "^1.0.1",
-    "passport-local": "^1.0.0",
+    "netiam-oauth": "^1.5.0",
+    "sails-memory": "^0.10.5",
+    "waterline": "^0.10.26",
     "xlsx": "^0.8.0"
   },
   "devDependencies": {
@@ -43,7 +38,6 @@
     "istanbul": "^0.3.5",
     "mkdirp": "^0.5.0",
     "mocha": "^2.0.1",
-    "pow-mongoose-fixtures": "^0.3.0",
     "redis": "^0.12.1",
     "rimraf": "^2.4.2",
     "semantic-release": "^4.3.4",
@@ -57,6 +51,9 @@
   },
   "keywords": [
     "REST",
+    "RESTful",
+    "Microservice",
+    "Webservice",
     "API",
     "OData",
     "Library",
