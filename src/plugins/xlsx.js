@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import XLSX from 'XLSX'
+import XLSX from 'xlsx'
 
 class Workbook {
   constructor(sheetNames = [], sheets = {}) {
