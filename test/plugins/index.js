@@ -3,6 +3,7 @@ import client from './client'
 import json from './json'
 import jsonapi from './jsonapi'
 import transform from './transform'
+import xlsx from './xlsx'
 
 describe('Plugins', () => {
   describe('Auto', auto)
@@ -10,4 +11,5 @@ describe('Plugins', () => {
   describe('JSON', json)
   describe('JSONAPI', jsonapi)
   describe('Transform', transform)
+  describe('XLSX', xlsx)
 })

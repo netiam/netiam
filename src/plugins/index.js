@@ -14,6 +14,7 @@ import render from './render'
 import rest from './rest'
 import state from './state'
 import transform from './transform'
+import xlsx from './xlsx'
 
 export default {
   acl,
@@ -32,6 +33,7 @@ export default {
   rest,
   state,
   transform,
+  xlsx,
   register(plugin, name) {
     this[name] = plugin
   }
