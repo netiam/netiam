@@ -7,14 +7,14 @@ notifications:
   email: false
 node_js:
   - iojs-v2
-services:
-  - mongodb
-  - redis-server
+  - iojs-v3
+  - 4
 before_script:
   - npm prune
-after_success:
+script:
   - npm run build
   - npm run test:coverage
+after_success:
   - codeclimate-test-reporter < coverage/lcov.info
   - npm run semantic-release
 
