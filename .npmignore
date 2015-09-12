@@ -1,4 +1,5 @@
 # dotiles
+.babelrc
 .codeclimate.yml
 .editorconfig
 .eslintignore
