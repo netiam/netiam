@@ -22,8 +22,6 @@ export default function resource(spec) {
   idField = idField || '_id'
   relationship = relationship || ONE_TO_MANY
 
-  const itemsPerPage = 10
-
   /**
    * Normalize the request query. The resource routes do access certain query
    * parameters, neither they are set or not.
@@ -53,6 +51,12 @@ export default function resource(spec) {
     }
 
     // Pagination
+    if (!query.itemsPerPage) {
+      query.itemsPerPage = 10
+    } else {
+      query.itemsPerPage = Number(query.itemsPerPage)
+    }
+
     if (!query.offset) {
       query.offset = 0
     } else {
@@ -66,8 +70,8 @@ export default function resource(spec) {
 
     if (query.page) {
       query.page = Number(query.page || 1)
-      query.limit = itemsPerPage
-      query.offset = Math.max(0, (query.page - 1) * itemsPerPage)
+      query.limit = query.itemsPerPage
+      query.offset = Math.max(0, (query.page - 1) * query.itemsPerPage)
     }
 
     return query

@@ -3,15 +3,16 @@ import url from 'url'
 
 export default function(spec) {
   const {collection} = spec
-  let {itemsPerPage} = spec
-
-  itemsPerPage = itemsPerPage || 10
+  const {itemsPerPage} = spec
 
   async function links(req, res) {
     const cnt = await collection.count()
     const base = req.protocol + '://' + req.get('host')
     const self = url.parse(base + req.originalUrl, true)
     const page = Number(req.query.page || 1)
+    const limit = req.query.itemsPerPage
+      ? Number(req.query.itemsPerPage)
+      : itemsPerPage
 
     self.search = undefined
     self.query.page = page
@@ -32,7 +33,7 @@ export default function(spec) {
 
       const last = url.parse(base + req.originalUrl, true)
       last.search = undefined
-      last.query.page = Math.max(1, Math.ceil(cnt / itemsPerPage))
+      last.query.page = Math.max(1, Math.ceil(cnt / limit))
 
       if (first.query.page < self.query.page) {
         o.first = url.format(first)
