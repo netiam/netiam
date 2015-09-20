@@ -6,30 +6,17 @@ import {ONE_TO_MANY, MANY_TO_ONE} from '../relationships'
 const debug = dbg('netiam:rest:resource:read')
 
 function read(query, queryNormalized) {
-  return new Promise((resolve, reject) => {
-    if (queryNormalized.expand.length > 0) {
-      query = query.populate(queryNormalized.expand.join(' '))
-    }
+  if (queryNormalized.expand.length > 0) {
+    query = query.populate(queryNormalized.expand)
+  }
 
-    query.exec((err, document) => {
-      if (err) {
-        debug(err)
-        return reject(
-          errors.internalServerError(
-            err,
-            [errors.Codes.E3000]))
-      }
-
+  return query
+    .then(document => {
       if (!document) {
-        return reject(
-          errors.notFound(
-            'Document not found',
-            [errors.Codes.E3000]))
+        throw errors.notFound('Document not found', [errors.Codes.E3000])
       }
-
-      resolve(document.toObject())
+      return document.toObject()
     })
-  })
 }
 
 function handleRelationship(spec) {

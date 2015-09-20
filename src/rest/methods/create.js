@@ -6,56 +6,19 @@ import {ONE_TO_MANY, MANY_TO_ONE} from '../relationships'
 
 const debug = dbg('netiam:rest:resource:create')
 
-function create(err, document, queryNormalized) {
-  return new Promise((resolve, reject)=> {
-    if (err) {
-      debug(err)
-      if (err.code === 11000) {
-        return reject(
-          errors.badRequest(err, [errors.Codes.E1001]))
-      }
-
-      if (err.name === 'ValidationError') {
-        const errList = []
-
-        _.forEach(err.errors, error => {
-          const modError = Object.assign({
-            path: error.path,
-            value: error.value
-          }, errors.Codes.E3002)
-
-          errList.push(modError)
-        })
-
-        return reject(
-          errors.badRequest(err, errList))
-      }
-
-      return reject(
-        errors.internalServerError(err, [errors.Codes.E3000]))
-    }
-
-    if (!document) {
-      return reject(
-        errors.internalServerError(
-          'Document could not be created',
-          [errors.Codes.E3000]))
-    }
-
-    if (queryNormalized.expand.length > 0) {
-      document.populate(queryNormalized.expand.join(' '), err => {
-        if (err) {
-          debug(err)
-          return reject(
-            errors.internalServerError(err, [errors.Codes.E3000]))
-        }
-
-        resolve(document.toObject())
-      })
-    } else {
-      resolve(document.toObject())
-    }
-  })
+function create(collection, document, queryNormalized) {
+  if (!document) {
+    return Promise.reject(errors.internalServerError(
+      'Document could not be created',
+      [errors.Codes.E3000]))
+  }
+  if (queryNormalized.expand.length > 0) {
+    return collection
+      .find(document)
+      .populate(queryNormalized.expand)
+  } else {
+    return Promise.resolve(document)
+  }
 }
 
 function handleRelationship(spec) {
@@ -82,7 +45,7 @@ function handleRelationship(spec) {
               const relationshipField = spec.relationship.field
               const relationshipIdField = spec.relationship.idField
 
-              create(err, doc, spec.queryNormalized)
+              create(doc, spec.queryNormalized)
                 .then(doc => {
                   if (!_.isArray(document[relationshipField])) {
                     document[relationshipField] = []
@@ -96,7 +59,9 @@ function handleRelationship(spec) {
                     resolve(doc)
                   })
                 })
-                .catch(reject)
+                .catch(err => {
+                  return reject(error(err))
+                })
             })
         })
     })
@@ -129,13 +94,39 @@ function handleRelationship(spec) {
           )
 
           spec.collection.create(body, (err, doc) => {
-            create(err, doc, spec.queryNormalized)
+            create(doc, spec.queryNormalized)
               .then(resolve)
-              .catch(reject)
+              .catch(err => {
+                return reject(error(err))
+              })
           })
         })
     })
   }
+}
+
+function error(err) {
+  debug(err)
+  if (err.code === 11000) {
+    return errors.badRequest(err, [errors.Codes.E1001])
+  }
+
+  if (err.name === 'ValidationError') {
+    const errList = []
+
+    _.forEach(err.errors, error => {
+      const modError = Object.assign({
+        path: error.path,
+        value: error.value
+      }, errors.Codes.E3002)
+
+      errList.push(modError)
+    })
+
+    return errors.badRequest(err, errList)
+  }
+
+  return errors.internalServerError(err, [errors.Codes.E3000])
 }
 
 /**
@@ -150,7 +141,6 @@ export default function(spec) {
   const {idField} = spec
   const {idParam} = spec
   const {relationship} = spec
-
   const queryNormalized = normalize({
     req,
     idField
@@ -167,9 +157,12 @@ export default function(spec) {
     })
   }
 
-  return new Promise(resolve => {
-    collection.create(req.body, (err, document) => {
-      resolve(create(err, document, queryNormalized))
+  return collection
+    .create(req.body)
+    .then(document => {
+      return create(collection, document, queryNormalized)
     })
-  })
+    .catch(err => {
+      throw error(err)
+    })
 }

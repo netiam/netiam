@@ -8,30 +8,19 @@ import {ONE_TO_MANY, MANY_TO_ONE} from '../relationships'
 const debug = dbg('netiam:rest:resource:list')
 
 function list(query, queryNormalized) {
-  return new Promise((resolve, reject) => {
-    if (queryNormalized.expand.length > 0) {
-      query = query.populate(queryNormalized.expand.join(' '))
+  if (queryNormalized.expand.length > 0) {
+    query = query.populate(queryNormalized.expand.join(' '))
+  }
+
+  query = query.sort(queryNormalized.sort)
+  query = query.skip(queryNormalized.offset)
+  query = query.limit(queryNormalized.limit)
+
+  return query.then(documents => {
+    if (!_.isArray(documents)) {
+      return []
     }
-
-    query = query.sort(queryNormalized.sort)
-    query = query.skip(queryNormalized.offset)
-    query = query.limit(queryNormalized.limit)
-
-    query.exec((err, documents) => {
-      if (err) {
-        debug(err)
-        return reject(
-          errors.internalServerError(err, [errors.Codes.E3000]))
-      }
-
-      if (!_.isArray(documents)) {
-        return resolve([])
-      }
-
-      resolve(_.map(documents, document => {
-        return document.toObject()
-      }))
-    })
+    return _.map(documents, document => document.toObject())
   })
 }
 
@@ -139,6 +128,5 @@ export default function(spec) {
   }
 
   const query = collection.find(queryFilter.toObject())
-
   return list(query, queryNormalized)
 }

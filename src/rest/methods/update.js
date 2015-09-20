@@ -9,23 +9,30 @@ const debug = dbg('netiam:rest:resource:update')
 
 function update(query, queryNormalized, req) {
   return new Promise((resolve, reject) => {
-    query.exec((err, document) => {
-      if (err) {
-        debug(err)
-        return reject(errors.internalServerError(err, [errors.Codes.E3000]))
-      }
-
-      if (!document) {
-        return reject(
-          errors.notFound('Document not found', [errors.Codes.E3000]))
-      }
-
-      document
-        .merge(req.body)
-        .save(err => {
-          if (err) {
+    query
+      .then(document => {
+        if (!document) {
+          return reject(
+            errors.notFound('Document not found', [errors.Codes.E3000]))
+        }
+        Object.assign(document, req.body)
+        document
+          .save()
+          .then(document => {
+            if (queryNormalized.expand.length > 0) {
+              document.populate(queryNormalized.expand, err => {
+                if (err) {
+                  return reject(
+                    errors.internalServerError(err, [errors.Codes.E3000]))
+                }
+                resolve(document.toObject())
+              })
+            } else {
+              resolve(document.toObject())
+            }
+          })
+          .catch(err => {
             debug(err)
-
             if (err.name === 'ValidationError') {
               const errList = []
 
@@ -43,22 +50,12 @@ function update(query, queryNormalized, req) {
 
             return reject(
               errors.internalServerError(err, [errors.Codes.E3000]))
-          }
-
-          if (queryNormalized.expand) {
-            document.populate(queryNormalized.expand.join(' '), err => {
-              if (err) {
-                return reject(
-                  errors.internalServerError(err, [errors.Codes.E3000]))
-              }
-
-              resolve(document.toObject())
-            })
-          } else {
-            resolve(document.toObject())
-          }
-        })
-    })
+          })
+      })
+      .catch(err => {
+        debug(err)
+        return reject(errors.internalServerError(err, [errors.Codes.E3000]))
+      })
   })
 }
 
@@ -293,9 +290,7 @@ export default function(spec) {
     req,
     map
   })
-
   const queryOptions = {[idField]: req.params[idParam]}
-
   if (relationship) {
     return handleRelationship({
       req,
@@ -311,6 +306,5 @@ export default function(spec) {
   }
 
   const query = collection.findOne(queryOptions)
-
   return update(query, queryNormalized, req)
 }

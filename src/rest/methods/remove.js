@@ -146,21 +146,11 @@ export default function(spec) {
     })
   }
 
-  return new Promise((resolve, reject) => {
-    collection
-      .findOneAndRemove(queryOptions)
-      .exec((err, document) => {
-        if (err) {
-          debug(err)
-          return reject(errors.internalServerError(err, [errors.Codes.E3000]))
-        }
-
-        if (!document) {
-          return reject(
-            errors.notFound('Document not found', [errors.Codes.E3000]))
-        }
-
-        resolve()
-      })
-  })
+  return collection
+    .destroy(queryOptions)
+    .then(document => {
+      if (!document) {
+        throw errors.notFound('Document not found', [errors.Codes.E3000])
+      }
+    })
 }
