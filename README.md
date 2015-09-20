@@ -119,12 +119,12 @@ export default function data(data) {
 app.get(
     '/users',
     api()
-        .auth(…)
+        .auth({…})
         .get('/resource/:id')
-        .rest(…)
-        .transform(…)
-        .data(…)
-        .acl(…)
+        .rest({…})
+        .transform({…})
+        .data({…})
+        .acl({…})
         .json({…})
 )
 ```
