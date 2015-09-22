@@ -5,8 +5,7 @@ import {
   DigestStrategy
 } from 'passport-http'
 import BearerStrategy from 'passport-http-bearer'
-import * as oauth from '../rest/schema/oauth/token'
-import Token from '../rest/models/token'
+import Token,{TOKEN_TYPE_ACCESS} from '../db/collections/token'
 import dbg from 'debug'
 import * as errors from 'netiam-errors'
 
@@ -67,7 +66,7 @@ export default function(opts) {
   function handleBearer(token, done) {
     Token
       .findOne({
-        token_type: oauth.TOKEN_TYPE_ACCESS,
+        token_type: TOKEN_TYPE_ACCESS,
         token: token
       })
       .populate('owner')
