@@ -4,8 +4,6 @@ import id from './id'
 import links from './links'
 import relationships from './relationships'
 
-const defaultExcludeIds = ['id', '_id']
-
 export default function document(spec) {
   const doc = {
     id: id({
@@ -16,7 +14,7 @@ export default function document(spec) {
     attributes: _.omit(attributes({
       data: spec.data,
       refs: spec.refs
-    }), defaultExcludeIds)
+    }), [spec.idField])
   }
 
   if (spec.isReference) {
