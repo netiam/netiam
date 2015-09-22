@@ -1,3 +1,4 @@
+import uuid from 'uuid'
 import collection from '../collection'
 import auth from './../plugins/auth'
 import created from './../plugins/created'
@@ -6,12 +7,20 @@ import modified from './../plugins/modified'
 const User = collection({
   identity: 'user',
   connection: 'default',
+  autoCreatedAt: false,
+  autoUpdatedAt: false,
   attributes: {
+    name: {
+      type: 'string',
+      primaryKey: true
+    },
     email: {
       type: 'string',
       unique: true,
-      primaryKey: true,
       required: true
+    },
+    description: {
+      type: 'string'
     },
     role: {
       model: 'Role'
