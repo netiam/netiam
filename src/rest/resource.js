@@ -43,7 +43,7 @@ export function hasMany(Model, spec) {
   }
 
   return Object.assign({
-    idField: '_id',
+    idField: 'id',
     idParam: 'id',
     type: ONE_TO_MANY,
     Model: Model
@@ -83,7 +83,7 @@ export function belongsTo(Model, spec) {
   }
 
   return Object.assign({
-    idField: '_id',
+    idField: 'id',
     idParam: 'id',
     type: MANY_TO_ONE,
     Model: Model
@@ -91,8 +91,10 @@ export function belongsTo(Model, spec) {
 }
 
 export default function resource(spec) {
-  spec.idParam = spec.idParam || 'id'
-  spec.idField = spec.idField || '_id'
+  spec = Object.assign({
+    idParam: 'id',
+    idField: 'id'
+  }, spec)
 
   return Object.freeze({
     list: (req) => list(Object.assign({req}, spec)),
