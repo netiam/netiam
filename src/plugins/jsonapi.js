@@ -19,7 +19,7 @@ function response(spec) {
   let {idField} = spec
   let {relationship} = spec
 
-  idField = idField || '_id'
+  idField = idField || 'id'
   relationship = relationship || ONE_TO_MANY
 
   function numTotalDocuments(req, query) {
@@ -60,7 +60,7 @@ function response(spec) {
             }
 
             // select only related
-            q = q.where('_id').in(doc[relationshipField])
+            q = q.where(idField).in(doc[relationshipField])
 
             // execute
             q.exec((err, count) => {
