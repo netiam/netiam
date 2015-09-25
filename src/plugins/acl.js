@@ -32,7 +32,7 @@ function request(spec) {
     }
 
     // update
-    if (req.method === 'PUT' && req.is('json')) {
+    if ((req.method === 'PUT' || req.method === 'PATCH') && req.is('json')) {
       if (!acl.resource(req.user, role, 'U')) {
         throw errors.forbidden(
           `You have not enough privileges to modify this resource as ${role.name}`
@@ -50,6 +50,16 @@ function request(spec) {
         req.body = acl.filter(req.user, req.body, role, 'U', asserts)
       }
     }
+
+    // delete
+    if (req.method === 'DELETE') {
+      if (!acl.resource(req.user, role, 'D')) {
+        throw errors.forbidden(
+          `You have not enough privileges to delete this resource as ${role.name}`
+        )
+      }
+    }
+
   }
 }
 
