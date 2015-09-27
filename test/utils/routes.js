@@ -23,6 +23,17 @@ export default Object.freeze({
     )
   },
 
+  resources(router) {
+    router.delete(
+      '/resource',
+      api()
+        .auth({collection: User})
+        .acl.req({settings: require('../fixtures/resource.acl')})
+        .data({})
+        .json()
+    )
+  },
+
   users(router) {
     router.get(
       '/users',
