@@ -32,7 +32,7 @@ function request(spec) {
     }
 
     // update
-    if (req.method === 'PUT' && req.is('json')) {
+    if ((req.method === 'PUT' || req.method === 'PATCH') && req.is('json')) {
       if (!acl.resource(req.user, role, 'U')) {
         throw errors.forbidden(
           `You have not enough privileges to modify this resource as ${role.name}`
