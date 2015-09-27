@@ -3,6 +3,18 @@ import {hasMany, belongsTo} from '../../src/rest/resource'
 import connection from '../../src/db/connection'
 
 export default Object.freeze({
+
+  resources(router) {
+    router.delete(
+      '/resource',
+      api()
+        .auth({collection: User})
+        .acl.req({settings: require('../fixtures/resource.acl')})
+        .data({})
+        .json()
+    )
+  },
+
   users(router) {
     const User = connection.collections.user
     router.post(

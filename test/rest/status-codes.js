@@ -8,6 +8,7 @@ export default function() {
 
   before(() => {
     routes.users(app)
+    routes.resources(app)
   })
   after(teardown)
 
@@ -23,13 +24,16 @@ export default function() {
       .set('Accept', 'application/json')
       .expect(400)
       .expect('Content-Type', /json/)
-      .end(err => {
-        if (err) {
-          return done(err)
-        }
+      .end(done)
+  })
 
-        done()
-      })
+  it('should deny permission to delete resource', done => {
+    request(app)
+      .delete('/resource')
+      .set('Accept', 'application/json')
+      .expect(403)
+      .expect('Content-Type', /json/)
+      .end(done)
   })
 
 }
