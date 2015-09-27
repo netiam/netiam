@@ -50,6 +50,16 @@ function request(spec) {
         req.body = acl.filter(req.user, req.body, role, 'U', asserts)
       }
     }
+
+    // delete
+    if (req.method === 'DELETE') {
+      if (!acl.resource(req.user, role, 'D')) {
+        throw errors.forbidden(
+          `You have not enough privileges to delete this resource as ${role.name}`
+        )
+      }
+    }
+
   }
 }
 
