@@ -60,8 +60,8 @@
     "API",
     "OData",
     "Library",
-    "Profiles",
-    "Documentation"
+		"Webservice",
+		"Microservice"
   ],
   "author": "Hannes Moser <hannes@impossiblearts.com>",
   "license": "MIT",
