@@ -26,7 +26,7 @@
     "jsdom": "6.5.1",
     "lodash": "3.10.1",
     "mongoose": "4.1.9",
-    "netiam-errors": "1.10.1",
+    "netiam-errors": "2.0.0",
     "passport": "0.3.0",
     "passport-http": "0.3.0",
     "passport-http-bearer": "1.0.1",
