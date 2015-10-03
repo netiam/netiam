@@ -6,7 +6,7 @@ import {
   Codes
 } from 'netiam-errors'
 import filter from '../odata/filter'
-import {params, normalize} from '../query'
+import {normalize} from '../query'
 import {ONE_TO_MANY, MANY_TO_ONE} from '../relationships'
 
 const debug = dbg('netiam:rest:resource:list')
