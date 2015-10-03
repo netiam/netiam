@@ -25,7 +25,7 @@ function list(query, queryNormalized) {
     if (!_.isArray(documents)) {
       return []
     }
-    return _.map(documents, document => document.toObject())
+    return documents
   })
 }
 
