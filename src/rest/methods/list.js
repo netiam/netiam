@@ -12,9 +12,10 @@ function list(query, queryNormalized) {
     query = query.populate(queryNormalized.expand.join(' '))
   }
 
-  query = query.sort(queryNormalized.sort)
-  query = query.skip(queryNormalized.offset)
-  query = query.limit(queryNormalized.limit)
+  query = query
+    .sort(queryNormalized.sort)
+    .skip(queryNormalized.offset)
+    .limit(queryNormalized.limit)
 
   return query.then(documents => {
     if (!_.isArray(documents)) {
