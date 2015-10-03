@@ -1,7 +1,10 @@
 import _ from 'lodash'
 import aclFilter from '../rest/acl'
 import roles from '../rest/roles'
-import * as errors from 'netiam-errors'
+import {
+  Forbidden,
+  Codes
+} from 'netiam-errors'
 
 function request(spec) {
   const {asserts} = spec
@@ -13,7 +16,7 @@ function request(spec) {
     // create
     if (req.method === 'POST' && req.is('json')) {
       if (!acl.resource(req.user, role, 'C')) {
-        throw errors.forbidden(
+        throw new Forbidden(Codes.E3000,
           `You have not enough privileges to create this resource as ${role.name}`
         )
       }
@@ -34,7 +37,7 @@ function request(spec) {
     // update
     if ((req.method === 'PUT' || req.method === 'PATCH') && req.is('json')) {
       if (!acl.resource(req.user, role, 'U')) {
-        throw errors.forbidden(
+        throw new Forbidden(Codes.E3000,
           `You have not enough privileges to modify this resource as ${role.name}`
         )
       }
@@ -54,7 +57,7 @@ function request(spec) {
     // delete
     if (req.method === 'DELETE') {
       if (!acl.resource(req.user, role, 'D')) {
-        throw errors.forbidden(
+        throw new Forbidden(Codes.E3000,
           `You have not enough privileges to delete this resource as ${role.name}`
         )
       }
@@ -70,7 +73,7 @@ function response(spec) {
     const role = roles.get(req.user ? req.user.role : null)
 
     if (!acl.resource(req.user, role, 'R')) {
-      throw errors.forbidden(
+    throw new Forbidden(Codes.E3000,
         `You have not enough privileges to read this resource as ${role.name}`
       )
     }
