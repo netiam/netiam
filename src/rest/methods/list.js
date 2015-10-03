@@ -34,6 +34,7 @@ function oneToMany(spec) {
     .findOne({[spec.idField]: spec.req.params[spec.idParam]})
     .then(document => {
       if (!document) {
+        debug('Base document does not exist')
         throw new NotFound(Codes.E1000, 'Base document does not exist')
       }
 
@@ -55,6 +56,7 @@ function manyToOne(spec) {
     .findOne({[relationshipIdField]: relationshipIdParam})
     .then(document => {
       if (!document) {
+        debug('Base document does not exist')
         throw new NotFound(Codes.E1000, 'Base document does not exist')
       }
 
