@@ -1,6 +1,10 @@
-import * as errors from 'netiam-errors'
 import dbg from 'debug'
-import {params, normalize} from '../query'
+import {
+  NotFound,
+  InternalServerError,
+  Codes
+} from 'netiam-errors'
+import {normalize} from '../query'
 import {ONE_TO_MANY, MANY_TO_ONE} from '../relationships'
 
 const debug = dbg('netiam:rest:resource:read')
@@ -13,76 +17,61 @@ function read(query, queryNormalized) {
   return query
     .then(document => {
       if (!document) {
-        throw errors.notFound('Document not found', [errors.Codes.E3000])
+        throw new NotFound(Codes.E1000, 'Document not found')
       }
-      return document.toObject()
+      return document
+    })
+}
+
+function oneToMany(spec) {
+  return spec.collection
+    .findOne({[spec.idField]: spec.req.params[spec.idParam]})
+    .then(document => {
+      if (!document) {
+        debug('Base document does not exist')
+        throw new NotFound(Codes.E1000, 'Base document does not exist')
+      }
+
+      const queryOptions = {
+        [spec.relationship.idField]: spec.req.params[spec.relationship.idParam]
+      }
+      const query = spec.relationship.Model.findOne(queryOptions)
+      return read(query, spec.queryNormalized)
+    })
+}
+
+function manyToOne(spec) {
+  const relationshipIdField = spec.relationship.idField
+  const relationshipIdParam = spec.req.params[spec.relationship.idParam]
+
+  return spec.relationship.Model
+    .findOne({[relationshipIdField]: relationshipIdParam})
+    .select(spec.relationship.field)
+    .then(document => {
+      if (!document) {
+        debug('Document does not exist')
+        throw new NotFound(Codes.E1000, 'Document does not exist')
+      }
+
+      const query = spec.collection.findOne(spec.queryOptions)
+      return read(query, spec.queryNormalized)
     })
 }
 
 function handleRelationship(spec) {
   if (ONE_TO_MANY === spec.relationship.type) {
-    const queryOptions = {
-      [spec.relationship.idField]: spec.req.params[spec.relationship.idParam]
-    }
-
-    return new Promise((resolve, reject) => {
-      spec.collection
-        .findOne({[spec.idField]: spec.req.params[spec.idParam]})
-        .exec((err, doc) => {
-          if (err) {
-            debug(err)
-            return reject(
-              errors.internalServerError(err, [errors.Codes.E3000]))
-          }
-
-          if (!doc) {
-            return reject(errors.notFound(
-              'Base document does not exist', [errors.Codes.E3000]))
-          }
-
-          const query = spec.relationship.Model.findOne(queryOptions)
-
-          resolve(
-            read(query, spec.queryNormalized))
-        })
-    })
+    return oneToMany(spec)
   }
 
   if (MANY_TO_ONE === spec.relationship.type) {
-    const relationshipIdField = spec.relationship.idField
-    const relationshipIdParam = spec.req.params[spec.relationship.idParam]
-
-    return new Promise((resolve, reject) => {
-      spec.relationship.Model
-        .findOne({[relationshipIdField]: relationshipIdParam})
-        .select(spec.relationship.field)
-        .exec((err, doc) => {
-          if (err) {
-            debug(err)
-            return reject(
-              errors.internalServerError(err, [errors.Codes.E3000]))
-          }
-
-          if (!doc) {
-            return reject(
-              errors.notFound(
-                'Document not found',
-                [errors.Codes.E3000]))
-          }
-
-          const query = spec.collection.findOne(spec.queryOptions)
-
-          resolve(
-            read(query, spec.queryNormalized))
-        })
-    })
+    return manyToOne(spec)
   }
 }
 
 /**
  * Fetches a single document from database
  *
- * @param {Object} req The request object
+ * @param {Object} spec The spec object
  * @returns {Promise}
  */
 export default function(spec) {
@@ -91,14 +80,9 @@ export default function(spec) {
   const {relationship} = spec
   const {idField} = spec
   const {idParam} = spec
-  const {map} = spec
   const queryNormalized = normalize({
     req,
     idField
-  })
-  const queryParams = params({
-    req,
-    map
   })
 
   const queryOptions = {[idField]: req.params[idParam]}
@@ -107,8 +91,6 @@ export default function(spec) {
     return handleRelationship({
       req,
       queryNormalized,
-      queryParams,
-      map,
       idField,
       idParam,
       collection,
