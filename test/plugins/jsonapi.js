@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import request from 'supertest'
-import User from './../models/user'
+import User from '../collections/user'
 import fixtures from '../fixtures'
 import roles from '../../src/rest/roles'
 import Role from '../../src/rest/models/role'

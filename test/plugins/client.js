@@ -1,5 +1,5 @@
 import request from 'supertest'
-import Client from './../models/client'
+import Client from '../collections/client'
 import db,{teardown} from './../utils/db.test.js'
 import api from '../../src/netiam'
 

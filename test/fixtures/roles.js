@@ -1,7 +1,6 @@
-import {Types} from 'mongoose'
+import uuid from 'uuid'
 
-const ObjectId = Types.ObjectId
-const userId = new ObjectId()
+const userId = uuid.v4()
 
 export default [
   {

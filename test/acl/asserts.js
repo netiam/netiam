@@ -1,5 +1,5 @@
-import User from '../models/user'
-import Project from '../models/project'
+import User from '../collections/user'
+import Project from '../collections/project'
 import asserts from '../../src/rest/asserts'
 import fixtures from '../fixtures'
 import roles from '../../src/rest/roles'
