@@ -92,14 +92,9 @@ export default function(spec) {
   const {relationship} = spec
   const {idField} = spec
   const {idParam} = spec
-  const {map} = spec
   const queryNormalized = normalize({
     req,
     idField
-  })
-  const queryParams = params({
-    req,
-    map
   })
 
   const queryFilter = filter(queryNormalized.filter)
