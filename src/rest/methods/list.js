@@ -29,61 +29,48 @@ function list(query, queryNormalized) {
   })
 }
 
+function oneToMany(spec) {
+  return spec.collection
+    .findOne({[spec.idField]: spec.req.params[spec.idParam]})
+    .then(document => {
+      if (!document) {
+        throw new NotFound(Codes.E1000, 'Base document does not exist')
+      }
+
+      const query = spec.relationship.Model
+        .find(spec.queryFilter.toObject())
+        .where(spec.relationship.idField)
+        .in(document[spec.relationship.field])
+
+      return list(query, spec.queryNormalized)
+    })
+}
+
+function manyToOne(spec) {
+  let queryFilter = spec.queryFilter
+  const relationshipIdField = spec.relationship.idField
+  const relationshipIdParam = spec.req.params[spec.relationship.idParam]
+
+  return spec.relationship.Model
+    .findOne({[relationshipIdField]: relationshipIdParam})
+    .then(document => {
+      if (!document) {
+        throw new NotFound(Codes.E1000, 'Base document does not exist')
+      }
+
+      const query = queryFilter
+        .where({[spec.relationship.field]: relationshipIdParam})
+      return list(query, spec.queryNormalized)
+    })
+}
+
 function handleRelationship(spec) {
   if (ONE_TO_MANY === spec.relationship.type) {
-    return new Promise((resolve, reject) => {
-      spec.collection
-        .findOne({[spec.idField]: spec.req.params[spec.idParam]})
-        .exec((err, doc) => {
-          if (err) {
-            debug(err)
-            return reject(new InternalServerError(Codes.E1000, err))
-          }
-
-          if (!doc) {
-            return reject(
-              new NotFound(Codes.E1000, 'Base document does not exist'))
-          }
-
-          const query = spec.relationship.Model
-            .find(spec.queryFilter.toObject())
-            .where(spec.relationship.idField)
-            .in(doc[spec.relationship.field])
-
-          resolve(
-            list(query, spec.queryNormalized))
-        })
-    })
+    return oneToMany(spec)
   }
 
   if (MANY_TO_ONE === spec.relationship.type) {
-    let queryFilter = spec.queryFilter
-    const relationshipIdField = spec.relationship.idField
-    const relationshipIdParam = spec.req.params[spec.relationship.idParam]
-
-    return new Promise((resolve, reject) => {
-      spec.relationship.Model
-        .findOne({[relationshipIdField]: relationshipIdParam})
-        //.select(spec.relationship.field)
-        .exec((err, doc) => {
-          if (err) {
-            debug(err)
-            return reject(
-              errors.internalServerError(err, [errors.Codes.E3000]))
-          }
-
-          if (!doc) {
-            return resolve([])
-          }
-
-          queryFilter.where({[spec.relationship.field]: relationshipIdParam})
-
-          const query = spec.collection.find(queryFilter.toObject())
-
-          resolve(
-            list(query, spec.queryNormalized))
-        })
-    })
+    return manyToOne(spec)
   }
 }
 
