@@ -1,6 +1,10 @@
 import _ from 'lodash'
 import dbg from 'debug'
-import * as errors from 'netiam-errors'
+import {
+  NotFound,
+  InternalServerError,
+  Codes
+} from 'netiam-errors'
 import filter from '../odata/filter'
 import {params, normalize} from '../query'
 import {ONE_TO_MANY, MANY_TO_ONE} from '../relationships'
@@ -33,13 +37,12 @@ function handleRelationship(spec) {
         .exec((err, doc) => {
           if (err) {
             debug(err)
-            return reject(
-              errors.internalServerError(err, [errors.Codes.E3000]))
+            return reject(new InternalServerError(Codes.E1000, err))
           }
 
           if (!doc) {
-            return reject(errors.notFound(
-              'Base document does not exist', [errors.Codes.E3000]))
+            return reject(
+              new NotFound(Codes.E1000, 'Base document does not exist'))
           }
 
           const query = spec.relationship.Model
@@ -118,16 +121,15 @@ export default function(spec) {
     return handleRelationship({
       req,
       queryNormalized,
-      queryParams,
       queryFilter,
       idField,
       idParam,
-      map,
       collection,
       relationship
     })
   }
 
   const query = collection.find(queryFilter.toObject())
+
   return list(query, queryNormalized)
 }
