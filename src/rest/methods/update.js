@@ -1,210 +1,117 @@
 import _ from 'lodash'
 import async from 'async'
-import * as errors from 'netiam-errors'
 import dbg from 'debug'
+import {
+  BadRequest,
+  NotFound,
+  Codes
+} from 'netiam-errors'
 import {params, normalize} from '../query'
 import {ONE_TO_MANY, MANY_TO_ONE} from '../relationships'
 
 const debug = dbg('netiam:rest:resource:update')
 
 function update(query, queryNormalized, req) {
-  return new Promise((resolve, reject) => {
-    query
-      .then(document => {
-        if (!document) {
-          return reject(
-            errors.notFound('Document not found', [errors.Codes.E3000]))
-        }
-        Object.assign(document, req.body)
-        document
-          .save()
-          .then(document => {
-            if (queryNormalized.expand.length > 0) {
-              document.populate(queryNormalized.expand, err => {
-                if (err) {
-                  return reject(
-                    errors.internalServerError(err, [errors.Codes.E3000]))
-                }
-                resolve(document.toObject())
-              })
-            } else {
-              resolve(document.toObject())
-            }
-          })
-          .catch(err => {
-            debug(err)
-            if (err.name === 'ValidationError') {
-              const errList = []
+  return query
+    .then(document => {
+      if (!document) {
+        throw new NotFound(Codes.E1000, 'Document not found')
+      }
 
-              _.forEach(err.errors, error => {
-                const modError = Object.assign({
-                  path: error.path,
-                  value: error.value
-                }, errors.Codes.E3002)
+      Object.assign(document, req.body)
 
-                errList.push(modError)
-              })
+      return document.save()
+    })
+    .then(document => {
+      if (queryNormalized.expand.length > 0) {
+        return document.populate(queryNormalized.expand)
+      }
 
-              return reject(errors.badRequest(err, errList))
-            }
-
-            return reject(
-              errors.internalServerError(err, [errors.Codes.E3000]))
-          })
-      })
-      .catch(err => {
-        debug(err)
-        return reject(errors.internalServerError(err, [errors.Codes.E3000]))
-      })
-  })
+      return document
+    })
 }
 
-function handleRelationship(spec) {
+function oneToMany(spec) {
   const {req} = spec
   const {queryNormalized} = spec
 
-  if (ONE_TO_MANY === spec.relationship.type) {
-    return new Promise((resolve, reject) => {
-      spec.collection
-        .findOne(spec.queryOptions)
-        .exec((err, document) => {
-          if (err) {
-            debug(err)
-            return reject(
-              errors.internalServerError(err, [errors.Codes.E3000]))
-          }
+  return spec.collection
+    .findOne(spec.queryOptions)
+    .then(document => {
+      if (!document) {
+        throw new NotFound(Codes.E1000, 'Base document not found')
+      }
 
-          if (!document) {
-            return reject(
-              errors.notFound('Base document not found', [errors.Codes.E3000]))
-          }
+      const queryOptions = {
+        [spec.relationship.idField]: spec.req.params[spec.relationship.idParam]
+      }
 
-          const queryOptions = {
-            [spec.relationship.idField]: spec.req.params[spec.relationship.idParam]
-          }
-
-          spec.relationship.Model
-            .findOne(queryOptions)
-            .exec((err, doc) => {
-              if (err) {
-                return reject(
-                  errors.internalServerError(err, [errors.Codes.E3000]))
-              }
-
-              if (!doc) {
-                return reject(
-                  errors.notFound('Document not fund', [errors.Codes.E3000]))
-              }
-
-              doc
-                .merge(req.body)
-                .save(err => {
-                  if (err) {
-                    debug(err)
-
-                    if (err.name === 'ValidationError') {
-                      const errList = []
-
-                      _.forEach(err.errors, error => {
-                        const modError = Object.assign({
-                          path: error.path,
-                          value: error.value
-                        }, errors.Codes.E3002)
-
-                        errList.push(modError)
-                      })
-
-                      return reject(errors.badRequest(err, errList))
-                    }
-
-                    return reject(
-                      errors.internalServerError(err, [errors.Codes.E3000]))
-                  }
-
-                  if (queryNormalized.expand) {
-                    doc.populate(queryNormalized.expand.join(' '), err => {
-                      if (err) {
-                        return reject(
-                          errors.internalServerError(err, [errors.Codes.E3000]))
-                      }
-
-                      resolve(doc.toObject())
-                    })
-                  } else {
-                    resolve(doc.toObject())
-                  }
-                })
-            })
-        })
+      return spec.relationship.Model.findOne(queryOptions)
     })
+    .then(document => {
+      if (!document) {
+        throw new NotFound(Codes.E1000, 'Document not found')
+      }
+
+      return document
+        .merge(req.body)
+        .save()
+    })
+    .then(document => {
+      if (queryNormalized.expand) {
+        return document.populate(queryNormalized.expand.join(' '))
+      }
+
+      return document
+    })
+}
+
+function manyToOne(spec) {
+  const {req} = spec
+  const {queryNormalized} = spec
+  const relationshipIdField = spec.relationship.idField
+  const relationshipIdParam = spec.req.params[spec.relationship.idParam]
+
+  return spec.relationship.Model
+    .findOne({[relationshipIdField]: relationshipIdParam})
+    .then(document => {
+      if (!document) {
+        throw new NotFound(Codes.E1000, 'Document not found')
+      }
+
+      const queryOptions = {[spec.idField]: req.params[spec.idParam]}
+      let query = spec.collection.findOne(queryOptions)
+
+      if (queryNormalized.expand.length > 0) {
+        query = query.populate(queryNormalized.expand.join(' '))
+      }
+
+      return query.exec()
+    })
+    .then(document => {
+      return updateExpanded(Object.assign({document}, spec))
+    })
+    .then(document => {
+      return document
+        .merge(req.body)
+        .save()
+    })
+    .then(document => {
+      if (queryNormalized.expand.length > 0) {
+        return document.populate(queryNormalized.expand.join(' '))
+      }
+
+      return document
+    })
+}
+
+function handleRelationship(spec) {
+  if (ONE_TO_MANY === spec.relationship.type) {
+    return oneToMany(spec)
   }
 
   if (MANY_TO_ONE === spec.relationship.type) {
-    const relationshipIdField = spec.relationship.idField
-    const relationshipIdParam = spec.req.params[spec.relationship.idParam]
-
-    return new Promise((resolve, reject) => {
-      spec.relationship.Model
-        .findOne({[relationshipIdField]: relationshipIdParam})
-        .then(doc => {
-          if (!doc) {
-            return reject(
-              errors.notFound('Document not found', [errors.Codes.E3000]))
-          }
-
-          const queryOptions = {[spec.idField]: req.params[spec.idParam]}
-
-          let query = spec.collection.findOne(queryOptions)
-
-          if (queryNormalized.expand.length > 0) {
-            query = query.populate(queryNormalized.expand.join(' '))
-          }
-
-          return query.exec()
-        })
-        .then(document => {
-          return updateExpanded(Object.assign({document}, spec))
-        })
-        .then(document => {
-          return document
-            .merge(spec.req.body)
-            .save()
-        })
-        .then(document => {
-          if (queryNormalized.expand.length > 0) {
-            return document.populate(queryNormalized.expand.join(' '), err => {
-              if (err) {
-                return reject(
-                  errors.internalServerError(err, [errors.Codes.E3000]))
-              }
-
-              resolve(document.toObject())
-            })
-          }
-
-          resolve(document.toObject())
-        })
-        .then(null, err => {
-          debug(err)
-
-          if (err.name === 'ValidationError') {
-            const errList = []
-
-            _.forEach(err.errors, error => {
-              const modError = Object.assign({
-                path: error.path,
-                value: error.value
-              }, errors.Codes.E3002)
-
-              errList.push(modError)
-            })
-
-            return reject(errors.badRequest(err, errList))
-          }
-
-          reject(errors.internalServerError(err, [errors.Codes.E3000]))
-        })
-    })
+    return manyToOne(spec)
   }
 }
 
@@ -281,25 +188,19 @@ export default function(spec) {
   const {relationship} = spec
   const {idField} = spec
   const {idParam} = spec
-  const {map} = spec
   const queryNormalized = normalize({
     req,
     idField
   })
-  const queryParams = params({
-    req,
-    map
-  })
+
   const queryOptions = {[idField]: req.params[idParam]}
   if (relationship) {
     return handleRelationship({
       req,
       queryNormalized,
-      queryParams,
       queryOptions,
       idField,
       idParam,
-      map,
       collection,
       relationship
     })
