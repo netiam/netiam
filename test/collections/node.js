@@ -1,6 +1,7 @@
-import collection from '../collection'
-import created from './../plugins/created'
-import modified from './../plugins/modified'
+import collection from '../../src/db/collection'
+import created from '../../src/db/plugins/created'
+import merge from '../../src/db/plugins/merge'
+import modified from '../../src/db/plugins/modified'
 
 const Node = collection({
   identity: 'node',
@@ -16,7 +17,7 @@ const Node = collection({
 })
 
 Node.plugin(created)
-Node.plugin(modified)
 Node.plugin(merge)
+Node.plugin(modified)
 
 export default Node

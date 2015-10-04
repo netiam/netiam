@@ -1,32 +1,18 @@
-import User from '../collections/user'
-import Project from '../collections/project'
 import aclRest from '../../src/rest/acl'
-import fixtures from '../fixtures'
 import roles from '../../src/rest/roles'
-import Role from '../../src/rest/models/role'
 
 const acl = aclRest({settings: require('../fixtures/user.acl')})
 
 export default function() {
 
-  before(function(done) {
-    fixtures(function(err) {
-      if (err) {
-        return done(err)
-      }
-
-      Role.find({}, function(err, docs) {
-        if (err) {
-          return done(err)
-        }
-
-        roles.set(docs)
-        done()
-      })
-    })
+  before(done => {
+    Role
+      .find({})
+      .then(roles.set)
+      .catch(done)
   })
 
-  it('should do something', function() {
+  it('should do something', () => {
     const user = new User({
       email: 'hannes@impossiblearts.com',
       role: roles.get('USER'),

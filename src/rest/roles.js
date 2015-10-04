@@ -144,6 +144,6 @@ function has(role) {
 export default Object.freeze({
   add,
   has,
-  get,
-  set
+  get: get,
+  set: set
 })

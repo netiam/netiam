@@ -2,7 +2,7 @@ import request from 'supertest'
 import api from '../../src/netiam'
 
 export default function() {
-  const app = require('./../utils/app.test.js')()
+  const app = require('./../utils/app')()
 
   before(() => {
     app.get(

@@ -1,10 +1,10 @@
 import request from 'supertest'
-import db,{teardown} from '../utils/db.test'
+import db,{teardown} from '../utils/db'
 import routes from '../utils/routes'
 import userFixture from '../fixtures/user.json'
 
 export default function() {
-  const app = require('../utils/app.test')()
+  const app = require('../utils/app')()
 
   before(() => {
     routes.users(app)

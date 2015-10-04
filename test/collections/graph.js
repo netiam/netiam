@@ -1,6 +1,7 @@
-import collection from '../collection'
-import created from './../plugins/created'
-import modified from './../plugins/modified'
+import collection from '../../src/db/collection'
+import created from '../../src/db/plugins/created'
+import merge from '../../src/db/plugins/merge'
+import modified from '../../src/db/plugins/modified'
 
 const Graph = collection({
   identity: 'graph',
@@ -14,7 +15,7 @@ const Graph = collection({
 })
 
 Graph.plugin(created)
-Graph.plugin(modified)
 Graph.plugin(merge)
+Graph.plugin(modified)
 
 export default Graph

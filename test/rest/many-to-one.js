@@ -1,11 +1,11 @@
 import request from 'supertest'
-import db,{teardown} from '../utils/db.test'
+import db,{teardown} from '../utils/db'
 import routes from '../utils/routes'
 import userFixture from '../fixtures/user'
 import projectFixture from '../fixtures/project'
 
 export default function() {
-  const app = require('../utils/app.test')()
+  const app = require('../utils/app')()
   let projectId
 
   before(() => {

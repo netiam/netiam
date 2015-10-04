@@ -1,9 +1,9 @@
 import request from 'supertest'
-import db,{teardown} from './utils/db.test'
+import db,{teardown} from './utils/db'
 import routes from './utils/routes'
 
 describe('Graph', function() {
-  const app = require('./utils/app.test')()
+  const app = require('./utils/app')()
 
   before(() => {
     routes.graph(app)

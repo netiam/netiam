@@ -1,6 +1,6 @@
 import request from 'supertest'
 import appUtil from '../utils/app'
-import db from '../utils/db'
+import {teardown} from '../utils/db'
 import connection from '../../src/db/connection'
 
 const {collections} = connection
@@ -10,7 +10,7 @@ describe('Collections', () => {
   let userId
 
   before(app.setup)
-  after(db.teardown)
+  after(teardown)
 
   it('should create a user', done => {
     request(app)

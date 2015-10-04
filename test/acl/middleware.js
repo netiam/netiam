@@ -1,37 +1,23 @@
 import request from 'supertest'
-import fixtures from '../fixtures'
 import roles from '../../src/rest/roles'
-import Role from '../../src/rest/models/role'
-import db,{teardown} from '../utils/db.test'
+import {teardown} from '../utils/db'
 import routes from '../utils/routes'
-import userFixture from '../fixtures/user.json'
 
 export default function() {
-  const app = require('../utils/app.test')()
+  const app = require('../utils/app')()
 
-  before(function(done) {
+  before(done => {
     routes.aclUsers(app)
-
-    fixtures(function(err) {
-      if (err) {
-        return done(err)
-      }
-
-      Role.find({}, function(err, docs) {
-        if (err) {
-          return done(err)
-        }
-
-        roles.set(docs)
-        done()
-      })
-    })
+    Role
+      .find({})
+      .then(roles.set)
+      .catch(done)
   })
   after(teardown)
 
   let userId
 
-  it('should create a user', function(done) {
+  it('should create a user', done => {
     const userWithRole = Object.assign(userFixture, {role: roles.get('user')})
 
     request(app)
@@ -40,7 +26,7 @@ export default function() {
       .set('Accept', 'application/json')
       .expect(201)
       .expect('Content-Type', /json/)
-      .end(function(err, res) {
+      .end((err, res) => {
         if (err) {
           return done(err)
         }
@@ -63,13 +49,13 @@ export default function() {
       })
   })
 
-  it('should get a user', function(done) {
+  it('should get a user', done => {
     request(app)
       .get('/users/' + userId)
       .set('Accept', 'application/json')
       .expect(200)
       .expect('Content-Type', /json/)
-      .end(function(err, res) {
+      .end((err, res) => {
         if (err) {
           return done(err)
         }
@@ -80,14 +66,14 @@ export default function() {
       })
   })
 
-  it('should get an authenticated user', function(done) {
+  it('should get an authenticated user', done => {
     request(app)
       .get('/auth-users/' + userId)
       .auth(userFixture.email, userFixture.password)
       .set('Accept', 'application/json')
       .expect(200)
       .expect('Content-Type', /json/)
-      .end(function(err, res) {
+      .end((err, res) => {
         if (err) {
           return done(err)
         }
