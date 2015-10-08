@@ -88,7 +88,8 @@ export default function xlsx(spec) {
     sheetName,
     fileName} = Object.assign({
     sheetName: 'Default',
-    fileName: 'default.xlsx'
+    fileName: 'default.xlsx',
+    colOrder: []
   }, spec)
 
   return function(req, res) {
@@ -100,6 +101,14 @@ export default function xlsx(spec) {
 
     if (!_.isArray(res.body)) {
       res.body = [res.body]
+    }
+
+    // URL query parameter options
+    if (req.query['xlsx-filename']) {
+      fileName = req.query['xlsx-filename']
+    }
+    if (req.query['xlsx-col-order']) {
+      colOrder = req.query['xlsx-col-order'].split(',')
     }
 
     const wb = new Workbook(
