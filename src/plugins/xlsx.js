@@ -13,7 +13,7 @@ function formatDate(value) {
   return (epoch - new Date(Date.UTC(1899, 11, 30))) / (24 * 60 * 60 * 1000)
 }
 
-function sheet(documents) {
+function sheet(documents, order = []) {
   const ws = {}
   const cols = Object.keys(documents[0])
   const maxX = cols.length
@@ -28,6 +28,9 @@ function sheet(documents) {
       r: 0
     }
   }
+  const intersect = _.intersection(cols, order)
+  const diff = _.difference(cols, intersect).sort()
+  order = order.concat(diff)
 
   for (let y = 0; y < maxY; y += 1) {
     for (let x = 0; x < maxX; x += 1) {
@@ -47,8 +50,8 @@ function sheet(documents) {
       const document = documents[y]
       let cell = {v: null}
 
-      if (document.hasOwnProperty(cols[x])) {
-        cell = {v: document[cols[x]]}
+      if (document.hasOwnProperty(order[x])) {
+        cell = {v: document[order[x]]}
       }
 
       if (!cell.v) {
@@ -86,7 +89,9 @@ function sheet(documents) {
 export default function xlsx(spec) {
   let {
     sheetName,
-    fileName} = Object.assign({
+    fileName,
+    colOrder
+    } = Object.assign({
     sheetName: 'Default',
     fileName: 'default.xlsx',
     colOrder: []
@@ -113,7 +118,7 @@ export default function xlsx(spec) {
 
     const wb = new Workbook(
       [sheetName],
-      {[sheetName]: sheet(res.body)}
+      {[sheetName]: sheet(res.body, colOrder)}
     )
 
     const xlsx = XLSX.write(wb, {
