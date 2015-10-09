@@ -55,12 +55,22 @@ export default function(spec) {
     return o
   }
 
+  async function meta(req, res) {
+    const size = await collection.count()
+    return {size}
+  }
+
   async function struct(req, res) {
     const o = {}
     const l = await links(req, res)
+    const m = await meta(req, res)
 
     if (!_.isEmpty(l)) {
       o.links = l
+    }
+
+    if (!_.isEmpty(m)) {
+      o.meta = m
     }
 
     o.data = res.body
