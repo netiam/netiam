@@ -2,6 +2,15 @@
 
 ## Request
 
+The common `request` object MAY have data within some properties under certain
+conditions. *JSON* request payload for these HTTP methods (POST, PUT, PATCH)
+should be provided as JSON encoded strings.
+
+### Body
+
+The `req.body` contains a deserialized *JSON* object which can be used to
+create or update resources.
+
 ## Response
 
 The `response` object follows the structure of the default `request` object.
