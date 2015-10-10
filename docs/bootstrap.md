@@ -30,7 +30,7 @@ With this library, you do things more or less the same, except invoking
 ```js
 const waterline = new Waterline()
 
-db.load(collection)
+db.load(collection) // equivalent to waterline.loadCollection(…)
 
 app.use(db.init(config)}
 ```
