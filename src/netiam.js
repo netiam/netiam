@@ -1,8 +1,11 @@
 import _ from 'lodash'
 import dbg from 'debug'
 import plugins from './plugins/index'
+import db from './db'
 
 const debug = dbg('netiam:dispatch')
+
+export const db = db
 
 export default function netiam() {
   const stack = []
@@ -16,7 +19,7 @@ export default function netiam() {
   }
 
   const dispatcher = (req, res) => {
-    dispatch(req, res)
+    return dispatch(req, res)
       .catch(err => {
         if (err.nonce) {
           return
