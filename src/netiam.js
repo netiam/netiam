@@ -54,6 +54,8 @@ export default function netiam() {
 
       return container
     }
+
+    throw new Error(`The provided plugin has invalid type "${typeof plugin}"`)
   }
 
   // plugins
