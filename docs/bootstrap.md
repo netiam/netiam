@@ -25,11 +25,9 @@ waterline.initialize(config, (err, ontology) => {
 ## Library
 
 With this library, you do things more or less the same, except invoking
-`initialize` yourself.
+`initialize` yourself and you do not have to initialize waterline on your own.
 
 ```js
-const waterline = new Waterline()
-
 db.load(collection) // equivalent to waterline.loadCollection(…)
 
 app.use(db.init(config)}
