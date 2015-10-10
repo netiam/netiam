@@ -8,14 +8,14 @@ export default function netiam() {
   const stack = []
 
   function dispatch(req, res) {
-    return _.reduce(stack, function(p, call) {
-      return p.then(function() {
+    return _.reduce(stack, (p, call) => {
+      return p.then(() => {
         return call(req, res)
       })
     }, Promise.resolve())
   }
 
-  const dispatcher = function(req, res) {
+  const dispatcher = (req, res) => {
     dispatch(req, res)
       .catch(err => {
         if (err.nonce) {
@@ -45,7 +45,7 @@ export default function netiam() {
     if (_.isObject(plugin)) {
       const container = {}
 
-      _.forEach(plugin, function(name, key) {
+      _.forEach(plugin, (name, key) => {
         container[key] = (...spec) => {
           stack.push(name(...spec))
           return dispatcher
@@ -57,7 +57,7 @@ export default function netiam() {
   }
 
   // plugins
-  _.forEach(plugins, function(plugin, name) {
+  _.forEach(plugins, (plugin, name) => {
     dispatcher[name] = registerPlugin(plugin)
   })
 
