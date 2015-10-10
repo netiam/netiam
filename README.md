@@ -15,6 +15,7 @@ and you should be able to use it with any compatible infrastructure
 
 ## TOC
 
+* [Bootstrap](./docs/bootstrap.md)
 * [Objects](./docs/objects.md)
 * [ACL](./docs/acl.md)
 * [Dispatch Flow](./docs/flow.md)
