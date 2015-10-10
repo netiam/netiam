@@ -30,15 +30,11 @@ With this library, you do things more or less the same, except invoking
 ```js
 const waterline = new Waterline()
 
-waterline.loadCollection(collection)
+db.load(collection)
 
-api({db: waterline})
-  .plugin(…)
+app.use(db.init(config)}
 ```
 
 The library invokes `initialize` once and will fullfill all potential request
-promises on a successfull connect. If there a error on connect, the application
-will crash.
-
-There are also a set of default collections that are loaded (user management, …)
-during this process.
+promises on a successfull connect. If there is an error on connect, the
+application will throw an error.
