@@ -1,6 +1,6 @@
-import api from '../../src/netiam'
+import api,{db} from '../../src/netiam'
+import User from '../../src/db/collections/user'
 import {hasMany, belongsTo} from '../../src/rest/resource'
-import connection from '../../src/db/connection'
 
 export default Object.freeze({
 
@@ -11,55 +11,54 @@ export default Object.freeze({
         .auth({collection: User})
         .acl.req({settings: require('../fixtures/resource.acl')})
         .data({})
+        .acl.res({settings: require('../fixtures/resource.acl')})
         .json()
     )
   },
 
   users(router) {
-    const User = connection.collections.user
     router.post(
       '/users',
       api()
-        .rest({
-          idField: 'name',
-          collection: User
-        })
+        .auth({collection: User})
+        .acl.req({settings: require('../fixtures/user.acl')})
+        .rest({collection: User})
+        .acl.res({settings: require('../fixtures/user.acl')})
         .json()
     )
     router.get(
       '/users',
       api()
-        .rest({
-          idField: 'name',
-          collection: User
-        })
+        .auth({collection: User})
+        .acl.req({settings: require('../fixtures/user.acl')})
+        .rest({collection: User})
+        .acl.res({settings: require('../fixtures/user.acl')})
         .json()
     )
     router.get(
       '/users/:id',
       api()
-        .rest({
-          idField: 'name',
-          collection: User
-        })
+        .auth({collection: User})
+        .acl.req({settings: require('../fixtures/user.acl')})
+        .rest({collection: User})
+        .acl.res({settings: require('../fixtures/user.acl')})
         .json()
     )
     router.patch(
       '/users/:id',
       api()
-        .rest({
-          idField: 'name',
-          collection: User
-        })
+        .auth({collection: User})
+        .acl.req({settings: require('../fixtures/user.acl')})
+        .rest({collection: User})
+        .acl.res({settings: require('../fixtures/user.acl')})
         .json()
     )
     router.delete(
       '/users/:id',
       api()
-        .rest({
-          idField: 'name',
-          collection: User
-        })
+        .auth({collection: User})
+        .acl.req({settings: require('../fixtures/user.acl')})
+        .rest({collection: User})
         .json()
     )
   }
