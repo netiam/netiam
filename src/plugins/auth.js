@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import passport from 'passport'
 import LocalStrategy from 'passport-local'
 import {
@@ -5,21 +6,32 @@ import {
   DigestStrategy
 } from 'passport-http'
 import BearerStrategy from 'passport-http-bearer'
-import Token,{TOKEN_TYPE_ACCESS} from '../db/collections/token'
+import {
+  TOKEN_TYPE_ACCESS
+} from '../db/collections/token'
+import {
+  getCollectionByIdentity
+} from '../db'
 import dbg from 'debug'
-import * as errors from 'netiam-errors'
+import {
+  BadRequest,
+  Unauthorized,
+  Codes
+} from 'netiam-errors'
 
 const debug = dbg('netiam:plugins:auth')
 
-export default function(opts) {
-  const {collection} = opts
-  let {usernameField} = opts
-  let {passwordField} = opts
+export default function(spec) {
+  const collection = getCollectionByIdentity(spec.collection)
+  let {idField} = spec
+  let {usernameField} = spec
+  let {passwordField} = spec
 
+  idField = idField || 'id'
   usernameField = usernameField || 'email'
   passwordField = passwordField || 'password'
 
-  const spec = {
+  const authConfig = {
     usernameField,
     passwordField
   }
@@ -32,30 +44,24 @@ export default function(opts) {
    */
   function handle(username, password, done) {
     const query = {[usernameField]: username}
-
-    collection.findOne(query, function(err, user) {
-      if (err) {
-        debug(err)
-        return done(err)
-      }
-
-      if (!user) {
-        return done(null, false, {message: 'Incorrect user'})
-      }
-
-      user.comparePassword(password, function(err, isMatch) {
-        if (err) {
-          debug(err)
-          return done(err)
+    let user
+    collection
+      .findOne(query)
+      .then(document => {
+        user = document
+        if (!user) {
+          return done(null, false, {message: 'Incorrect user'})
         }
-
+        return user.comparePassword(password)
+      })
+      .then(isMatch => {
         if (!isMatch) {
-          return done(errors.badRequest('Invalid username or password'))
+          return done(
+            new Unauthorized(Codes.E1000, 'Invalid username or password'))
         }
-
         done(null, user)
       })
-    })
+      .catch(done)
   }
 
   /**
@@ -77,7 +83,7 @@ export default function(opts) {
         }
 
         if (!document) {
-          return done(errors.notFound('User does not exist'))
+          return done(new NotFound(Codes.E1000, 'User does not exist'))
         }
 
         done(null, document.owner)
@@ -85,22 +91,20 @@ export default function(opts) {
   }
 
   passport.serializeUser(function(user, done) {
-    done(null, user._id)
+    done(null, user[idField])
   })
   passport.deserializeUser(function(id, done) {
-    collection.findById(id, function(err, user) {
-      if (err) {
-        debug(err)
-        return done(err)
-      }
-
-      done(null, user)
-    })
+    collection
+      .findById(id)
+      .then(user => {
+        done(null, user)
+      })
+      .catch(done)
   })
-  passport.use(new BasicStrategy(spec, handle))
-  passport.use(new BearerStrategy(spec, handleBearer))
-  passport.use(new DigestStrategy(spec, handle))
-  passport.use(new LocalStrategy(spec, handle))
+  passport.use(new BasicStrategy(authConfig, handle))
+  passport.use(new BearerStrategy(authConfig, handleBearer))
+  passport.use(new DigestStrategy(authConfig, handle))
+  passport.use(new LocalStrategy(authConfig, handle))
 
   return function(req, res) {
     return new Promise((resolve, reject) => {
