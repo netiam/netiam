@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt'
+import crypto from 'crypto'
 import dbg from 'debug'
 
 const debug = dbg('netiam:rest:schema:plugins')
@@ -34,6 +35,13 @@ export default function auth(collection, opts = {}) {
 
   this.before('create', save)
   this.before('update', save)
+
+  collection[passwordField] = {
+    type: 'string',
+    defaultsTo: () => {
+      return crypto.randomBytes(64).toString('hex')
+    }
+  }
 
   collection.comparePassword = function(candidate) {
     return new Promise((resolve, reject) => {
