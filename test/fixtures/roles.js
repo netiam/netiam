@@ -8,14 +8,13 @@ export default [
     'description': 'If not logged in, every user is a guest.'
   },
   {
-    '_id': userId,
     'name': 'USER',
     'description': 'Every user inherits from this role.'
   },
   {
     'name': 'MANAGER',
     'description': 'Petsitters are like regular users, but they have their petsitting tools.',
-    'parent': userId
+    'parent': 'USER'
   },
   {
     'name': 'OWNER',
