@@ -1,19 +1,17 @@
 import request from 'supertest'
-import db,{teardown} from '../utils/db'
-import routes from '../utils/routes'
+import app from '../utils/app'
+import {
+  setup,
+  teardown
+} from '../utils/db'
 import userFixture from '../fixtures/user.json'
 import projectFixture from '../fixtures/project.json'
 
 export default function() {
-
-  const app = require('../utils/app')()
   let projectId
   let userId
 
-  before(() => {
-    routes.users(app)
-    routes.projectsOneToMany(app)
-  })
+  before(setup)
   after(teardown)
 
   it('should create a project', done => {

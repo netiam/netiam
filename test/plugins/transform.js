@@ -1,9 +1,12 @@
 import request from 'supertest'
 import api from '../../src/netiam'
+import app from '../utils/app'
+import {
+  setup,
+  teardown
+} from '../utils/db'
 
 export default function() {
-  const app = require('./../utils/app')()
-
   before(() => {
     app.get(
       '/transform',

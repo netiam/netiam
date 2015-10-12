@@ -1,14 +1,14 @@
 import request from 'supertest'
-import {teardown} from '../utils/db'
-import routes from '../utils/routes'
+import app from '../utils/app'
+import {
+  setup,
+  teardown
+} from '../utils/db'
 import userFixture from '../fixtures/user.json'
 
 export default function() {
-  const app = require('../utils/app')()
 
-  before(() => {
-    routes.auto(app)
-  })
+  before(setup)
   after(teardown)
 
   it('should create a user', done => {

@@ -1,15 +1,14 @@
 import request from 'supertest'
-import appUtil from '../utils/app'
-import {teardown} from '../utils/db'
-import connection from '../../src/db/connection'
-
-const {collections} = connection
+import app from '../utils/app'
+import {
+  setup,
+  teardown
+} from '../utils/db'
 
 describe('Collections', () => {
-  const app = require('../utils/app')()
   let userId
 
-  before(app.setup)
+  before(setup)
   after(teardown)
 
   it('should create a user', done => {

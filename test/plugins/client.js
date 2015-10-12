@@ -1,11 +1,13 @@
 import request from 'supertest'
-import {teardown} from './../utils/db'
+import app from '../utils/app'
+import {
+  setup,
+  teardown
+} from '../utils/db'
 import api from '../../src/netiam'
+import clientFixture from '../fixtures/client.json'
 
 export default function() {
-
-  const clientFixture = require('./../fixtures/client.json')
-  const app = require('./../utils/app')()
   let clientId
   let clientKey
 

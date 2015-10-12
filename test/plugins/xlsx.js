@@ -2,13 +2,15 @@ import _ from 'lodash'
 import fs from 'fs'
 import request from 'supertest'
 import roles from '../../src/rest/roles'
-import db from './../utils/db'
+import app from '../utils/app'
+import {
+  setup,
+  teardown
+} from '../utils/db'
 import api from '../../src/netiam'
+import userFixture from '../fixtures/user.json'
 
 export default function() {
-
-  const userFixture = require('./../fixtures/user.json')
-  const app = require('./../utils/app')()
   const n = 10
 
   before(done => {

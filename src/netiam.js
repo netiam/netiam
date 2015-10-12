@@ -1,11 +1,11 @@
 import _ from 'lodash'
 import dbg from 'debug'
 import plugins from './plugins/index'
-import db from './db'
+import dbRef from './db'
 
 const debug = dbg('netiam:dispatch')
 
-export const db = db
+export const db = dbRef
 
 export default function netiam() {
   const stack = []
@@ -32,7 +32,8 @@ export default function netiam() {
           .json({
             status: err.status || 'INTERNAL SERVER ERROR',
             message: err.message || 'Undefined Error',
-            errors: _.isObject(err.data) ? err.data : undefined
+            errors: _.isObject(err.data) ? err.data : undefined,
+            stack: err.stack
           })
       })
   }
@@ -47,7 +48,6 @@ export default function netiam() {
 
     if (_.isObject(plugin)) {
       const container = {}
-
       _.forEach(plugin, (name, key) => {
         container[key] = (...spec) => {
           stack.push(name(...spec))
