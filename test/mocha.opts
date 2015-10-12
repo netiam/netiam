@@ -1,6 +1,6 @@
+--compilers js:babel/register
 --recursive
 --require should
+--require ./test/utils/babelhook.js
 --reporter spec
 --ui bdd
---compilers js:babel/register
---require ./test/utils/babelhook.js
