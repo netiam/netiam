@@ -1,9 +1,9 @@
 import * as errors from 'netiam-errors'
-import resourceRest from '../rest/resource'
+import restResource from '../rest/resource'
 import {ONE_TO_MANY} from '../rest/relationships'
 
 export default function rest(spec) {
-  const resource = resourceRest(spec)
+  const resource = restResource(spec)
   const {relationship} = spec
 
   return async function(req, res) {
