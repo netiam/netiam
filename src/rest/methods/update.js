@@ -8,6 +8,7 @@ import {
 } from 'netiam-errors'
 import {params, normalize} from '../query'
 import {ONE_TO_MANY, MANY_TO_ONE} from '../relationships'
+import {getCollectionByIdentity} from '../../db'
 
 const debug = dbg('netiam:rest:resource:update')
 
@@ -133,7 +134,7 @@ function updateExpandedPath(spec) {
       }, err => {
         if (err) {
           debug(err)
-          return reject(errors.internalServerError(err, [errors.Codes.E3000]))
+          return reject(new InternalServerError(Codes.E3000, err))
         }
 
         resolve()
@@ -147,7 +148,8 @@ function updateExpandedPath(spec) {
         .merge(update)
         .save(err => {
           if (err) {
-            return reject(errors.internalServerError(err, [errors.Codes.E3000]))
+            debug(err)
+            return reject(new InternalServerError(Codes.E3000, err))
           }
 
           resolve()
@@ -162,7 +164,7 @@ function updateExpanded(spec) {
   const {req} = spec
 
   if (!document) {
-    throw errors.notFound('Document not found')
+    throw new NotFound(Codes.E3000, 'Document not found')
   }
 
   const ops = _.map(queryNormalized.expand, path => {
@@ -184,7 +186,7 @@ function updateExpanded(spec) {
  */
 export default function(spec) {
   const {req} = spec
-  const {collection} = spec
+  const collection = getCollectionByIdentity(spec.collection)
   const {relationship} = spec
   const {idField} = spec
   const {idParam} = spec

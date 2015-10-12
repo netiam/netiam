@@ -7,6 +7,7 @@ import {
 } from 'netiam-errors'
 import {normalize} from '../query'
 import {ONE_TO_MANY, MANY_TO_ONE} from '../relationships'
+import {getCollectionByIdentity} from '../../db'
 
 const debug = dbg('netiam:rest:resource:create')
 
@@ -97,12 +98,12 @@ function handleRelationship(spec) {
 /**
  * Creates a new document and saves it to the database.
  *
- * @param {Object} req The request object
+ * @param {Object} spec The spec object
  * @returns {Promise}
  */
 export default function(spec) {
   const {req} = spec
-  const {collection} = spec
+  const collection = getCollectionByIdentity(spec.collection)
   const {idField} = spec
   const {idParam} = spec
   const {relationship} = spec
