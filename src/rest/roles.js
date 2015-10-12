@@ -8,7 +8,7 @@ let isLoaded = false
 function set(documents) {
   roles = documents
   roles.forEach(function(role) {
-    ids[role.id] = role
+    ids[role.name] = role
     names[role.name] = role
   })
 
@@ -61,14 +61,9 @@ function normalizeObject(role) {
     return getById(role.toString())
   }
 
-  // Evaluate as object with id.toString()
-  if (role.id && getById(role.id)) {
-    return getById(role.id)
-  }
-
   // Evaluate as object with id
-  if (role.id && getById(role.id)) {
-    return getById(role.id)
+  if (role.name && getById(role.name)) {
+    return getById(role.name)
   }
 
   // Evaluate as object with name
