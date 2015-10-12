@@ -6,7 +6,7 @@ export default function acl(spec) {
   const ALLOW = 'ALLOW'
   const DENY = 'DENY'
   const {settings} = spec
-  let o = {}
+  let exportObject = {}
 
   if (!settings) {
     throw new Error('You must provide an ACL "settings" option')
@@ -132,7 +132,7 @@ export default function acl(spec) {
     // asserts
     asserts.forEach(function(assert) {
       allowedKeys = allowedKeys.concat(
-        assert(user, o, resource, role, privilege)
+        assert(user, exportObject, resource, role, privilege)
       )
     })
 
@@ -173,7 +173,7 @@ export default function acl(spec) {
 
     asserts.forEach(function(assert) {
       allowedKeys = allowedKeys.concat(
-        assert(user, o, resource, role, privilege))
+        assert(user, exportObject, resource, role, privilege))
     })
 
     roleHierarchy.forEach(function(r) {
@@ -182,16 +182,6 @@ export default function acl(spec) {
     })
 
     return allowedKeys
-  }
-
-  /**
-   * Test wheter a given parameter is of type object and has a constructor
-   * of ObjectID
-   * @param {*} obj
-   * @returns {Boolean}
-   */
-  function isObjectID(obj) {
-    return _.isObject(obj) && obj.constructor.name === 'ObjectID'
   }
 
   /**
@@ -216,37 +206,38 @@ export default function acl(spec) {
     )
 
     // filter in populated paths
-    const allRefs = refs()
-    _.forEach(allRefs, function(ref, path) {
-      const subacl = acl({settings: ref})
+    /*
+     const allRefs = refs()
+     _.forEach(allRefs, function(ref, path) {
+     const subacl = acl({settings: ref})
 
-      if (_.isArray(data[path]) && data[path].length > 0) {
-        data[path] = data[path].map(function(nestedResource) {
-          // HACK Check for ObjectID objects -> lean does not convert them to String
-          if (isObjectID(nestedResource)) {
-            return nestedResource.toHexString()
-          }
+     if (_.isArray(data[path]) && data[path].length > 0) {
+     data[path] = data[path].map(function(nestedResource) {
+     // HACK Check for ObjectID objects -> lean does not convert them to String
+     if (isObjectID(nestedResource)) {
+     return nestedResource.toHexString()
+     }
 
-          if (_.isObject(nestedResource)) {
-            return subacl.filter(user, nestedResource, role, privilege, asserts)
-          }
+     if (_.isObject(nestedResource)) {
+     return subacl.filter(user, nestedResource, role, privilege, asserts)
+     }
 
-          return nestedResource
-        })
-        return
-      }
+     return nestedResource
+     })
+     return
+     }
 
-      // HACK Check for ObjectID objects -> lean does not convert them to String
-      if (isObjectID(data[path])) {
-        data[path] = data[path].toHexString()
-        return
-      }
+     // HACK Check for ObjectID objects -> lean does not convert them to String
+     if (isObjectID(data[path])) {
+     data[path] = data[path].toHexString()
+     return
+     }
 
-      if (_.isObject(data[path])) {
-        data[path] = subacl.filter(user, data[path], role, privilege, asserts)
-      }
-    })
-
+     if (_.isObject(data[path])) {
+     data[path] = subacl.filter(user, data[path], role, privilege, asserts)
+     }
+     })
+     */
     return data
   }
 
@@ -307,10 +298,10 @@ export default function acl(spec) {
     return isAllowed
   }
 
-  o.settings = settings
-  o.allowed = allowed
-  o.filter = filter
-  o.resource = resource
+  exportObject.settings = settings
+  exportObject.allowed = allowed
+  exportObject.filter = filter
+  exportObject.resource = resource
 
-  return Object.freeze(o)
+  return Object.freeze(exportObject)
 }
