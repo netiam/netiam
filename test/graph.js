@@ -1,14 +1,11 @@
 import request from 'supertest'
-import db,{teardown} from './utils/db'
+import app from './utils/app'
+import {setup,teardown} from './utils/db'
 import routes from './utils/routes'
 
 describe('Graph', function() {
-  const app = require('./utils/app')()
 
-  before(() => {
-    routes.graph(app)
-  })
-
+  before(setup)
   after(teardown)
 
   describe('SVG', function() {
