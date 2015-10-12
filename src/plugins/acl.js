@@ -73,7 +73,7 @@ function response(spec) {
     const role = roles.get(req.user ? req.user.role : null)
 
     if (!acl.resource(req.user, role, 'R')) {
-    throw new Forbidden(Codes.E3000,
+      throw new Forbidden(Codes.E3000,
         `You have not enough privileges to read this resource as ${role.name}`
       )
     }
