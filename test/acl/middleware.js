@@ -1,21 +1,25 @@
 import request from 'supertest'
+import app from '../utils/app'
+import {
+  setup,
+  teardown
+} from '../utils/db'
+import db from '../../src/db'
 import roles from '../../src/rest/roles'
-import {teardown} from '../utils/db'
-import routes from '../utils/routes'
+import userFixture from '../fixtures/user'
 
 export default function() {
-  const app = require('../utils/app')()
+  let userId
 
   before(done => {
-    routes.aclUsers(app)
-    Role
-      .find({})
-      .then(roles.set)
+    setup()
+      .then(() => db.collections.role.find({}))
+      .then(documents => {
+        roles.set(documents)
+        done()
+      })
       .catch(done)
   })
-  after(teardown)
-
-  let userId
 
   it('should create a user', done => {
     const userWithRole = Object.assign(userFixture, {role: roles.get('user')})
@@ -68,7 +72,7 @@ export default function() {
 
   it('should get an authenticated user', done => {
     request(app)
-      .get('/auth-users/' + userId)
+      .get('/users/' + userId)
       .auth(userFixture.email, userFixture.password)
       .set('Accept', 'application/json')
       .expect(200)

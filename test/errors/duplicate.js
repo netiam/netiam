@@ -1,17 +1,11 @@
 import request from 'supertest'
-import db,{setup,teardown} from '../utils/db'
-import routes from '../utils/routes'
+import app from '../utils/app'
+import {setup,teardown} from '../utils/db'
 import userFixture from '../fixtures/user'
 
 describe('Errors', () => {
-  const app = require('../utils/app')()
 
-  before(done => {
-    routes.users(app)
-
-    setup(done)
-  })
-
+  before(setup)
   after(teardown)
 
   describe('Duplicate', () => {

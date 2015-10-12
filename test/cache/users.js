@@ -1,21 +1,18 @@
 import request from 'supertest'
-import db,{teardown} from './../utils/db'
-import routes from './../utils/routes'
+import app from '../utils/app'
+import {setup,teardown} from '../utils/db'
+import routes from '../utils/routes'
+import userFixture from '../fixtures/user.json'
 
 export default function() {
-  const user = require('./../fixtures/user.json')
-  const app = require('./../utils/app')()
 
-  before(() => {
-    routes.cache(app)
-  })
-
+  before(setup)
   after(teardown)
 
   it('should create a user', function(done) {
     request(app)
       .post('/users')
-      .send(user)
+      .send(userFixture)
       .set('Accept', 'application/json')
       .expect(201)
       .expect('Content-Type', /json/)
