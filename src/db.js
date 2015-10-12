@@ -5,9 +5,9 @@ let _config
 let _state = Promise.reject()
 
 function init(spec) {
-  const {config} = Object.assign({}, spec)
+  const {config = {}} = spec
   _state = new Promise((resolve, reject) => {
-    waterline.initialize(config, (err, ontology) => {
+    waterline.initialize(config, err => {
       if (err) {
         return reject(err)
       }
