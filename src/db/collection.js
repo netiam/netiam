@@ -1,7 +1,6 @@
 import _ from 'lodash'
 import async from 'async'
 import {Collection} from 'waterline'
-import connection from './connection'
 
 export default function collection(spec) {
   const hooks = Object.freeze({
