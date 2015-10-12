@@ -5,6 +5,8 @@ import modified from './../plugins/modified'
 const Role = collection({
   identity: 'role',
   connection: 'default',
+  autoCreatedAt: false,
+  autoUpdatedAt: false,
   attributes: {
     name: {
       type: 'string',

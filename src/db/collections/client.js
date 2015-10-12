@@ -6,6 +6,8 @@ import modified from './../plugins/modified'
 const Client = collection({
   identity: 'client',
   connection: 'default',
+  autoCreatedAt: false,
+  autoUpdatedAt: false,
   attributes: {
     email: {
       type: 'string',

@@ -1,15 +1,19 @@
-import collection from '../collection'
 import crypto from 'crypto'
 import moment from 'moment'
+import collection from '../collection'
+import created from '../plugins/created'
+import modified from '../plugins/modified'
 
 export const ACCESS_TOKEN_TTL = 3600
 export const REFRESH_TOKEN_TTL = 604800
 export const TOKEN_TYPE_ACCESS = 'access_token'
 export const TOKEN_TYPE_REFRESH = 'refresh_token'
 
-export default collection({
+const Token = collection({
   identity: 'token',
   connection: 'default',
+  autoCreatedAt: false,
+  autoUpdatedAt: false,
   attributes: {
     token: {
       type: 'string',
@@ -41,3 +45,8 @@ export default collection({
     }
   }
 })
+
+Token.plugin(created)
+Token.plugin(modified)
+
+export default Token

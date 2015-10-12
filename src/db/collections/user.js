@@ -11,8 +11,7 @@ const User = collection({
   autoUpdatedAt: false,
   attributes: {
     name: {
-      type: 'string',
-      primaryKey: true
+      type: 'string'
     },
     email: {
       type: 'string',
