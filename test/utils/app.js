@@ -21,10 +21,7 @@ const config = {
   }
 }
 
-db.load(Client)
-db.load(Role)
-db.load(Token)
-db.load(User)
+db.load(Client, Role, Token, User)
 
 app.use(passport.initialize())
 app.use(db.init({config}))

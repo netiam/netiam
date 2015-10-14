@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import Waterline from 'waterline'
 
 const waterline = new Waterline()
@@ -22,8 +23,8 @@ function init(spec) {
   }
 }
 
-function load(collection) {
-  waterline.loadCollection(collection)
+function load(...collection) {
+  collection.forEach(c => waterline.loadCollection(c))
 }
 
 // FIXME: workaround for waterline initialization routine
