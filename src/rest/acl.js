@@ -92,7 +92,7 @@ export default function acl(spec) {
       return [roles.get(role)]
     }
 
-    return [roles.get(role)].concat(hierarchy(role.parent))
+    return [roles.get(role), ...hierarchy(role.parent)]
   }
 
   /**
