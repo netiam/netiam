@@ -23,13 +23,9 @@ const debug = dbg('netiam:plugins:auth')
 
 export default function(spec) {
   const collection = getCollectionByIdentity(spec.collection)
-  let {idField} = spec
-  let {usernameField} = spec
-  let {passwordField} = spec
-
-  idField = idField || 'id'
-  usernameField = usernameField || 'email'
-  passwordField = passwordField || 'password'
+  const {idField = 'id'} = spec
+  const {usernameField = 'email'} = spec
+  const {passwordField = 'password'} = spec
 
   const authConfig = {
     usernameField,

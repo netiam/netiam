@@ -6,9 +6,7 @@
  */
 export default function(config) {
   const {client} = config
-  let {PREFIX} = config
-
-  PREFIX = PREFIX || 'cache:'
+  const {PREFIX = 'cache:'} = config
 
   /**
    * Get KEY

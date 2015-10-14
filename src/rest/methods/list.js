@@ -49,7 +49,7 @@ function oneToMany(spec) {
 }
 
 function manyToOne(spec) {
-  let queryFilter = spec.queryFilter
+  const {queryFilter} = spec
   const relationshipIdField = spec.relationship.idField
   const relationshipIdParam = spec.req.params[spec.relationship.idParam]
 

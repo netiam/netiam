@@ -103,7 +103,7 @@ export default function(spec) {
     .destroy(queryOptions)
     .then(document => {
       if (!document) {
-        throw errors.notFound('Document not found', [errors.Codes.E3000])
+        throw new NotFound(Codes.E1000, 'Document not found')
       }
     })
 }

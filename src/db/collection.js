@@ -50,7 +50,7 @@ export default function collection(spec) {
   }
 
   // extend spec with lifecycle events
-  spec = Object.assign({
+  Object.assign(spec, {
     beforeValidate: registerLifecycleEvent.bind(null, 'beforeValidate'),
     afterValidate: registerLifecycleEvent.bind(null, 'afterValidate'),
     beforeCreate: registerLifecycleEvent.bind(null, 'beforeCreate'),
@@ -59,7 +59,7 @@ export default function collection(spec) {
     afterUpdate: registerLifecycleEvent.bind(null, 'afterUpdate'),
     beforeDestroy: registerLifecycleEvent.bind(null, 'beforeDestroy'),
     afterDestroy: registerLifecycleEvent.bind(null, 'afterDestroy')
-  }, spec)
+  })
 
   const waterlineCollection = Collection.extend(spec)
 

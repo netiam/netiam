@@ -1,4 +1,7 @@
-import * as errors from 'netiam-errors'
+import {
+  InternalServerError,
+  Codes
+} from 'netiam-errors'
 import restResource from '../rest/resource'
 import {ONE_TO_MANY} from '../rest/relationships'
 
@@ -7,9 +10,9 @@ export default function rest(spec) {
   const {relationship} = spec
 
   return async function(req, res) {
-    const method = req.method
+    const {method} = req
+    const {idParam = 'id'} = spec
     let isList = false
-    let idParam = spec.idParam || 'id'
 
     if (!req.params[idParam]) {
       isList = true
@@ -17,7 +20,8 @@ export default function rest(spec) {
 
     if (relationship && relationship.type === ONE_TO_MANY) {
       if (req.idParam === relationship.idParam) {
-        throw errors.internalServerError(
+        throw new InternalServerError(
+          Codes.E1000,
           'The relationship "idParam" must not match the base "idParam"')
       }
       if (!req.params[relationship.idParam]) {

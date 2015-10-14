@@ -1,6 +1,6 @@
-import parser from './parser'
-import ast from './ast'
 import _ from 'lodash'
+import ast from './ast'
+import parser from './parser'
 
 // Set correct scope to parser
 parser.yy = ast
@@ -11,7 +11,7 @@ parser.yy = ast
  * @param {*} type.id
  * @returns {*}
  */
-let identifier = function(type) {
+function identifier(type) {
   if (type instanceof ast.Expression) {
     return expression(type)
   } else if (type instanceof ast.Function) {
@@ -32,10 +32,10 @@ let identifier = function(type) {
  * @param {String} expr.right
  * @returns {*}
  */
-let expression = function(expr) {
-  let lft = identifier(expr.left)
-  let rgt = identifier(expr.right)
-  let e
+function expression(expr) {
+  const lft = identifier(expr.left)
+  const rgt = identifier(expr.right)
+  let e = {}
 
   switch (expr.operator) {
     // Logical operators
@@ -46,32 +46,25 @@ let expression = function(expr) {
     case 'not':
       throw 'Operator not implemented'
     case 'eq':
-      e = {}
       e[lft] = rgt
       return e
     case 'ne':
-      e = {}
       e[lft] = {$ne: rgt}
       return e
     case 'gt':
-      e = {}
       e[lft] = {$gt: rgt}
       return e
     case 'ge':
-      e = {}
       e[lft] = {$gte: rgt}
       return e
     case 'lt':
-      e = {}
       e[lft] = {$lt: rgt}
       return e
     case 'le':
-      e = {}
       e[lft] = {$lte: rgt}
       return e
     // Search operators
     case 'lk':
-      e = {}
       e[lft] = new RegExp(rgt, 'i')
       return e
   }

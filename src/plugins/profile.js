@@ -4,14 +4,10 @@ import path from 'path'
 
 const debug = dbg('netiam:plugins:profile')
 
-export default function profile(opts) {
-
-  opts = Object.assign({
-    query: 'profile',
-    basedir: './models'
-  }, opts)
-
-  let {collection} = opts
+export default function profile(spec) {
+  const {query = 'profile'} = spec
+  const {basedir = './models'} = spec
+  const {collection} = spec
 
   if (!collection) {
     throw new Error('Collection must be defined')
@@ -27,15 +23,15 @@ export default function profile(opts) {
     let file
     let schema
 
-    if (req.query[opts.query] && req.query[opts.query] !== 'default') {
+    if (req.query[query] && req.query[query] !== 'default') {
       // TODO Load profiles during start time
       file =
         path.join(
           path.dirname(require.main.filename),
-          opts.basedir,
+          basedir,
           collection.modelName.toLowerCase() +
           '.profile.' +
-          req.query[opts.query] +
+          req.query[query] +
           '.json'
         )
       try {

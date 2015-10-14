@@ -124,7 +124,7 @@ function handle(data, collection, refField, expand) {
 export default function merge(spec) {
   const {collection} = spec
   const {refField} = spec
-  let {expand} = spec
+  const {expand} = spec
 
   return function(req, res) {
     let queryExpand

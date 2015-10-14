@@ -1,5 +1,8 @@
 import _ from 'lodash'
-import errors from 'netiam-errors'
+import {
+  InternalServerError,
+  Codes
+} from 'netiam-errors'
 import dbrefs from './jsonapi/dbrefs'
 import document from './jsonapi/document'
 import included from './jsonapi/included'
@@ -30,7 +33,7 @@ function data(spec) {
     })
   }
 
-  throw errors.internalServerError('Cannot process resonse body')
+  throw new InternalServerError(Codes.E1000, 'Cannot process resonse body')
 }
 
 function transform(spec) {

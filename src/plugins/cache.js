@@ -30,7 +30,7 @@ function process(obj) {
  * @returns String
  */
 function hash(req, opts = {}) {
-  let md5 = crypto.createHash('md5')
+  const md5 = crypto.createHash('md5')
   let str = ''
 
   // path

@@ -1,4 +1,9 @@
-import * as errors from 'netiam-errors'
+import {
+  BadRequest,
+  InternalServerError,
+  NotImplemented,
+  Codes
+} from 'netiam-errors'
 import {ONE_TO_MANY, MANY_TO_ONE} from '../rest/resource'
 import jsonapi from '../rest/jsonapi'
 import {normalize, params} from '../rest/query'
@@ -8,7 +13,7 @@ import dbg from 'debug'
 const debug = dbg('netiam:plugins:jsonapi')
 
 function request() {
-  throw errors.notImplemnted('jsonapi#request is not implemented')
+  throw new NotImplemnted(Codes.E1000, 'jsonapi#request is not implemented')
 }
 
 function response(spec) {
@@ -16,11 +21,8 @@ function response(spec) {
   const {relationshipField} = spec
   const {relationshipCollection} = spec
   const {map} = spec
-  let {idField} = spec
-  let {relationship} = spec
-
-  idField = idField || 'id'
-  relationship = relationship || ONE_TO_MANY
+  const {idField = 'id'} = spec
+  const {relationship = ONE_TO_MANY} = spec
 
   function numTotalDocuments(req, query) {
     return new Promise((resolve, reject) => {
@@ -56,7 +58,7 @@ function response(spec) {
               q = relationshipCollection.count(f.toObject())
             } catch (err) {
               debug(err)
-              reject(errors.badRequest(err.message))
+              reject(new BadRequest(Codes.E1000, err.message))
             }
 
             // select only related
@@ -66,7 +68,7 @@ function response(spec) {
             q.exec((err, count) => {
               if (err) {
                 debug(err)
-                return reject(errors.internalServerError(err.message))
+                return reject(new InternalServerError(Codes.E1000, err.message))
               }
 
               resolve(count)
@@ -88,14 +90,14 @@ function response(spec) {
           q = collection.count(f.toObject())
         } catch (err) {
           debug(err)
-          reject(errors.badRequest(err.message))
+          reject(new BadRequest(Codes.E1000, err.message))
         }
 
         // execute
         q.exec((err, count) => {
           if (err) {
             debug(err)
-            return reject(errors.internalServerError(err.message))
+            return reject(new InternalServerError(Codes.E1000, err.message))
           }
 
           resolve(count)

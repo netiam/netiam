@@ -1,11 +1,15 @@
 import _ from 'lodash'
-import * as errors from 'netiam-errors'
+import {
+  NotImplemented,
+  BadRequest,
+  Codes
+} from 'netiam-errors'
 import jsonPlugin from './json'
 import jsonapiPlugin from './jsonapi'
 
 function request() {
   return () => {
-    throw errors.notImplemented('"auto.req" is not implemented')
+    throw new NotImplemented(Codes.E1000, '"auto.req" is not implemented')
   }
 }
 
@@ -24,7 +28,7 @@ function response(spec = {}) {
       return json(req, res)
     }
 
-    throw errors.badRequest('Set a correct "Accept" header')
+    throw new BadRequest(Codes.E1000, 'Set a correct "Accept" header')
   }
 }
 

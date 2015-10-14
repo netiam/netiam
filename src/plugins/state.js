@@ -110,10 +110,8 @@ export default function state(spec) {
 
   const {collection} = spec
   const {refField} = spec
-  let {userField} = spec
-
-  userField = userField || 'owner'
   const {expand} = spec
+  const {userField = 'owner'} = spec
 
   return function(req, res) {
     return handle(res.body, req.user, collection, refField, userField, expand)

@@ -6,9 +6,7 @@ const debug = dbg('netiam:rest:schema:plugins')
 const SALT_WORK_FACTOR = 10
 
 export default function auth(collection, opts = {}) {
-  const {passwordField} = Object.assign({
-    passwordField: 'password'
-  }, opts)
+  const {passwordField = 'password'} = opts
 
   function save(values, next) {
     if (!values.hasOwnProperty(passwordField)) {

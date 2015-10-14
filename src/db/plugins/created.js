@@ -4,9 +4,7 @@ import moment from 'moment'
 const debug = dbg('netiam:rest:schema:plugins')
 
 export default function created(collection, opts = {}) {
-  const {createdField} = Object.assign({
-    createdField: 'created'
-  }, opts)
+  const {createdField = 'created'} = opts
 
   collection[createdField] = {
     type: 'datetime',

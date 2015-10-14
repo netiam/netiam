@@ -74,7 +74,6 @@ function manyToOne(spec) {
       }
 
       const body = Object.assign(
-        {},
         req.body,
         {[spec.relationship.field]: document[relationshipIdField]}
       )

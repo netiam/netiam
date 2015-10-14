@@ -7,7 +7,7 @@ import {
 } from 'netiam-errors'
 
 function request(spec) {
-  const {asserts} = spec
+  const {asserts = []} = spec
   const acl = aclFilter({settings: spec.settings})
 
   return function(req) {
@@ -66,7 +66,7 @@ function request(spec) {
 }
 
 function response(spec) {
-  const {asserts} = spec
+  const {asserts = []} = spec
   const acl = aclFilter({settings: spec.settings})
 
   return function(req, res) {

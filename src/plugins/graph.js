@@ -1,9 +1,7 @@
 import _ from 'lodash'
 
 export default function(opts = {}) {
-  let {nodesField} = opts
-
-  nodesField = nodesField || 'nodes'
+  const {nodesField = 'nodes'} = opts
 
   return function(req, res) {
     if (!res.body) {

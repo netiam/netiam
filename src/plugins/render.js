@@ -2,13 +2,9 @@ import d3 from 'd3'
 import jsdom from 'jsdom'
 
 export default function(opts = {}) {
-  let {width} = opts
-  let {height} = opts
-  let {ticks} = opts
-
-  width = width || 400
-  height = height || 400
-  ticks = ticks || 100
+  const {width = 400} = opts
+  const {height = 400} = opts
+  const {ticks = 100} = opts
 
   return function(req, res) {
     if (!res.body) {

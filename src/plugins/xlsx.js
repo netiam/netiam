@@ -84,12 +84,8 @@ function sheet(documents) {
 }
 
 export default function xlsx(spec) {
-  let {
-    sheetName,
-    fileName} = Object.assign({
-    sheetName: 'Default',
-    fileName: 'default.xlsx'
-  }, spec)
+  const {sheetname = 'Default'} = spec
+  const {fileName = 'default.xlsx'} = spec
 
   return function(req, res) {
     if (!res.body) {
