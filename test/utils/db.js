@@ -3,26 +3,22 @@ import roles from '../../src/rest/roles'
 import rolesFixture from '../fixtures/roles'
 
 export function setup(done) {
+  const promise = db.state
+    .then(() => {
+      return db.collections.role.create(rolesFixture)
+    })
+
   if (done) {
-    db.state
-      .then(() => {
-        return db.collections.role.create(rolesFixture)
-      })
+    return promise
       .then(() => done())
       .catch(done)
   }
 
-  return db.state
-    .then(() => {
-      return db.collections.role.create(rolesFixture)
-    })
+  return promise
 }
 
 export function teardown(done) {
-  if (done) {
-    db.connection.teardown(done)
-  }
-  return new Promise((resolve, reject) => {
+  const promise = new Promise((resolve, reject) => {
     db.connection.teardown(err => {
       if (err) {
         return reject(err)
@@ -30,4 +26,12 @@ export function teardown(done) {
       resolve()
     })
   })
+
+  if (done) {
+    return promise
+      .then(() => done())
+      .catch(done)
+  }
+
+  return promise
 }
