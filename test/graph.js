@@ -1,6 +1,9 @@
 import request from 'supertest'
 import app from './utils/app'
-import {setup,teardown} from './utils/db'
+import {
+  setup,
+  teardown
+} from './utils/db'
 import routes from './utils/routes'
 
 describe('Graph', function() {
