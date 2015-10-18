@@ -14,8 +14,6 @@ cache:
 notifications:
   email: false
 node_js:
-  - "iojs-v2"
-  - "iojs-v3"
   - "4"
 before_script:
   - npm prune
