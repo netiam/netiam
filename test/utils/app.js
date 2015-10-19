@@ -28,6 +28,11 @@ app.use(db.init({config}))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
+routes.auto(app)
+routes.cache(app)
+routes.clients(app)
+routes.graph(app)
+routes.plain(app)
 routes.resources(app)
 routes.users(app)
 

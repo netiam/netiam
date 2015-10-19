@@ -3,6 +3,10 @@ import roles from '../../src/rest/roles'
 import rolesFixture from '../fixtures/roles'
 
 export function setup(done) {
+  if (db.config) {
+    db.init({config: db.config})
+  }
+
   const promise = db.state
     .then(() => {
       return db.collections.role.create(rolesFixture)
