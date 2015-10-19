@@ -28,12 +28,11 @@ export default function netiam() {
         debug(err)
 
         res
-          .status(err.code || 500)
+          .status(err.status)
           .json({
-            status: err.status || 'INTERNAL SERVER ERROR',
-            message: err.message || 'Undefined Error',
-            errors: _.isObject(err.data) ? err.data : undefined,
-            stack: err.stack
+            type: err.type,
+            message: err.message,
+            errors: _.isObject(err.data) ? err.data : undefined
           })
       })
   }
