@@ -30,9 +30,15 @@ function load(...collection) {
 // FIXME: workaround for waterline initialization routine
 // FIXME: we must fetch collection instance via collection identity
 export function getCollectionByIdentity(collection) {
+  if (!collection) {
+    return undefined
+  }
   const identity = collection.prototype.identity.toLowerCase()
-  if (!waterline.collections || !waterline.collections.hasOwnProperty(identity)) {
+  if (!waterline.collections) {
     throw new Error('ORM is not initialized!')
+  }
+  if (!waterline.collections.hasOwnProperty(identity)) {
+    return undefined
   }
   return waterline.collections[identity]
 }
