@@ -1,4 +1,5 @@
 import project from './project.acl'
+import role from './role.acl'
 
 export default {
   'asserts': {
@@ -74,6 +75,14 @@ export default {
         'MANAGER': 'CR'
       },
       ref: project
+    },
+    'role': {
+      'ALLOW': {
+        'USER': 'R',
+        'MANAGER': 'R',
+        'GUEST': 'R'
+      },
+      ref: role
     }
   }
 }
