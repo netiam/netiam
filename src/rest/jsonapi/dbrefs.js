@@ -1,16 +1,13 @@
 import _ from 'lodash'
 
 export default function dbrefs(collection) {
-  const schema = collection.schema
-  let refs = []
+  const definition = collection.definition
+  const refs = []
 
-  _.forEach(schema.paths, (path, name) => {
-    let caster = path.caster
-    let opt = path.options
+  _.forEach(definition, (path, name) => {
+    const model = path.model
 
-    if (caster && caster.options && caster.options.ref) {
-      refs.push(name)
-    } else if (opt && opt.ref) {
+    if (model) {
       refs.push(name)
     }
   })
