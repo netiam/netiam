@@ -22,7 +22,8 @@ const User = collection({
       type: 'string'
     },
     role: {
-      model: 'Role'
+      model: 'Role',
+      defaultsTo: 'USER'
     }
   }
 })
