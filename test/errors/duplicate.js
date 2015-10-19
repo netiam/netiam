@@ -1,11 +1,26 @@
 import request from 'supertest'
 import app from '../utils/app'
-import {setup,teardown} from '../utils/db'
+import roles from '../../src/rest/roles'
+import {
+  setup,
+  teardown
+} from '../utils/db'
+import db from '../../src/db'
 import userFixture from '../fixtures/user'
 
 describe('Errors', () => {
 
-  before(setup)
+  before(done => {
+    setup()
+      .then(() => {
+        return db.collections.role.find({})
+      })
+      .then(documents => {
+        roles.set(documents)
+        done()
+      })
+      .catch(done)
+  })
   after(teardown)
 
   describe('Duplicate', () => {
@@ -41,7 +56,11 @@ describe('Errors', () => {
           res.body.should.have.property('errors')
           res.body.errors.should.be.an.Array()
           res.body.errors.should.have.length(1)
-          res.body.errors[0].should.have.properties(['code', 'message'])
+          res.body.errors[0].should.have.properties([
+            'value',
+            'rule',
+            'message'
+          ])
 
           done()
         })
