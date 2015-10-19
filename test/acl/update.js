@@ -1,6 +1,11 @@
 import filter from './../utils/filter'
 import aclRest from '../../src/rest/acl'
 import asserts from '../../src/rest/asserts'
+import {
+  setup,
+  teardown
+} from '../utils/db'
+import db from '../../src/db'
 import roles from '../../src/rest/roles'
 
 const userFixture = require('./../fixtures/user.json')
@@ -9,11 +14,15 @@ const acl = aclRest({settings: require('../fixtures/user.acl')})
 export default function() {
 
   before(done => {
-    Role
-      .find({})
-      .then(roles.set)
+    setup()
+      .then(() => db.collections.role.find({}))
+      .then(documents => {
+        roles.set(documents)
+        done()
+      })
       .catch(done)
   })
+  after(teardown)
 
   it('should filter properties for role GUEST', () => {
     let props = filter(userFixture, acl, userFixture, roles.get('GUEST'), 'U')

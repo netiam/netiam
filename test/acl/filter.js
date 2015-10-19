@@ -20,6 +20,7 @@ export default function() {
       })
       .catch(done)
   })
+  after(teardown)
 
   it('should apply filter', () => {
     const user = {

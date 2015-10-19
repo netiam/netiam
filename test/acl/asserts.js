@@ -1,14 +1,14 @@
 import asserts from '../../src/rest/asserts'
-import roles from '../../src/rest/roles'
 import aclRest from '../../src/rest/acl'
+import roles from '../../src/rest/roles'
 import {
   setup,
   teardown
 } from '../utils/db'
 import db from '../../src/db'
+import userFixture from './../fixtures/user.json'
+import projectFixture from './../fixtures/project.json'
 
-const userFixture = require('./../fixtures/user.json')
-const projectFixture = require('./../fixtures/project.json')
 const acl = aclRest({settings: require('../fixtures/acl.js')})
 
 export default function() {
@@ -23,6 +23,7 @@ export default function() {
       })
       .catch(done)
   })
+  after(teardown)
 
   it('should check if user owns resource', () => {
     const assert = asserts.owner()

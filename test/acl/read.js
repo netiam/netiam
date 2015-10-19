@@ -22,6 +22,7 @@ export default function() {
       })
       .catch(done)
   })
+  after(teardown)
 
   it('should filter properties for role GUEST', () => {
     let props = filter(userFixture, acl, userFixture, roles.get('GUEST'), 'R')
