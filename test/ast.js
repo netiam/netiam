@@ -28,7 +28,6 @@ describe('AST', function() {
     let id = new AST.Identifier('id')
 
     id.should.have.property('id')
-
     id.id.should.eql('id')
   })
 
