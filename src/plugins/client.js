@@ -5,13 +5,14 @@ import {
   Forbidden,
   Codes
 } from 'netiam-errors'
+import {getCollectionByIdentity} from '../db'
 
 const debug = dbg('netiam:plugins:client')
 
 const API_CLIENT_ID = 'Api-Client-Id'
 
 export default function(spec) {
-  const {collection} = spec
+  const collection = getCollectionByIdentity(spec.collection)
   const {idField = 'key'} = spec
 
   return function(req, res) {
