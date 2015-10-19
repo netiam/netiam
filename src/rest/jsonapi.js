@@ -37,7 +37,6 @@ function data(spec) {
 }
 
 function transform(spec) {
-
   const refs = dbrefs(spec.collection)
 
   return {
