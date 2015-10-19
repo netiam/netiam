@@ -1,6 +1,6 @@
 import _ from 'lodash'
-import dbg from 'debug'
-import {
+import HTTPError,{
+  BadRequest,
   NotFound,
   InternalServerError,
   Codes
@@ -8,8 +8,6 @@ import {
 import {normalize} from '../query'
 import {ONE_TO_MANY, MANY_TO_ONE} from '../relationships'
 import {getCollectionByIdentity} from '../../db'
-
-const debug = dbg('netiam:rest:resource:create')
 
 function create(collection, document, queryNormalized) {
   if (!document) {
@@ -22,7 +20,7 @@ function create(collection, document, queryNormalized) {
       .populate(queryNormalized.expand)
   }
 
-  return document
+  return Promise.resolve(document)
 }
 
 function oneToMany(spec) {
@@ -126,5 +124,15 @@ export default function(spec) {
     .create(req.body)
     .then(document => {
       return create(collection, document, queryNormalized)
+    })
+    .catch(err => {
+      if (err.code === 'E_VALIDATION') {
+        let errors = []
+        _.forEach(err.invalidAttributes, attr => {
+          errors = errors.concat(attr)
+        })
+        return Promise.reject(new HTTPError(400, Codes.E1000, 'A validation error occured', errors))
+      }
+      return Promise.reject(err)
     })
 }
