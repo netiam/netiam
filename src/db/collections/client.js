@@ -1,4 +1,5 @@
 import uuid from 'uuid'
+import crypto from 'crypto'
 import collection from '../collection'
 import created from './../plugins/created'
 import modified from './../plugins/modified'
@@ -9,16 +10,19 @@ const Client = collection({
   autoCreatedAt: false,
   autoUpdatedAt: false,
   attributes: {
-    email: {
+    key: {
       type: 'string',
       unique: true,
-      primaryKey: true,
       required: true,
-      uuidv4: true,
+      primaryKey: true,
       defaultsTo: uuid.v4
     },
-    role: {
-      model: 'Role'
+    secret: {
+      type: 'string',
+      required: true,
+      defaultsTo: function() {
+        return crypto.randomBytes(64).toString('hex')
+      }
     }
   }
 })
