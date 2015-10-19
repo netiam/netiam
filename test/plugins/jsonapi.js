@@ -1,11 +1,11 @@
-import _ from 'lodash'
 import request from 'supertest'
-import roles from '../../src/rest/roles'
 import app from '../utils/app'
+import roles from '../../src/rest/roles'
 import {
   setup,
   teardown
 } from '../utils/db'
+import db from '../../src/db'
 import api from '../../src/netiam'
 import userFixture from '../fixtures/user.json'
 
@@ -13,54 +13,14 @@ export default function() {
   let userId
 
   before(done => {
-    app.post(
-      '/users',
-      api()
-        .rest({collection: User})
-        .map.res({_id: 'id'})
-        .jsonapi.res({collection: User})
-    )
-
-    app.get(
-      '/users',
-      api()
-        .rest({collection: User})
-        .map.res({_id: 'id'})
-        .jsonapi.res({collection: User})
-    )
-
-    app.get(
-      '/users/:id',
-      api()
-        .rest({collection: User})
-        .map.res({_id: 'id'})
-        .jsonapi.res({collection: User})
-    )
-
-    app.put(
-      '/users/:id',
-      api()
-        .rest({collection: User})
-        .map.res({_id: 'id'})
-        .jsonapi.res({collection: User})
-    )
-
-    fixtures(err => {
-      if (err) {
-        return done(err)
-      }
-
-      Role.find({}, (err, docs) => {
-        if (err) {
-          return done(err)
-        }
-
-        roles.set(docs)
+    setup()
+      .then(() => db.collections.role.find({}))
+      .then(documents => {
+        roles.set(documents)
         done()
       })
-    })
+      .catch(done)
   })
-
   after(teardown)
 
   it('should create a user', function(done) {
@@ -482,8 +442,7 @@ export default function() {
   })
 
   it('should modify a user', function(done) {
-    let modifiedUser = _.clone(userFixture)
-    modifiedUser.name = 'modified name'
+    const modifiedUser = Object.assign({}, userFixture, {name: 'modified name'})
 
     request(app)
       .put('/users/' + userId)

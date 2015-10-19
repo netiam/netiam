@@ -1,96 +1,27 @@
-import _ from 'lodash'
 import request from 'supertest'
-import roles from '../../src/rest/roles'
 import app from '../utils/app'
+import roles from '../../src/rest/roles'
 import {
   setup,
   teardown
 } from '../utils/db'
+import db from '../../src/db'
 import api from '../../src/netiam'
 import userFixture from '../fixtures/user.json'
 
 export default function() {
   let userId
 
-  before(function(done) {
-    app.post(
-      '/users',
-      api()
-        .rest({collection: User})
-        .map.res({_id: 'id'})
-        .json({collection: User})
-    )
-
-    app.get(
-      '/users-plain',
-      api()
-        .rest({
-          collection: User,
-          itemsPerPage: 1
-        })
-        .map.res({_id: 'id'})
-        .json()
-    )
-
-    app.get(
-      '/users',
-      api()
-        .rest({
-          collection: User,
-          itemsPerPage: 1
-        })
-        .map.res({_id: 'id'})
-        .json({collection: User})
-    )
-
-    app.get(
-      '/users-plain/:id',
-      api()
-        .rest({collection: User})
-        .map.res({_id: 'id'})
-        .json()
-    )
-
-    app.get(
-      '/users/:id',
-      api()
-        .rest({collection: User})
-        .map.res({_id: 'id'})
-        .json({collection: User})
-    )
-
-    app.put(
-      '/users/:id',
-      api()
-        .rest({collection: User})
-        .map.res({_id: 'id'})
-        .json({collection: User})
-    )
-
-    fixtures(function(err) {
-      if (err) {
-        return done(err)
-      }
-
-      Role.find({}, function(err, docs) {
-        if (err) {
-          return done(err)
-        }
-
-        roles.set(docs)
+  before(done => {
+    setup()
+      .then(() => db.collections.role.find({}))
+      .then(documents => {
+        roles.set(documents)
         done()
       })
-    })
+      .catch(done)
   })
-
-  after(done => {
-    db.connection.db.dropDatabase(err => {
-      if (err) {
-        return done(err)
-      }
-      done()
-    })
-  })
+  after(teardown)
 
   it('should create a user', function(done) {
     request(app)
@@ -104,10 +35,15 @@ export default function() {
           return done(err)
         }
 
-        res.body.should.have.property('user')
-        res.body.user.should.be.an.Object()
+        res.body.should.have.properties([
+          'id',
+          'name',
+          'email',
+          'description',
+          'role'
+        ])
 
-        userId = res.body.user.id
+        userId = res.body.id
 
         done()
       })
@@ -115,7 +51,7 @@ export default function() {
 
   it('should get users - plain', function(done) {
     request(app)
-      .get('/users-plain')
+      .get('/plain-users')
       .set('Accept', 'application/json')
       .expect(200)
       .expect('Content-Type', /json/)
@@ -153,7 +89,7 @@ export default function() {
 
   it('should get a user - plain', function(done) {
     request(app)
-      .get('/users-plain/' + userId)
+      .get('/plain-users/' + userId)
       .set('Accept', 'application/json')
       .expect(200)
       .expect('Content-Type', /json/)
@@ -170,8 +106,7 @@ export default function() {
   })
 
   it('should modify a user', function(done) {
-    let modifiedUser = _.clone(userFixture)
-    modifiedUser.name = 'modified name'
+    let modifiedUser = Object.assign({}, userFixture, {name: 'modified name'})
 
     request(app)
       .put('/users/' + userId)

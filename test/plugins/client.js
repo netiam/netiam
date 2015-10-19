@@ -4,32 +4,23 @@ import {
   setup,
   teardown
 } from '../utils/db'
+import db from '../../src/db'
+import roles from '../../src/rest/roles'
 import api from '../../src/netiam'
 import clientFixture from '../fixtures/client.json'
 
 export default function() {
-  let clientId
   let clientKey
 
-  before(() => {
-    app.post(
-      '/clients',
-      api()
-        .rest({collection: Client})
-        .map.res({_id: 'id'})
-        .json()
-    )
-
-    app.get(
-      '/clients/:id',
-      api()
-        .client({collection: Client})
-        .rest({collection: Client})
-        .map.res({_id: 'id'})
-        .json()
-    )
+  before(done => {
+    setup()
+      .then(() => db.collections.role.find({}))
+      .then(documents => {
+        roles.set(documents)
+        done()
+      })
+      .catch(done)
   })
-
   after(teardown)
 
   it('should create a client', done => {
@@ -39,7 +30,7 @@ export default function() {
       .set('Accept', 'application/json')
       .expect(201)
       .expect('Content-Type', /json/)
-      .end(function(err, res) {
+      .end((err, res) => {
         if (err) {
           return done(err)
         }
@@ -48,22 +39,22 @@ export default function() {
           key: 'BXqJjCNvro0AZvuO5ur8F1j3UPXxI4pf5RcSdXFs8m4AYe3NHFcwow6LW29dUCkz+XzSzTPZ+M2LSFymtFCVtQ==',
           secret: 'Gw6TIPGWpxx+IzHrDQXR/X+4OHxg2XfCbo7wlyjyJjFl94gJ2rgKP5BdJwOPcnwnUnSkM5rv7EFXQqnGDEhr6Q=='
         })
-        clientId = res.body.id
+
         clientKey = res.body.key
 
         done()
       })
   })
 
-  it('should get a client', function(done) {
+  it('should get a client', done => {
     request(app)
-      .get('/clients/' + clientId)
+      .get('/clients/' + clientKey)
       .set('Accept', 'application/json')
       .set('api-client-id', clientKey)
       .expect(200)
       .expect('Content-Type', /json/)
       .expect('Api-Client-Id', clientKey)
-      .end(function(err, res) {
+      .end((err, res) => {
         if (err) {
           return done(err)
         }
@@ -74,18 +65,12 @@ export default function() {
       })
   })
 
-  it('should not get a client', function(done) {
+  it('should not get a client', done => {
     request(app)
-      .get('/clients/' + clientId)
+      .get('/clients/' + clientKey)
       .set('Accept', 'application/json')
       .expect(400)
-      .end(function(err) {
-        if (err) {
-          return done(err)
-        }
-
-        done()
-      })
+      .end(done)
   })
 
 }
