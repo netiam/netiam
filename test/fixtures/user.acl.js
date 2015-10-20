@@ -8,7 +8,7 @@ export default {
   'resource': {
     'ALLOW': {
       'ADMIN': 'CRUD',
-      'USER': 'R',
+      'USER': 'RUD',
       'GUEST': 'CRUD'
     }
   },
@@ -63,7 +63,6 @@ export default {
     },
     'password': {
       'ALLOW': {
-        'USER': 'C',
         'MANAGER': 'C',
         'GUEST': 'C'
       }
