@@ -49,7 +49,7 @@
     "semantic-release": "4.3.5",
     "should": "7.1.1",
     "supertest": "1.1.0",
-    "validator": "4.1.0"
+    "validator": "4.2.0"
   },
   "repository": {
     "type": "git",
