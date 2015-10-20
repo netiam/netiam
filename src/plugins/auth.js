@@ -27,11 +27,6 @@ export default function(spec) {
   const {usernameField = 'email'} = spec
   const {passwordField = 'password'} = spec
 
-  const authConfig = {
-    usernameField,
-    passwordField
-  }
-
   /**
    * Handle
    * @param {String} username
@@ -97,6 +92,10 @@ export default function(spec) {
       })
       .catch(done)
   })
+  const authConfig = {
+    usernameField,
+    passwordField
+  }
   passport.use(new BasicStrategy(authConfig, handle))
   passport.use(new BearerStrategy(authConfig, handleBearer))
   passport.use(new DigestStrategy(authConfig, handle))
