@@ -11,10 +11,10 @@ export default function relationships(spec) {
             data: relationship,
             idField: spec.idField
           }),
-          type: _.camelCase(spec.collection.schema.paths[key].options.ref),
+          type: _.camelCase(spec.collection.definition[key].model),
           links: links({
             req: spec.req,
-            type: _.camelCase(spec.collection.schema.paths[key].options.ref),
+            type: _.camelCase(spec.collection.definition[key].model),
             isRelated: true
           })
         }
