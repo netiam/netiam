@@ -10,6 +10,7 @@
     "test": "npm run test:unit",
     "test:debug": "DEBUG=netiam:* npm test",
     "test:unit": "mocha",
+    "test:watch": "mocha --watch",
     "test:coverage": "istanbul cover _mocha --report lcovonly -- -R spec",
     "watch": "./bin/watch",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
