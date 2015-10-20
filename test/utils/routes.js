@@ -60,6 +60,60 @@ export default Object.freeze({
     )
   },
 
+  jsonapi(router) {
+    router.post(
+      '/jsonapi-users',
+      api()
+        .rest({collection: User})
+        .acl.res({settings: require('../fixtures/user.acl')})
+        .jsonapi.res({collection: User})
+    )
+    router.get(
+      '/jsonapi-users',
+      api()
+        .auth({collection: User})
+        .acl.req({settings: require('../fixtures/user.acl')})
+        .rest({collection: User})
+        .acl.res({settings: require('../fixtures/user.acl')})
+        .jsonapi.res({collection: User})
+    )
+    router.get(
+      '/jsonapi-users/:id',
+      api()
+        .auth({collection: User})
+        .acl.req({settings: require('../fixtures/user.acl')})
+        .rest({collection: User})
+        .acl.res({settings: require('../fixtures/user.acl')})
+        .jsonapi.res({collection: User})
+    )
+    router.put(
+      '/jsonapi-users/:id',
+      api()
+        .auth({collection: User})
+        .acl.req({settings: require('../fixtures/user.acl')})
+        .rest({collection: User})
+        .acl.res({settings: require('../fixtures/user.acl')})
+        .jsonapi.res({collection: User})
+    )
+    router.patch(
+      '/jsonapi-users/:id',
+      api()
+        .auth({collection: User})
+        .acl.req({settings: require('../fixtures/user.acl')})
+        .rest({collection: User})
+        .acl.res({settings: require('../fixtures/user.acl')})
+        .jsonapi.res({collection: User})
+    )
+    router.delete(
+      '/jsonapi-users/:id',
+      api()
+        .auth({collection: User})
+        .acl.req({settings: require('../fixtures/user.acl')})
+        .rest({collection: User})
+        .jsonapi.res({collection: User})
+    )
+  },
+
   plain(router) {
     router.get(
       '/plain-users',

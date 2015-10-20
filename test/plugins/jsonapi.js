@@ -25,7 +25,7 @@ export default function() {
 
   it('should create a user', function(done) {
     request(app)
-      .post('/users')
+      .post('/jsonapi-users')
       .send(userFixture)
       .set('Accept', 'application/json')
       .expect(201)
@@ -54,9 +54,15 @@ export default function() {
   })
 
   it('should create a second user', function(done) {
+    const modifiedUserFixture = Object.assign(
+      {},
+      userFixture,
+      {email: userFixture + '2'}
+    )
+
     request(app)
-      .post('/users')
-      .send(userFixture)
+      .post('/jsonapi-users')
+      .send(modifiedUserFixture)
       .set('Accept', 'application/json')
       .expect(201)
       .expect('Content-Type', /json/)
@@ -84,9 +90,15 @@ export default function() {
   })
 
   it('should create a third user', function(done) {
+    const modifiedUserFixture = Object.assign(
+      {},
+      userFixture,
+      {email: userFixture + '3'}
+    )
+
     request(app)
-      .post('/users')
-      .send(userFixture)
+      .post('/jsonapi-users')
+      .send(modifiedUserFixture)
       .set('Accept', 'application/json')
       .expect(201)
       .expect('Content-Type', /json/)
@@ -114,9 +126,15 @@ export default function() {
   })
 
   it('should create a fourth user', function(done) {
+    const modifiedUserFixture = Object.assign(
+      {},
+      userFixture,
+      {email: userFixture + '4'}
+    )
+
     request(app)
-      .post('/users')
-      .send(userFixture)
+      .post('/jsonapi-users')
+      .send(modifiedUserFixture)
       .set('Accept', 'application/json')
       .expect(201)
       .expect('Content-Type', /json/)
@@ -144,9 +162,15 @@ export default function() {
   })
 
   it('should create a fifth user', function(done) {
+    const modifiedUserFixture = Object.assign(
+      {},
+      userFixture,
+      {email: userFixture + '5'}
+    )
+
     request(app)
-      .post('/users')
-      .send(userFixture)
+      .post('/jsonapi-users')
+      .send(modifiedUserFixture)
       .set('Accept', 'application/json')
       .expect(201)
       .expect('Content-Type', /json/)
@@ -175,7 +199,7 @@ export default function() {
 
   it('should get users - default page', function(done) {
     request(app)
-      .get('/users?itemsPerPage=1')
+      .get('/jsonapi-users?itemsPerPage=1')
       .set('Accept', 'application/json')
       .expect(200)
       .expect('Content-Type', /json/)
@@ -201,13 +225,13 @@ export default function() {
       })
   })
 
-  it('should get users + expanded role - default page', function(done) {
+  it('should get users + expanded role - default page', done => {
     request(app)
-      .get('/users?expand=role&itemsPerPage=1')
+      .get('/jsonapi-users?expand=role&itemsPerPage=1')
       .set('Accept', 'application/json')
       .expect(200)
       .expect('Content-Type', /json/)
-      .end(function(err, res) {
+      .end((err, res) => {
         if (err) {
           return done(err)
         }
@@ -238,7 +262,7 @@ export default function() {
 
   it('should get users + expanded role - page1', function(done) {
     request(app)
-      .get('/users?expand=role&page=1&itemsPerPage=1')
+      .get('/jsonapi-users?expand=role&page=1&itemsPerPage=1')
       .set('Accept', 'application/json')
       .expect(200)
       .expect('Content-Type', /json/)
@@ -280,7 +304,7 @@ export default function() {
 
   it('should get users + expanded role - page2', function(done) {
     request(app)
-      .get('/users?expand=role&page=2&itemsPerPage=1')
+      .get('/jsonapi-users?expand=role&page=2&itemsPerPage=1')
       .set('Accept', 'application/json')
       .expect(200)
       .expect('Content-Type', /json/)
@@ -323,7 +347,7 @@ export default function() {
 
   it('should get users + expanded role - page3', function(done) {
     request(app)
-      .get('/users?expand=role&page=3&itemsPerPage=1')
+      .get('/jsonapi-users?expand=role&page=3&itemsPerPage=1')
       .set('Accept', 'application/json')
       .expect(200)
       .expect('Content-Type', /json/)
@@ -366,7 +390,7 @@ export default function() {
 
   it('should get users + expanded role - page4', function(done) {
     request(app)
-      .get('/users?expand=role&page=4&itemsPerPage=1')
+      .get('/jsonapi-users?expand=role&page=4&itemsPerPage=1')
       .set('Accept', 'application/json')
       .expect(200)
       .expect('Content-Type', /json/)
@@ -409,7 +433,7 @@ export default function() {
 
   it('should get a user', function(done) {
     request(app)
-      .get('/users/' + userId + '?expand=role')
+      .get('/jsonapi-users/' + userId + '?expand=role')
       .set('Accept', 'application/json')
       .expect(200)
       .expect('Content-Type', /json/)
@@ -445,7 +469,7 @@ export default function() {
     const modifiedUser = Object.assign({}, userFixture, {name: 'modified name'})
 
     request(app)
-      .put('/users/' + userId)
+      .put('/jsonapi-users/' + userId)
       .send(modifiedUser)
       .set('Accept', 'application/json')
       .expect(200)
