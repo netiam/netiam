@@ -7,6 +7,7 @@ import {
 import userFixture from '../fixtures/user.json'
 
 export default function() {
+
   before(setup)
   after(teardown)
 
