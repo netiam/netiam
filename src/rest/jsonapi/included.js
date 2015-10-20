@@ -19,7 +19,7 @@ export default function included(spec) {
       return document({
         req: spec.req,
         data: result,
-        type: spec.collection.schema.paths[ref].options.ref,
+        type: spec.collection.definition[ref].model,
         idField: spec.idField
       })
     })
@@ -35,7 +35,7 @@ export default function included(spec) {
               results.push(document({
                 req: spec.req,
                 data: node[ref],
-                type: spec.collection.schema.paths[ref].options.ref
+                type: spec.collection.definition[ref].model
               }))
             }
           })
@@ -48,7 +48,7 @@ export default function included(spec) {
             results.push(document({
               req: spec.req,
               data: data[ref],
-              type: spec.collection.schema.paths[ref].options.ref
+              type: spec.collection.definition[ref].model
             }))
           }
         }
