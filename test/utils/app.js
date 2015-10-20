@@ -34,6 +34,7 @@ routes.clients(app)
 routes.graph(app)
 routes.plain(app)
 routes.resources(app)
+routes.typed(app)
 routes.users(app)
 
 export default app

@@ -92,12 +92,31 @@ export default Object.freeze({
     )
   },
 
+  typed(router) {
+    router.get(
+      '/typed-users',
+      api()
+        .auth({collection: User})
+        .acl.req({settings: require('../fixtures/user.acl')})
+        .rest({collection: User})
+        .acl.res({settings: require('../fixtures/user.acl')})
+        .json({collection: User})
+    )
+    router.put(
+      '/typed-users/:id',
+      api()
+        .auth({collection: User})
+        .acl.req({settings: require('../fixtures/user.acl')})
+        .rest({collection: User})
+        .acl.res({settings: require('../fixtures/user.acl')})
+        .json({collection: User})
+    )
+  },
+
   users(router) {
     router.post(
       '/users',
       api()
-        .auth({collection: User})
-        .acl.req({settings: require('../fixtures/user.acl')})
         .rest({collection: User})
         .acl.res({settings: require('../fixtures/user.acl')})
         .json()
