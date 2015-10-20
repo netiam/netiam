@@ -1,10 +1,13 @@
 import _ from 'lodash'
+import {
+  getCollectionByIdentity
+} from '../db'
 
-export default function json(spec) {
+export default function json(spec = {}) {
   let type
-
-  if (spec && spec.collection && spec.collection.modelName) {
-    type = _.camelCase(spec.collection.modelName)
+  const {collection} = spec
+  if (collection) {
+    type = _.camelCase(collection.prototype.identity)
   }
 
   return function(req, res) {
