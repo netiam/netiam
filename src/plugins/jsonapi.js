@@ -86,15 +86,21 @@ function response(spec) {
 
     return numTotalDocuments(req, queryNormalized)
       .then(count => {
-        res
-          .set('Content-Type', 'application/vnd.api+json')
-          .json(jsonapi.transform({
+        try {
+          res.body = jsonapi.transform({
             req,
             res,
             count,
             itemsPerPage: queryNormalized.itemsPerPage,
             collection
-          }))
+          })
+          res
+            .set('Content-Type', 'application/vnd.api+json')
+            .json(res.body)
+        } catch (err) {
+          console.log(err.stack)
+          return Promise.reject(new InternalServerError(Codes.E1000, err))
+        }
       })
   }
 
