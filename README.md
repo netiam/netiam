@@ -64,10 +64,10 @@ const app = express()
 const server = http.createServer(app)
 
 app.get(
-    '/users'
-    api()
-        .data({'Hello': 'World!'})
-        .json()
+  '/users'
+  api()
+    .data({'Hello': 'World!'})
+    .json()
 )
 
 server.listen(3000)
@@ -75,8 +75,8 @@ server.listen(3000)
 
 ## Tech Stack
 
-* Express
-* MongoDB + Mongoose
+* Connect/Express
+* Database agnostic w/ [waterline](https://github.com/balderdashy/waterline)
 
 ## Future
 
@@ -98,8 +98,8 @@ objects.
 
 ```js
 const path = api()
-    .rest({…})
-    .json()
+  .rest({…})
+  .json()
 
 app.get('/foo', path)
 ```
@@ -108,9 +108,9 @@ app.get('/foo', path)
 
 ```js
 export default function data(data) {
-    return function(req, res) {
-        res.body = data;
-    }
+  return function(req, res) {
+    res.body = data;
+  }
 }
 
 ```
@@ -119,15 +119,15 @@ export default function data(data) {
 
 ```js
 app.get(
-    '/users',
-    api()
-        .auth({…})
-        .get('/resource/:id')
-        .rest({…})
-        .transform({…})
-        .data({…})
-        .acl({…})
-        .json({…})
+  '/users',
+  api()
+    .auth({…})
+    .get('/resource/:id')
+    .rest({…})
+    .transform({…})
+    .data({…})
+    .acl({…})
+    .json({…})
 )
 ```
 
