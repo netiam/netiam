@@ -78,18 +78,6 @@ server.listen(3000)
 * Connect/Express
 * Database agnostic w/ [waterline](https://github.com/balderdashy/waterline)
 
-## Future
-
-Upcoming releases might provide a better abstraction and allows you to choose
-your own database, filesystem and so on. There is also a plan to cut loose the
-*express* dependency as you might want to use this library with any other Node.js
-web framework out there.
-
-Also, there are more than valid reasons to use a relational database instead of
-a document based database. There are some great solutions out there. Especially
-the [ORM](http://en.wikipedia.org/wiki/Object-relational_mapping)
-[sequelizejs](http://sequelizejs.com/) library.
-
 ## How it works
 
 The core idea of this library is to give you a bunch of plugins,
