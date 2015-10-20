@@ -127,11 +127,9 @@ export default function(spec) {
     })
     .catch(err => {
       if (err.code === 'E_VALIDATION') {
-        let errors = []
-        _.forEach(err.invalidAttributes, attr => {
-          errors = errors.concat(attr)
-        })
-        return Promise.reject(new HTTPError(400, Codes.E1000, 'A validation error occured', errors))
+        const errors = [err.invalidAttributes]
+        return Promise.reject(
+          new HTTPError(400, Codes.E1000, 'A validation error occured', errors))
       }
       return Promise.reject(err)
     })
