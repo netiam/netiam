@@ -1,64 +1,27 @@
-import _ from 'lodash'
 import fs from 'fs'
 import request from 'supertest'
-import roles from '../../src/rest/roles'
 import app from '../utils/app'
+import roles from '../../src/rest/roles'
 import {
   setup,
   teardown
 } from '../utils/db'
-import api from '../../src/netiam'
-import userFixture from '../fixtures/user.json'
+import db from '../../src/db'
+import userFixture from '../fixtures/user'
 
 export default function() {
   const n = 10
 
   before(done => {
-    app.post(
-      '/users',
-      api()
-        .rest({collection: User})
-        .json()
-    )
-
-    app.get(
-      '/users',
-      api()
-        .rest({collection: User})
-        .json()
-    )
-
-    app.get(
-      '/users.xlsx',
-      api()
-        .rest({collection: User})
-        .xlsx()
-    )
-
-    fixtures(err => {
-      if (err) {
-        return done(err)
-      }
-
-      Role.find({}, (err, docs) => {
-        if (err) {
-          return done(err)
-        }
-
-        roles.set(docs)
+    setup()
+      .then(() => db.collections.role.find({}))
+      .then(documents => {
+        roles.set(documents)
         done()
       })
-    })
+      .catch(done)
   })
-
-  after(done => {
-    db.connection.db.dropDatabase(err => {
-      if (err) {
-        return done(err)
-      }
-      done()
-    })
-  })
+  after(teardown)
 
   it(`should create ${n} random users`, done => {
     let cnt = 0

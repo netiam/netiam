@@ -6,7 +6,7 @@ import {
   teardown
 } from '../utils/db'
 import db from '../../src/db'
-import userFixture from '../fixtures/user.json'
+import userFixture from '../fixtures/user'
 
 export default function() {
 

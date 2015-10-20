@@ -4,8 +4,8 @@ import {
   setup,
   teardown
 } from '../utils/db'
-import userFixture from '../fixtures/user.json'
-import projectFixture from '../fixtures/project.json'
+import userFixture from '../fixtures/user'
+import projectFixture from '../fixtures/project'
 
 export default function() {
   let projectId

@@ -7,7 +7,7 @@ import {
 import db from '../../src/db'
 import roles from '../../src/rest/roles'
 import api from '../../src/netiam'
-import clientFixture from '../fixtures/client.json'
+import clientFixture from '../fixtures/client'
 
 export default function() {
   let clientKey

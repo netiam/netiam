@@ -6,8 +6,7 @@ import {
   teardown
 } from '../utils/db'
 import db from '../../src/db'
-import api from '../../src/netiam'
-import userFixture from '../fixtures/user.json'
+import userFixture from '../fixtures/user'
 
 export default function() {
   let userId
@@ -69,7 +68,7 @@ export default function() {
 
   it('should get users - typed', function(done) {
     request(app)
-      .get('/users')
+      .get('/typed-users')
       .set('Accept', 'application/json')
       .expect(200)
       .expect('Content-Type', /json/)
@@ -105,11 +104,11 @@ export default function() {
       })
   })
 
-  it('should modify a user', function(done) {
-    let modifiedUser = Object.assign({}, userFixture, {name: 'modified name'})
+  it('should modify a user - typed', function(done) {
+    const modifiedUser = Object.assign({}, userFixture, {name: 'modified name'})
 
     request(app)
-      .put('/users/' + userId)
+      .put('/typed-users/' + userId)
       .send(modifiedUser)
       .set('Accept', 'application/json')
       .expect(200)

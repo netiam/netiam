@@ -1,7 +1,7 @@
 import request from 'supertest'
 import app from '../utils/app'
 import {setup,teardown} from '../utils/db'
-import userFixture from '../fixtures/user.json'
+import userFixture from '../fixtures/user'
 
 export default function() {
 

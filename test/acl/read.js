@@ -7,7 +7,7 @@ import {
 } from '../utils/db'
 import db from '../../src/db'
 import roles from '../../src/rest/roles'
-import userFixture from '../fixtures/user.json'
+import userFixture from '../fixtures/user'
 
 const acl = aclRest({settings: require('../fixtures/user.acl')})
 

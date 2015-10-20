@@ -7,7 +7,7 @@ import {
 } from '../utils/db'
 import db from '../../src/db'
 import api from '../../src/netiam'
-import userFixture from '../fixtures/user.json'
+import userFixture from '../fixtures/user'
 
 export default function() {
   let userId

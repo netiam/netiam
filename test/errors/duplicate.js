@@ -56,11 +56,10 @@ describe('Errors', () => {
           res.body.should.have.property('errors')
           res.body.errors.should.be.an.Array()
           res.body.errors.should.have.length(1)
-          res.body.errors[0].should.have.properties([
-            'value',
-            'rule',
-            'message'
-          ])
+          res.body.errors[0].should.have.property('email')
+          res.body.errors[0].email.should.be.an.Array()
+          res.body.errors[0].email[0].should.have.property('rule')
+          res.body.errors[0].email[0].rule.should.eql('unique')
 
           done()
         })

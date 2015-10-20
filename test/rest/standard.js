@@ -5,9 +5,9 @@ import {
   setup,
   teardown
 } from './../utils/db'
+import userFixture from '../fixtures/user'
 
 export default function() {
-  const userFixture = require('./../fixtures/user.json')
   let userId
 
   before(setup)

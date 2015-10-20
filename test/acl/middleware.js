@@ -6,7 +6,7 @@ import {
 } from '../utils/db'
 import db from '../../src/db'
 import roles from '../../src/rest/roles'
-import userFixture from '../fixtures/user.json'
+import userFixture from '../fixtures/user'
 
 export default function() {
   let userId
@@ -23,7 +23,7 @@ export default function() {
   after(teardown)
 
   it('should create a user', done => {
-    const userWithRole = Object.assign(userFixture, {role: roles.get('user')})
+    const userWithRole = Object.assign({}, userFixture, {role: roles.get('user')})
 
     request(app)
       .post('/users')

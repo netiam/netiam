@@ -6,7 +6,7 @@ import {
 } from '../utils/db'
 import db from '../../src/db'
 import roles from '../../src/rest/roles'
-import userFixture from '../fixtures/user.json'
+import userFixture from '../fixtures/user'
 
 export default function() {
 
