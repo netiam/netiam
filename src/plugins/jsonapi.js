@@ -98,7 +98,6 @@ function response(spec) {
             .set('Content-Type', 'application/vnd.api+json')
             .json(res.body)
         } catch (err) {
-          console.log(err.stack)
           return Promise.reject(new InternalServerError(Codes.E1000, err))
         }
       })
