@@ -18,7 +18,7 @@
     "tag": "next"
   },
   "dependencies": {
-    "async": "1.4.2",
+    "async": "1.5.0",
     "babel-runtime": "5.8.25",
     "bcrypt": "0.8.5",
     "d3": "3.5.6",
