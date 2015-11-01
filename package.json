@@ -47,7 +47,7 @@
     "mkdirp": "0.5.1",
     "mocha": "^2.3.3",
     "pow-mongoose-fixtures": "0.3.0",
-    "redis": "2.2.5",
+    "redis": "2.3.0",
     "rimraf": "2.4.3",
     "semantic-release": "4.3.5",
     "should": "^7.1.1",
