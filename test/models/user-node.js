@@ -1,7 +1,7 @@
 import mongoose, {Schema} from 'mongoose'
-import {merge} from '../../src/rest/schema/plugins'
+import plugins from '../../src/rest/schema/plugins'
 
-const schema = new Schema({
+const UserNode = new Schema({
   score: Number,
   node: {
     type: Schema.Types.ObjectId,
@@ -9,6 +9,6 @@ const schema = new Schema({
   }
 })
 
-schema.plugin(merge)
+UserNode.plugin(plugins.merge)
 
-export default mongoose.model('UserNode', schema)
+export default mongoose.model('UserNode', UserNode)

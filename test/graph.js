@@ -1,9 +1,10 @@
 import request from 'supertest'
 import db,{teardown} from './utils/db.test'
 import routes from './utils/routes'
+import appMock from './utils/app.test'
 
 describe('Graph', function() {
-  const app = require('./utils/app.test')()
+  const app = appMock()
 
   before(() => {
     routes.graph(app)

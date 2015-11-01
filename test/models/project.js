@@ -1,11 +1,7 @@
 import mongoose, {Schema} from 'mongoose'
-import {
-  created,
-  merge,
-  modified
-} from '../../src/rest/schema/plugins'
+import plugins from '../../src/rest/schema/plugins'
 
-const schema = new Schema({
+const Project = new Schema({
   name: String,
   owner: {
     type: Schema.Types.ObjectId,
@@ -19,8 +15,8 @@ const schema = new Schema({
   ]
 })
 
-schema.plugin(created)
-schema.plugin(merge)
-schema.plugin(modified)
+Project.plugin(plugins.created)
+Project.plugin(plugins.merge)
+Project.plugin(plugins.modified)
 
-export default mongoose.model('Project', schema)
+export default mongoose.model('Project', Project)

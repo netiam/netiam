@@ -3,10 +3,11 @@ import db,{teardown} from '../utils/db.test'
 import routes from '../utils/routes'
 import userFixture from '../fixtures/user.json'
 import projectFixture from '../fixtures/project.json'
+import appMock from '../utils/app.test'
 
 export default function() {
 
-  const app = require('../utils/app.test')()
+  const app = appMock()
   let projectId
   let userId
 

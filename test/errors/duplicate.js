@@ -2,9 +2,10 @@ import request from 'supertest'
 import db,{setup,teardown} from '../utils/db.test'
 import routes from '../utils/routes'
 import userFixture from '../fixtures/user'
+import appMock from '../utils/app.test'
 
 describe('Errors', () => {
-  const app = require('../utils/app.test')()
+  const app = appMock()
 
   before(done => {
     routes.users(app)

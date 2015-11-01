@@ -1,13 +1,8 @@
 import mongoose, {Schema} from 'mongoose'
 import validator from 'validator'
-import {
-  auth,
-  created,
-  merge,
-  modified
-} from '../../src/rest/schema/plugins'
+import plugins from '../../src/rest/schema/plugins'
 
-const schema = new Schema({
+const User = new Schema({
   name: String,
   description: String,
   email: {
@@ -33,9 +28,9 @@ const schema = new Schema({
   }
 })
 
-schema.plugin(auth)
-schema.plugin(created)
-schema.plugin(merge)
-schema.plugin(modified)
+User.plugin(plugins.auth)
+User.plugin(plugins.created)
+User.plugin(plugins.merge)
+User.plugin(plugins.modified)
 
-export default mongoose.model('User', schema)
+export default mongoose.model('User', User)

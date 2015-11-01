@@ -2,10 +2,11 @@ import _ from 'lodash'
 import request from 'supertest'
 import db,{teardown} from './../utils/db.test.js'
 import routes from './../utils/routes'
+import appMock from '../utils/app.test'
 
 export default function() {
   const userFixture = require('./../fixtures/user.json')
-  const app = require('./../utils/app.test.js')()
+  const app = appMock()
   let userId
 
   before(() => {

@@ -14,7 +14,7 @@ cache:
 notifications:
   email: false
 node_js:
-  - "4"
+  - "5"
 services:
   - mongodb
   - redis-server

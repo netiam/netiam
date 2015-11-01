@@ -11,7 +11,7 @@ export default function included(spec) {
   const data = spec.res.body
 
   if (!refs || !refs.length) {
-    return
+    return undefined
   }
 
   function list(arr, ref) {

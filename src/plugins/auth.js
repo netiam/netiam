@@ -14,12 +14,8 @@ const debug = dbg('netiam:plugins:auth')
 
 export default function(opts) {
   const {collection} = opts
-  let {usernameField} = opts
-  let {passwordField} = opts
-
-  usernameField = usernameField || 'email'
-  passwordField = passwordField || 'password'
-
+  const {usernameField = 'email'} = opts
+  const {passwordField = 'password'} = opts
   const spec = {
     usernameField,
     passwordField

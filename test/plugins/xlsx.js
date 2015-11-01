@@ -7,11 +7,12 @@ import roles from '../../src/rest/roles'
 import Role from '../../src/rest/models/role'
 import db from './../utils/db.test.js'
 import api from '../../src/netiam'
+import appMock from '../utils/app.test'
 
 export default function() {
 
   const userFixture = require('./../fixtures/user.json')
-  const app = require('./../utils/app.test.js')()
+  const app = appMock()
   const n = 10
 
   before(done => {

@@ -4,20 +4,15 @@
   },
   "rules": {
     "quotes": [
-      1,
+      2,
       "single"
     ],
     "semi": [
       2,
       "never"
     ],
-    "camelcase": [
-      2,
-      {
-        "properties": "never"
-      }
-    ],
-    "consistent-return": 0,
+    "camelcase": 0,
+    "consistent-return": 2,
     "no-underscore-dangle": 0,
     "no-use-before-define": 0,
     "no-shadow": 0

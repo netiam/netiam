@@ -1,4 +1,4 @@
-import User from '../models/user'
+gimport User from '../models/user'
 import Project from '../models/project'
 import aclRest from '../../src/rest/acl'
 import fixtures from '../fixtures'

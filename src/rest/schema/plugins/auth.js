@@ -5,9 +5,7 @@ const debug = dbg('netiam:rest:schema:plugins')
 
 export default function created(schema, opts = {}) {
   const SALT_WORK_FACTOR = 10
-  let {passwordField} = opts
-
-  passwordField = passwordField || 'password'
+  const {passwordField = 'password'} = opts
 
   schema.pre('save', function(next) {
     var self = this

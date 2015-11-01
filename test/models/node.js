@@ -1,11 +1,11 @@
 import mongoose, {Schema} from 'mongoose'
-import {merge} from '../../src/rest/schema/plugins'
+import plugins from '../../src/rest/schema/plugins'
 
-const schema = new Schema({
+const Node = new Schema({
   name: String,
   edges: Object
 })
 
-schema.plugin(merge)
+Node.plugin(plugins.merge)
 
-export default mongoose.model('Node', schema)
+export default mongoose.model('Node', Node)

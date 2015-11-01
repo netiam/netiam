@@ -1,16 +1,12 @@
 import mongoose, {Schema} from 'mongoose'
-import {
-  created,
-  merge,
-  modified
-  } from '../../src/rest/schema/plugins'
+import plugins from '../../src/rest/schema/plugins'
 
-const schema = new Schema({
+const Graph = new Schema({
   nodes: [Object]
 })
 
-schema.plugin(created)
-schema.plugin(merge)
-schema.plugin(modified)
+Graph.plugin(plugins.created)
+Graph.plugin(plugins.merge)
+Graph.plugin(plugins.modified)
 
-export default mongoose.model('Graph', schema)
+export default mongoose.model('Graph', Graph)

@@ -2,11 +2,11 @@ import request from 'supertest'
 import Client from './../models/client'
 import db,{teardown} from './../utils/db.test.js'
 import api from '../../src/netiam'
+import appMock from '../utils/app.test'
 
 export default function() {
-
   const clientFixture = require('./../fixtures/client.json')
-  const app = require('./../utils/app.test.js')()
+  const app = appMock()
   let clientId
   let clientKey
 

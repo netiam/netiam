@@ -1,8 +1,9 @@
 import request from 'supertest'
 import api from '../../src/netiam'
+import appMock from '../utils/app.test'
 
 export default function() {
-  const app = require('./../utils/app.test.js')()
+  const app = appMock()
 
   before(() => {
     app.get(
