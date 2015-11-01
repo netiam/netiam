@@ -13,17 +13,16 @@ chain order).
  * @param {*} any
  * @returns {Function}
  */
-function data( any ) {
+export default function data( any ) {
     /**
      * @scope {Resource}
      * @param {Object} req
      * @param {Object} res
      */
     return function( req, res ) {
-        res.body = body;
-    };
+        res.body = body
+    }
 }
-module.exports = data;
 ```
 
 ## Example
@@ -32,14 +31,13 @@ All of the following methods, which are chained to the route, are plugins.
 
 ```js
 app
-    .get( '/resource/:id' )
     .auth(…)
+    .acl.req(…)
     .rest(…)
     .transform(…)
     .data(…)
-    .acl.req(…)
+    .acl.res(…)
     .json( {…} )
-    .catch( function( err ) {…} )
 ```
 
 ## Lifecycle

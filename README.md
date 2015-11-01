@@ -120,12 +120,9 @@ app.get(
     '/users',
     api()
         .auth(…)
-        .get('/resource/:id')
         .rest(…)
-        .transform(…)
-        .data(…)
-        .acl(…)
-        .json({…})
+        .acl.res(…)
+        .jsonapi({…})
 )
 ```
 
