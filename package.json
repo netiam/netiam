@@ -24,7 +24,7 @@
     "debug": "2.2.0",
     "jsdom": "7.0.2",
     "lodash": "3.10.1",
-    "mongoose": "^4.2.3",
+    "mongoose": "^4.2.4",
     "netiam-errors": "1.10.1",
     "passport": "0.3.0",
     "passport-http": "0.3.0",
