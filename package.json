@@ -45,7 +45,7 @@
     "express": "4.13.3",
     "istanbul": "0.4.0",
     "mkdirp": "0.5.1",
-    "mocha": "^2.3.3",
+    "mocha": "^2.3.4",
     "pow-mongoose-fixtures": "0.3.0",
     "redis": "2.3.0",
     "rimraf": "2.4.3",
