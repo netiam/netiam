@@ -33,7 +33,7 @@
     "xlsx": "0.8.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.1.2",
+    "babel-cli": "^6.2.0",
     "babel-core": "^6.1.21",
     "babel-eslint": "^4.1.4",
     "babel-plugin-syntax-async-functions": "^6.0.14",
