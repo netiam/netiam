@@ -1,6 +1,6 @@
 import * as errors from 'netiam-errors'
 import resourceRest from '../rest/resource'
-import {ONE_TO_MANY, MANY_TO_ONE} from '../rest/relationships'
+import {ONE_TO_MANY} from '../rest/relationships'
 
 export default function rest(spec) {
   const resource = resourceRest(spec)

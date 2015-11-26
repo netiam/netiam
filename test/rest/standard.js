@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import request from 'supertest'
-import db,{teardown} from './../utils/db.test.js'
+import {teardown} from './../utils/db.test.js'
 import routes from './../utils/routes'
 import appMock from '../utils/app.test'
 

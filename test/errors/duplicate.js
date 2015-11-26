@@ -1,5 +1,5 @@
 import request from 'supertest'
-import db,{setup,teardown} from '../utils/db.test'
+import {setup,teardown} from '../utils/db.test'
 import routes from '../utils/routes'
 import userFixture from '../fixtures/user'
 import appMock from '../utils/app.test'

@@ -1,5 +1,5 @@
 import request from 'supertest'
-import db,{teardown} from '../utils/db.test'
+import {teardown} from '../utils/db.test'
 import routes from '../utils/routes'
 import userFixture from '../fixtures/user.json'
 import projectFixture from '../fixtures/project.json'

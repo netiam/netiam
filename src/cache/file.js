@@ -1,4 +1,3 @@
-import dbg from 'debug'
 import mkdirp from 'mkdirp'
 import path from 'path'
 import Promise from 'bluebird'

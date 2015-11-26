@@ -4,7 +4,7 @@ import User from './../models/user'
 import fixtures from '../fixtures'
 import roles from '../../src/rest/roles'
 import Role from '../../src/rest/models/role'
-import db,{teardown} from './../utils/db.test.js'
+import {teardown} from './../utils/db.test.js'
 import api from '../../src/netiam'
 import appMock from '../utils/app.test'
 
