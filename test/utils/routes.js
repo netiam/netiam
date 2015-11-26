@@ -5,7 +5,6 @@ import User from '../models/user'
 import Project from '../models/project'
 import nodesFixture from '../fixtures/nodes'
 import aclUser from '../fixtures/user.acl'
-import aclResource from '../fixtures/resource.acl'
 
 export default Object.freeze({
 
