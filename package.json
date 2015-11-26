@@ -14,9 +14,6 @@
     "watch": "./bin/watch",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
-  "publishConfig": {
-    "tag": "next"
-  },
   "dependencies": {
     "async": "1.5.0",
     "bcrypt": "0.8.5",
