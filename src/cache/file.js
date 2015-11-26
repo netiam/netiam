@@ -1,7 +1,8 @@
 import dbg from 'debug'
 import fs from 'fs'
-import path from 'path'
 import mkdirp from 'mkdirp'
+import path from 'path'
+import Promise from 'bluebird'
 
 const debug = dbg('netiam:cache:file')
 

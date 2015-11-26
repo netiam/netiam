@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import dbg from 'debug'
 import plugins from './plugins/index'
+import Promise from 'bluebird'
 
 const debug = dbg('netiam:dispatch')
 
