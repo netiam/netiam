@@ -14,7 +14,6 @@ export default function() {
     cache
       .has('test_id')
       .then(val => {
-        console.log(val)
         val.should.eql(true)
         done()
       })
