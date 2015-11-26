@@ -25,17 +25,6 @@ export default Object.freeze({
     )
   },
 
-  resources(router) {
-    router.delete(
-      '/resource',
-      api()
-        .auth({collection: User})
-        .acl.req({settings: aclResource})
-        .data({})
-        .json()
-    )
-  },
-
   users(router) {
     router.get(
       '/users',
@@ -107,6 +96,17 @@ export default Object.freeze({
           collection: User
         })
         .map.res({_id: 'id'})
+        .json()
+    )
+  },
+
+  resources(router) {
+    router.delete(
+      '/resource',
+      api()
+        .auth({collection: User})
+        .acl.req({settings: require('../fixtures/resource.acl')})
+        .data({})
         .json()
     )
   },
