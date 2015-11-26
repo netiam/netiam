@@ -8,6 +8,17 @@ export default function acl(spec) {
   const {settings} = spec
   let o = {}
 
+  // Defaults for settings
+  if (!_.isObject(settings.asserts)) {
+    settings.asserts = {}
+  }
+  if (!_.isObject(settings.fields)) {
+    settings.fields = {}
+  }
+  if (!_.isObject(settings.resource)) {
+    settings.resource = {}
+  }
+
   if (!settings) {
     throw new Error('You must provide an ACL "settings" option')
   }
