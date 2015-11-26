@@ -22,7 +22,7 @@
     "bcrypt": "0.8.5",
     "d3": "3.5.9",
     "debug": "2.2.0",
-    "jsdom": "7.0.2",
+    "jsdom": "7.1.0",
     "lodash": "3.10.1",
     "mongoose": "^4.2.6",
     "netiam-errors": "1.10.1",
