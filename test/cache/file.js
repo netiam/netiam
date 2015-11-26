@@ -13,7 +13,8 @@ export default function() {
   it('should verify that cache entry exists', function(done) {
     cache
       .has('test_id')
-      .then(function(val) {
+      .then(val => {
+        console.log(val)
         val.should.eql(true)
         done()
       })

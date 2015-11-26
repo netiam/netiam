@@ -1,10 +1,9 @@
 import dbg from 'debug'
-import fs from 'fs'
 import mkdirp from 'mkdirp'
 import path from 'path'
 import Promise from 'bluebird'
 
-const debug = dbg('netiam:cache:file')
+const fs = Promise.promisifyAll(require('fs'))
 
 /**
  * Cache
@@ -40,13 +39,9 @@ export default function(config) {
    * @param {String} id
    */
   function has(id) {
-    return new Promise((resolve) => {
-      fs.access(get(id), fs.R_OK | fs.W_OK, function(err) {
-        if (err) {
-          return resolve(false)
-        }
-
-        resolve(true)
+    return new Promise(resolve => {
+      fs.accessAsync(get(id), fs.R_OK | fs.W_OK, err => {
+        resolve(err ? false : true)
       })
     })
   }
@@ -56,26 +51,13 @@ export default function(config) {
    * @param {String} id
    */
   function load(id) {
-    return new Promise((resolve, reject) => {
-      has(id)
-        .then(function(exists) {
-          if (!exists) {
-            return reject(new Error(`Cache entry does not exist: "${id}"`))
-          }
-
-          fs.readFile(get(id), 'utf8', function(err, data) {
-            if (err) {
-              debug(err)
-              return reject(err)
-            }
-
-            resolve(data)
-          })
-        })
-        .catch(function() {
-          resolve()
-        })
-    })
+    return has(id)
+      .then(exists => {
+        if (!exists) {
+          throw new Error(`Cache entry does not exist: "${id}"`)
+        }
+        return fs.readFileAsync(get(id), 'utf8')
+      })
   }
 
   /**
@@ -84,16 +66,7 @@ export default function(config) {
    * @param {String} data
    */
   function save(id, data) {
-    return new Promise((resolve, reject) => {
-      fs.writeFile(get(id), data, function(err) {
-        if (err) {
-          debug(err)
-          return reject(err)
-        }
-
-        resolve()
-      })
-    })
+    return fs.writeFileAsync(get(id), data)
   }
 
   return Object.freeze({
