@@ -74,6 +74,6 @@
   "homepage": "https://github.com/netiam/netiam",
   "engines": {
     "node": ">=5",
-    "npm": ">=2.1.12"
+    "npm": ">=3"
   }
 }
