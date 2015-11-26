@@ -10,15 +10,15 @@ import appMock from '../utils/app.test'
 export default function() {
   const app = appMock()
 
-  before(function(done) {
+  before(done => {
     routes.aclUsers(app)
 
-    fixtures(function(err) {
+    fixtures(err => {
       if (err) {
         return done(err)
       }
 
-      Role.find({}, function(err, docs) {
+      Role.find({}, (err, docs) => {
         if (err) {
           return done(err)
         }
@@ -32,7 +32,7 @@ export default function() {
 
   let userId
 
-  it('should create a user', function(done) {
+  it('should create a user', done => {
     const userWithRole = Object.assign(userFixture, {role: roles.get('user')})
 
     request(app)
@@ -41,7 +41,7 @@ export default function() {
       .set('Accept', 'application/json')
       .expect(201)
       .expect('Content-Type', /json/)
-      .end(function(err, res) {
+      .end((err, res) => {
         if (err) {
           return done(err)
         }
@@ -64,13 +64,13 @@ export default function() {
       })
   })
 
-  it('should get a user', function(done) {
+  it('should get a user', done => {
     request(app)
       .get('/users/' + userId)
       .set('Accept', 'application/json')
       .expect(200)
       .expect('Content-Type', /json/)
-      .end(function(err, res) {
+      .end((err, res) => {
         if (err) {
           return done(err)
         }
@@ -81,14 +81,14 @@ export default function() {
       })
   })
 
-  it('should get an authenticated user', function(done) {
+  it('should get an authenticated user', done => {
     request(app)
       .get('/auth-users/' + userId)
       .auth(userFixture.email, userFixture.password)
       .set('Accept', 'application/json')
       .expect(200)
       .expect('Content-Type', /json/)
-      .end(function(err, res) {
+      .end((err, res) => {
         if (err) {
           return done(err)
         }

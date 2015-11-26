@@ -4,9 +4,10 @@ import asserts from '../../src/rest/asserts'
 import fixtures from '../fixtures'
 import roles from '../../src/rest/roles'
 import Role from '../../src/rest/models/role'
+import aclUser from '../fixtures/user.acl'
+import userFixture from './../fixtures/user.json'
 
-const userFixture = require('./../fixtures/user.json')
-const acl = aclRest({settings: require('../fixtures/user.acl')})
+const acl = aclRest({settings: aclUser})
 
 export default function() {
 

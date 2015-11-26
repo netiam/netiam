@@ -4,6 +4,8 @@ import storage from '../../src/cache/file'
 import User from '../models/user'
 import Project from '../models/project'
 import nodesFixture from '../fixtures/nodes'
+import aclUser from '../fixtures/user.acl'
+import aclResource from '../fixtures/resource.acl'
 
 export default Object.freeze({
 
@@ -28,7 +30,7 @@ export default Object.freeze({
       '/resource',
       api()
         .auth({collection: User})
-        .acl.req({settings: require('../fixtures/resource.acl')})
+        .acl.req({settings: aclResource})
         .data({})
         .json()
     )
@@ -122,7 +124,7 @@ export default Object.freeze({
       '/users/:id',
       api()
         .rest({collection: User})
-        .acl.res({settings: require('../fixtures/user.acl')})
+        .acl.res({settings: aclUser})
         .map.res({_id: 'id'})
         .json()
     )
@@ -132,7 +134,7 @@ export default Object.freeze({
       api()
         .auth({collection: User})
         .rest({collection: User})
-        .acl.res({settings: require('../fixtures/user.acl')})
+        .acl.res({settings: aclUser})
         .map.res({_id: 'id'})
         .json()
     )
