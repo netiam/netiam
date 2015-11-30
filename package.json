@@ -33,7 +33,7 @@
     "babel-cli": "^6.2.0",
     "babel-eslint": "^4.1.6",
     "babel-plugin-transform-async-to-generator": "^6.1.18",
-    "babel-preset-es2015-node5": "^1.1.0",
+    "babel-preset-es2015-node5": "^1.1.1",
     "bluebird": "^3.0.5",
     "body-parser": "1.14.1",
     "codeclimate-test-reporter": "0.1.1",
