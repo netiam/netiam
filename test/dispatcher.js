@@ -15,45 +15,47 @@ function pluginB() {
 
 describe('netiam', () => {
 
-  it('should execute basic dispatcher', done => {
-    const api = netiam()
-    api({}, {})
-      .then(() => done())
-      .catch(done)
-  })
+  describe('dispatcher', () => {
+    it('should execute basic dispatcher', done => {
+      const api = netiam()
+      api({}, {})
+        .then(() => done())
+        .catch(done)
+    })
 
-  it('should register plugin', done => {
-    const api = netiam()
-    api.plugin('test', pluginA)
-    api
-      .test()
-      .call()
-      .then(() => done())
-      .catch(done)
-  })
-
-  it('should throw error on plugin registration', () => {
-    const api = netiam()
-    api.plugin('test', pluginA);
-    (function() {
+    it('should register plugin', done => {
+      const api = netiam()
       api.plugin('test', pluginA)
-    }).should.throw();
+      api
+        .test()
+        .call()
+        .then(() => done())
+        .catch(done)
+    })
 
-    (function() {
-      api.plugin('plugin', pluginA)
-    }).should.throw()
-  })
+    it('should throw error on plugin registration', () => {
+      const api = netiam()
+      api.plugin('test', pluginA);
+      (function() {
+        api.plugin('test', pluginA)
+      }).should.throw();
 
-  it('should execute dispatch stack', done => {
-    const api = netiam()
-    api.plugin('a', pluginA)
-    api.plugin('b', pluginB)
-    api
-      .a()
-      .b()
-      .call()
-      .then(() => done())
-      .catch(done)
+      (function() {
+        api.plugin('plugin', pluginA)
+      }).should.throw()
+    })
+
+    it('should execute dispatch stack', done => {
+      const api = netiam()
+      api.plugin('a', pluginA)
+      api.plugin('b', pluginB)
+      api
+        .a()
+        .b()
+        .call()
+        .then(() => done())
+        .catch(done)
+    })
   })
 
 })
