@@ -56,6 +56,9 @@ export default function() {
 
   // plugins
   function plugin(name, plugin) {
+    if (dispatcher.hasOwnProperty(name)) {
+      throw new Error(`The plugin with name ${name} is already registered or would overwrite a builtin method.`)
+    }
     Object.defineProperty(dispatcher, name, {
       value: registerPlugin(plugin)
     })
@@ -65,5 +68,5 @@ export default function() {
     value: plugin
   })
 
-  return Object.freeze(dispatcher)
+  return dispatcher
 }
