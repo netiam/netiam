@@ -62,6 +62,8 @@ export default function() {
     Object.defineProperty(dispatcher, name, {
       value: registerPlugin(plugin)
     })
+
+    return dispatcher
   }
 
   Object.defineProperty(dispatcher, 'plugin', {
