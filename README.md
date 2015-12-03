@@ -73,16 +73,10 @@ app.get(
 server.listen(3000)
 ```
 
-## Tech Stack
-
-* Connect/Express
-* Database agnostic w/ [waterline](https://github.com/balderdashy/waterline)
-
 ## How it works
 
-The core idea of this library is to give you a bunch of plugins,
-which should be used to accept, validate, transform request and/or response
-objects.
+The core idea of this library is to have a stack of plugins executed in an
+asynchronous way.
 
 ```js
 const path = api()
