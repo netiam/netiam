@@ -14,35 +14,12 @@ function pluginB() {
 }
 
 describe('netiam', () => {
-
   describe('dispatcher', () => {
     it('should execute basic dispatcher', done => {
       const api = netiam()
       api({}, {})
         .then(() => done())
         .catch(done)
-    })
-
-    it('should register plugin', done => {
-      const api = netiam()
-      api.plugin('test', pluginA)
-      api
-        .test()
-        .call()
-        .then(() => done())
-        .catch(done)
-    })
-
-    it('should throw error on plugin registration', () => {
-      const api = netiam()
-      api.plugin('test', pluginA);
-      (function() {
-        api.plugin('test', pluginA)
-      }).should.throw();
-
-      (function() {
-        api.plugin('plugin', pluginA)
-      }).should.throw()
     })
 
     it('should execute dispatch stack', done => {
@@ -57,5 +34,4 @@ describe('netiam', () => {
         .catch(done)
     })
   })
-
 })
