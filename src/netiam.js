@@ -3,7 +3,7 @@ import isObject from 'lodash/lang/isObject'
 import forEach from 'lodash/collection/forEach'
 import Promise from 'bluebird'
 
-export default function() {
+export default function({plugins = {}} = {}) {
   const stack = []
 
   function dispatch(req, res) {
@@ -69,6 +69,8 @@ export default function() {
   Object.defineProperty(dispatcher, 'plugin', {
     value: plugin
   })
+
+  forEach(plugins, (fn, name) => plugin(name, fn))
 
   return dispatcher
 }

@@ -32,5 +32,17 @@ describe('netiam', () => {
       }).should.throw()
     })
 
+    it('add plugins at initialization time', done => {
+      const plugins = {
+        test: plugin
+      }
+      const api = netiam({plugins})
+      api
+        .test()
+        .call()
+        .then(() => done())
+        .catch(done)
+    })
+
   })
 })
