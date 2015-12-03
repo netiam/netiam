@@ -20,21 +20,19 @@ You just can use the *rest* plugin straightforward.
 
 ```js
 netiam
-   .get('/users/:id')
    .rest({collection: User})
-   .json();
+   .json()
 ```
 
 ### Resource with custom idField
 
 ```js
 netiam
-  .get('/users/:user')
   .rest({
     idField: 'user',
     collection: User
   })
-  .json();
+  .json()
 ```
 
 ### One-To-Many
@@ -56,13 +54,12 @@ project ID's.
 
 ```js
 netiam
-  .get('/users/:user/projects')
   .rest({
     idParam: 'user'
     collection: User,
     relationship: hasMany(Project, {field: 'projects'})
   })
-  .json();
+  .json()
 ```
 
 Be careful on how parameters are assigned to such a relationship. As the
@@ -72,26 +69,24 @@ using the default `id` parameter).
 
 ```js
 netiam
-  .get('/users/:user/projects/:project')
   .rest({
     idParam: 'user'
     collection: User,
     relationship: hasMany(Project, {field: 'projects', param: 'project'})
   })
-  .json();
+  .json()
 ```
 
 **With defaults:**
 
 ```js
 netiam
-  .get('/users/:user/projects/:id')
   .rest({
     idParam: 'user'
     collection: User,
     relationship: hasMany(Project, {field: 'projects'})
   })
-  .json();
+  .json()
 ```
 
 ### Many-To-One
@@ -129,23 +124,21 @@ resource.
 
 ```js
 netiam
-  .get('/users/:user/projects')
   .rest({
     collection: Project,
     relationship: belongsTo(User, {field: 'owner', idParam: 'user'})
   })
-  .json();
+  .json()
 ```
 
 For sure it is possible to customize the project parameter too.
 
 ```js
 netiam
-  .get('/users/:user/projects/:project')
   .rest({
     idField: 'project',
     collection: Project,
     relationship: belongsTo(User, {field: 'owner', idParam: 'user'})
   })
-  .json();
+  .json()
 ```

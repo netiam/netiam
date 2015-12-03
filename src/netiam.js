@@ -1,17 +1,13 @@
-import _ from 'lodash'
-import dbg from 'debug'
-import plugins from './plugins/index'
-import dbRef from './db'
+import isFunction from 'lodash/lang/isFunction'
+import isObject from 'lodash/lang/isObject'
+import forEach from 'lodash/collection/forEach'
+import Promise from 'bluebird'
 
-const debug = dbg('netiam:dispatch')
-
-export const db = dbRef
-
-export default function netiam() {
+export default function() {
   const stack = []
 
   function dispatch(req, res) {
-    return _.reduce(stack, (p, call) => {
+    return stack.reduce((p, call) => {
       return p.then(() => {
         return call(req, res)
       })
@@ -25,29 +21,27 @@ export default function netiam() {
           return
         }
 
-        debug(err)
-
         res
           .status(err.status)
           .json({
             type: err.type,
             message: err.message,
-            errors: _.isObject(err.data) ? err.data : undefined
+            errors: isObject(err.data) ? err.data : undefined
           })
       })
   }
 
   function registerPlugin(plugin) {
-    if (_.isFunction(plugin)) {
+    if (isFunction(plugin)) {
       return (...spec) => {
         stack.push(plugin(...spec))
         return dispatcher
       }
     }
 
-    if (_.isObject(plugin)) {
+    if (isObject(plugin)) {
       const container = {}
-      _.forEach(plugin, (name, key) => {
+      forEach(plugin, (name, key) => {
         container[key] = (...spec) => {
           stack.push(name(...spec))
           return dispatcher
@@ -61,8 +55,14 @@ export default function netiam() {
   }
 
   // plugins
-  _.forEach(plugins, (plugin, name) => {
-    dispatcher[name] = registerPlugin(plugin)
+  function plugin(name, plugin) {
+    Object.defineProperty(dispatcher, name, {
+      value: registerPlugin(plugin)
+    })
+  }
+
+  Object.defineProperty(dispatcher, 'plugin', {
+    value: plugin
   })
 
   return Object.freeze(dispatcher)

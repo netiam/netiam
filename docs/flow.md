@@ -11,7 +11,7 @@ This describes the execution flow of the library.
 
     ```js
     netiam
-        .get(  '/users/:id' );
+        .rest(…)
     ```
 
     The example above would create a new *users* resource using the *:id*
@@ -24,8 +24,8 @@ This describes the execution flow of the library.
 
     ```js
     netiam
-        .auth( … )
-        .get( '/users/:id' );
+        .auth(…)
+        .rest()
     ```
 
     Depending on the authentication configuration, you have to pass OAuth2
@@ -50,11 +50,11 @@ This describes the execution flow of the library.
     ```js
     netiam
         .auth(…)
-        .get( '/resource/:id' )
-        .acl.req( {
+        .res(…)
+        .acl.req({
             model: user,
             def: './models/user.acl.json'
-         } );
+         })
     ```
 
     An example JSON file (support for other formats is planned -> YAML, XML)
@@ -98,8 +98,8 @@ This describes the execution flow of the library.
 
     ```js
     netiam
-        .get( '/resource/:id' )
-        .transform( function( resource ) { … } );
+        .rest(…)
+        .transform((req, res) => {…})
     ```
 
 5. Response
@@ -109,6 +109,6 @@ This describes the execution flow of the library.
 
     ```js
     netiam
-        .get( '/resource/:id' )
-        .json( … );
+        .rest(…)
+        .json(…)
     ```

@@ -16,41 +16,22 @@
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "dependencies": {
-    "async": "^1.4.2",
-    "babel-runtime": "^5",
-    "bcrypt": "^0.8.4",
-    "d3": "^3.5.5",
-    "debug": "^2.2.0",
-    "jsdom": "^6.3.0",
-    "lodash": "^3.10.1",
-    "moment": "^2.10.6",
     "netiam-errors": "^2.4.0",
-    "netiam-oauth": "^1.5.0",
-    "passport": "^0.3.0",
-    "passport-http": "^0.3.0",
-    "passport-http-bearer": "^1.0.1",
-    "passport-local": "^1.0.0",
-    "uuid": "^2.0.1",
-    "waterline": "^0.10.26",
-    "xlsx": "^0.8.0"
+    "lodash": "3.10.1"
   },
   "devDependencies": {
-    "babel": "^5",
-    "babel-eslint": "^4.1.0",
-    "body-parser": "^1.10.1",
-    "codeclimate-test-reporter": "^0.1.0",
-    "eslint": "^1.0.0",
-    "express": "^4.13.3",
-    "istanbul": "^0.3.5",
-    "mkdirp": "^0.5.0",
-    "mocha": "^2.0.1",
-    "redis": "^0.12.1",
-    "rimraf": "^2.4.2",
-    "sails-memory": "^0.10.5",
-    "semantic-release": "^4.3.4",
-    "should": "^7.0.2",
-    "supertest": "^1.1.0",
-    "validator": "^4.0.5"
+    "babel-cli": "^6.2.0",
+    "babel-eslint": "^4.1.6",
+    "babel-preset-es2015-node5": "^1.1.0",
+    "bluebird": "^3.0.5",
+    "codeclimate-test-reporter": "0.1.1",
+    "eslint": "1.10.1",
+    "express": "4.13.3",
+    "istanbul": "0.4.1",
+    "mocha": "^2.3.4",
+    "semantic-release": "4.3.5",
+    "should": "^7.1.1",
+    "supertest": "1.1.0"
   },
   "repository": {
     "type": "git",
@@ -72,8 +53,7 @@
   },
   "homepage": "https://github.com/netiam/netiam",
   "engines": {
-    "node": ">=v0.12",
-    "iojs": ">=v2",
-    "npm": ">=2.1.12"
+    "node": ">=5",
+    "npm": ">=3"
   }
 }

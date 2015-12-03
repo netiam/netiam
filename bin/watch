@@ -2,5 +2,5 @@
 # author: Hannes Moser <hannes@impossiblearts.com>
 #
 
-# compile to JavaScript
-babel --optional runtime -L -e 1 -w -d ./lib ./src
+# compile
+babel -w -d ./lib ./src

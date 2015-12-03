@@ -109,13 +109,10 @@ export default function data(data) {
 app.get(
   '/users',
   api()
-    .auth({…})
-    .get('/resource/:id')
-    .rest({…})
-    .transform({…})
-    .data({…})
-    .acl({…})
-    .json({…})
+    .auth(…)
+    .rest(…)
+    .acl.res(…)
+    .jsonapi({…})
 )
 ```
 

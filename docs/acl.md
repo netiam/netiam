@@ -6,7 +6,7 @@
 
 ```js
 api()
-  .acl(
+  .acl.req(
     {
       collection: User,
       loader: fileLoader
