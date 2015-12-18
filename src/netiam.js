@@ -16,7 +16,7 @@ export default function({plugins = {}} = {}) {
         }
 
         res
-          .status(err.status)
+          .status(err.status || 500)
           .json({
             type: err.type,
             message: err.message,
