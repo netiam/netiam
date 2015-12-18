@@ -4,18 +4,12 @@ import forEach from 'lodash/collection/forEach'
 import Promise from 'bluebird'
 
 export default function({plugins = {}} = {}) {
+
   const stack = []
 
-  function dispatch(req, res) {
-    return stack.reduce((p, call) => {
-      return p.then(() => {
-        return call(req, res)
-      })
-    }, Promise.resolve())
-  }
-
   const dispatcher = (req, res) => {
-    return dispatch(req, res)
+    return Promise
+      .each(stack, call => call(req, res))
       .catch(err => {
         if (err.nonce) {
           return
