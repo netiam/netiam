@@ -1,6 +1,4 @@
-import isFunction from 'lodash/lang/isFunction'
-import isObject from 'lodash/lang/isObject'
-import forEach from 'lodash/collection/forEach'
+import _ from 'lodash'
 import Promise from 'bluebird'
 
 export default function({plugins = {}} = {}) {
@@ -20,22 +18,22 @@ export default function({plugins = {}} = {}) {
           .json({
             type: err.type,
             message: err.message,
-            errors: isObject(err.data) ? err.data : undefined
+            errors: _.isObject(err.data) ? err.data : undefined
           })
       })
   }
 
   function registerPlugin(plugin) {
-    if (isFunction(plugin)) {
+    if (_.isFunction(plugin)) {
       return (...spec) => {
         stack.push(plugin(...spec))
         return dispatcher
       }
     }
 
-    if (isObject(plugin)) {
+    if (_.isObject(plugin)) {
       const container = {}
-      forEach(plugin, (name, key) => {
+      _.forEach(plugin, (name, key) => {
         container[key] = (...spec) => {
           stack.push(name(...spec))
           return dispatcher
@@ -64,7 +62,7 @@ export default function({plugins = {}} = {}) {
     value: plugin
   })
 
-  forEach(plugins, (fn, name) => plugin(name, fn))
+  _.forEach(plugins, (fn, name) => plugin(name, fn))
 
   return dispatcher
 }
