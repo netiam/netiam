@@ -15,11 +15,7 @@ export default function({plugins = {}} = {}) {
 
         res
           .status(err.status || 500)
-          .json({
-            type: err.type,
-            message: err.message,
-            errors: _.isObject(err.data) ? err.data : undefined
-          })
+          .json(err && _.isFunction(err.toJSON) ? err.toJSON() : err)
       })
   }
 
