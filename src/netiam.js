@@ -1,5 +1,8 @@
 import _ from 'lodash'
+import dbg from 'debug'
 import Promise from 'bluebird'
+
+const debug = dbg('netiam:dispatcher')
 
 export default function({plugins = {}} = {}) {
 
@@ -12,6 +15,8 @@ export default function({plugins = {}} = {}) {
         if (err.nonce) {
           return
         }
+
+        debug(err)
 
         res
           .status(err.status || 500)
