@@ -1,7 +1,4 @@
 {
-  "ecmaFeatures": {
-    "modules": true
-  },
   "rules": {
     "quotes": [
       2,
@@ -10,12 +7,7 @@
     "semi": [
       2,
       "never"
-    ],
-    "camelcase": 0,
-    "consistent-return": 2,
-    "no-underscore-dangle": 0,
-    "no-use-before-define": 0,
-    "no-shadow": 0
+    ]
   },
   "env": {
     "node": true,
