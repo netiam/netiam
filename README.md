@@ -39,15 +39,6 @@ npm i -S netiam@7
 * [JSON](https://github.com/netiam/contrib-json)
 * [OAuth](https://github.com/netiam/contrib-oauth)
 
-## Tests
-
-Using [mocha](http://mochajs.org) with [should](http://shouldjs.github.io/) for
-tests and [istanbul](https://github.com/gotwarlost/istanbul) to check coverage.
-
-```bash
-npm test
-```
-
 ## What can it do for you
 
 * Authentication (with [passportjs](http://passportjs.org/) and [OAuth 2.0](https://github.com/netiam/oauth))
@@ -125,6 +116,15 @@ app.get(
 You do not need to handle common API errors on your own. The library responds
 to the client at least with a proper HTTP status code
 (e.g. 404 for document not found) automatically.
+
+## Tests
+
+Using [mocha](http://mochajs.org) with [should](http://shouldjs.github.io/) for
+tests and [istanbul](https://github.com/gotwarlost/istanbul) to check coverage.
+
+```bash
+npm test
+```
 
 ## Supported by
 
