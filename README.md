@@ -26,8 +26,18 @@ and you should be able to use it with any compatible infrastructure
 ## Get it
 
 ```bash
-npm i -S netiam
+npm i -S netiam@7
 ```
+
+## Plugins
+
+* [Authentication](https://github.com/netiam/contrib-auth)
+* [Authorization](https://github.com/netiam/contrib-acl)
+* [REST](https://github.com/netiam/contrib-rest)
+* [Transform](https://github.com/netiam/contrib-transform)
+* [Data](https://github.com/netiam/contrib-data)
+* [JSON](https://github.com/netiam/contrib-json)
+* [OAuth](https://github.com/netiam/contrib-oauth)
 
 ## Tests
 
