@@ -15,9 +15,7 @@ export default function({plugins = {}} = {}) {
         if (err.nonce) {
           return
         }
-
         debug(err)
-
         res
           .status(err.status || 500)
           .json(err && _.isFunction(err.toJSON) ? err.toJSON() : err)
@@ -55,7 +53,6 @@ export default function({plugins = {}} = {}) {
     Object.defineProperty(dispatcher, name, {
       value: registerPlugin(plugin)
     })
-
     return dispatcher
   }
 
