@@ -30,7 +30,7 @@
     "istanbul": "0.4.2",
     "mocha": "^2.3.4",
     "semantic-release": "4.3.5",
-    "should": "^8.0.1",
+    "should": "^8.3.0",
     "supertest": "1.2.0"
   },
   "repository": {
