@@ -8,6 +8,16 @@ export default function({plugins = {}} = {}) {
 
   const stack = []
 
+  function normalizeError(err) {
+    if (err && _.isFunction(err.toJSON)) {
+      return err.toJSON()
+    }
+
+    return {
+      message: err.message
+    }
+  }
+
   const dispatcher = (req, res) => {
     return Promise
       .each(stack, call => call(req, res))
@@ -18,7 +28,7 @@ export default function({plugins = {}} = {}) {
         debug(err)
         res
           .status(err.status || 500)
-          .json(err && _.isFunction(err.toJSON) ? err.toJSON() : err)
+          .json(normalizeError(err))
       })
   }
 
