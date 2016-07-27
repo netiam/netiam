@@ -29,7 +29,7 @@ describe('netiam', () => {
       api
         .a()
         .b()
-        .call()
+        .call(null, {}, {})
         .then(() => done())
         .catch(done)
     })

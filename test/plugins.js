@@ -15,7 +15,7 @@ describe('netiam', () => {
       api.plugin('test', plugin)
       api
         .test()
-        .call()
+        .call(null, {}, {})
         .then(() => done())
         .catch(done)
     })
@@ -39,7 +39,7 @@ describe('netiam', () => {
       const api = netiam({plugins})
       api
         .test()
-        .call()
+        .call(null, {}, {})
         .then(() => done())
         .catch(done)
     })
