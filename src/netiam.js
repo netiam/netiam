@@ -4,11 +4,27 @@ import Promise from 'bluebird'
 
 const debug = dbg('netiam:dispatcher')
 
-export default function({plugins = {}} = {}) {
+export default function({config = {}, plugins = {}} = {}) {
 
   const stack = []
 
+  config = Object.assign({
+    baseUrl: '/'
+  }, config)
+
+  function normalizeError(err) {
+    if (err && _.isFunction(err.toJSON)) {
+      return err.toJSON()
+    }
+
+    return {
+      message: err.message
+    }
+  }
+
   const dispatcher = (req, res) => {
+    req.config = config
+
     return Promise
       .each(stack, call => call(req, res))
       .catch(err => {
@@ -18,7 +34,7 @@ export default function({plugins = {}} = {}) {
         debug(err)
         res
           .status(err.status || 500)
-          .json(err && _.isFunction(err.toJSON) ? err.toJSON() : err)
+          .json(normalizeError(err))
       })
   }
 

@@ -16,22 +16,22 @@
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "dependencies": {
-    "bluebird": "^3.1.1",
+    "bluebird": "^3.3.4",
     "debug": "^2.2.0",
     "lodash": "^4.0.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.3.17",
-    "babel-eslint": "^6.0.0",
-    "babel-preset-es2015-node5": "^1.1.0",
+    "babel-cli": "^6.8.0",
+    "babel-preset-es2015-node5": "^1.2.0",
     "codeclimate-test-reporter": "0.3.3",
-    "eslint": "^2.2.0",
-    "express": "4.13.4",
+    "eslint": "^3.0.0",
+    "express": "4.14.0",
     "istanbul": "^1.0.0-alpha.2",
-    "mocha": "^2.3.4",
+    "lodash": "^4.13.1",
+    "mocha": "^3.0.0",
     "semantic-release": "4.3.5",
-    "should": "^9.0.0",
-    "supertest": "1.2.0"
+    "should": "^11.1.0",
+    "supertest": "2.0.0"
   },
   "repository": {
     "type": "git",
