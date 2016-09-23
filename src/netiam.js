@@ -1,5 +1,7 @@
-import _ from 'lodash'
 import dbg from 'debug'
+import isFunction from 'lodash/isFunction'
+import isObject from 'lodash/isObject'
+import forEach from 'lodash/forEach'
 import Promise from 'bluebird'
 
 const debug = dbg('netiam:dispatcher')
@@ -13,7 +15,7 @@ export default function({config = {}, plugins = {}} = {}) {
   }, config)
 
   function normalizeError(err) {
-    if (err && _.isFunction(err.toJSON)) {
+    if (err && isFunction(err.toJSON)) {
       return err.toJSON()
     }
 
@@ -39,16 +41,16 @@ export default function({config = {}, plugins = {}} = {}) {
   }
 
   function registerPlugin(plugin) {
-    if (_.isFunction(plugin)) {
+    if (isFunction(plugin)) {
       return (...spec) => {
         stack.push(plugin(...spec))
         return dispatcher
       }
     }
 
-    if (_.isObject(plugin)) {
+    if (isObject(plugin)) {
       const container = {}
-      _.forEach(plugin, (name, key) => {
+      forEach(plugin, (name, key) => {
         container[key] = (...spec) => {
           stack.push(name(...spec))
           return dispatcher
@@ -76,7 +78,7 @@ export default function({config = {}, plugins = {}} = {}) {
     value: plugin
   })
 
-  _.forEach(plugins, (fn, name) => plugin(name, fn))
+  forEach(plugins, (fn, name) => plugin(name, fn))
 
   return dispatcher
 }
