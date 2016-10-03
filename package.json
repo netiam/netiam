@@ -67,6 +67,9 @@
   "bugs": {
     "url": "https://github.com/netiam/netiam/issues"
   },
+  "publishConfig": {
+    "tag": "v6"
+  },
   "homepage": "https://github.com/netiam/netiam",
   "engines": {
     "node": ">=5",
