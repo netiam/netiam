@@ -57,7 +57,7 @@
     "npm": ">=3"
   },
   "publishConfig": {
-    "tag": "next"
+    "tag": "latest"
   },
   "release": {
     "branch": "v7"
