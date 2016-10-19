@@ -31,7 +31,7 @@
     "mocha": "^3.0.0",
     "semantic-release": "4.3.5",
     "should": "^11.1.0",
-    "supertest": "2.0.0"
+    "supertest": "2.0.1"
   },
   "repository": {
     "type": "git",
