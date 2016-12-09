@@ -58,8 +58,5 @@
   },
   "publishConfig": {
     "tag": "latest"
-  },
-  "release": {
-    "branch": "v7"
   }
 }
