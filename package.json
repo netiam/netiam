@@ -29,7 +29,7 @@
     "istanbul": "^1.0.0-alpha.2",
     "lodash": "^4.13.1",
     "mocha": "^3.0.0",
-    "semantic-release": "6.3.2",
+    "semantic-release": "6.3.6",
     "should": "^11.1.0",
     "supertest": "3.0.0"
   },
