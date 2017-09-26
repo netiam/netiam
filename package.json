@@ -25,13 +25,12 @@
     "babel-preset-es2015-node5": "^1.2.0",
     "codeclimate-test-reporter": "0.4.1",
     "eslint": "^4.1.0",
-    "express": "5.0.0-alpha.5",
+    "express": "5.0.0-alpha.6",
     "istanbul": "^1.0.0-alpha.2",
     "lodash": "^4.13.1",
     "mocha": "^3.0.0",
-    "semantic-release": "7.0.1",
     "should": "^13.0.0",
-    "should": "^13.0.0",
+    "semantic-release": "8.0.0",
     "supertest": "3.0.0"
   },
   "repository": {
