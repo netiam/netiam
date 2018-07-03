@@ -1,5 +1,4 @@
 import netiam from '../src/netiam'
-import Promise from 'bluebird'
 
 function plugin() {
   return function() {

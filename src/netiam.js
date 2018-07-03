@@ -1,83 +1,84 @@
-import dbg from 'debug'
-import isFunction from 'lodash/isFunction'
-import isObject from 'lodash/isObject'
-import forEach from 'lodash/forEach'
+import dbg from 'debug';
+import isFunction from 'lodash/isFunction';
+import isObject from 'lodash/isObject';
+import forEach from 'lodash/forEach';
 
-const debug = dbg('netiam:dispatcher')
+const debug = dbg('netiam:dispatcher');
 
-export default function({config = {}, plugins = {}} = {}) {
+export default function({ config = {}, plugins = {} } = {}) {
+  const stack = [];
 
-  const stack = []
-
-  config = Object.assign({
-    baseUrl: '/'
-  }, config)
+  config = Object.assign(
+    {
+      baseUrl: '/'
+    },
+    config
+  );
 
   function normalizeError(err) {
     if (err && isFunction(err.toJSON)) {
-      return err.toJSON()
+      return err.toJSON();
     }
 
     return {
       message: err.message
+    };
+  }
+
+  const dispatcher = async (req, res) => {
+    try {
+      req.config = config;
+      for (let call of stack) {
+        await call(req, res);
+      }
+    } catch (err) {
+      if (err.nonce) {
+        return;
+      }
+      debug(err);
+      res.status(err.status || 500).json(normalizeError(err));
     }
-  }
-
-  const dispatcher = (req, res) => {
-    req.config = config
-
-    return Promise
-      .each(stack, call => call(req, res))
-      .catch(err => {
-        if (err.nonce) {
-          return
-        }
-        debug(err)
-        res
-          .status(err.status || 500)
-          .json(normalizeError(err))
-      })
-  }
+  };
 
   function registerPlugin(plugin) {
     if (isFunction(plugin)) {
       return (...spec) => {
-        stack.push(plugin(...spec))
-        return dispatcher
-      }
+        stack.push(plugin(...spec));
+        return dispatcher;
+      };
     }
 
     if (isObject(plugin)) {
-      const container = {}
+      const container = {};
       forEach(plugin, (name, key) => {
         container[key] = (...spec) => {
-          stack.push(name(...spec))
-          return dispatcher
-        }
-      })
+          stack.push(name(...spec));
+          return dispatcher;
+        };
+      });
 
-      return container
+      return container;
     }
 
-    throw new Error(`The provided plugin has invalid type "${typeof plugin}"`)
+    throw new Error(`The provided plugin has invalid type "${typeof plugin}"`);
   }
 
   // plugins
   function plugin(name, plugin) {
     if (dispatcher.hasOwnProperty(name)) {
-      throw new Error(`The plugin with name ${name} is already registered or would overwrite a builtin method.`)
+      throw new Error(`The plugin with name ${name} is already registered or would overwrite a builtin method.`);
     }
     Object.defineProperty(dispatcher, name, {
       value: registerPlugin(plugin)
-    })
-    return dispatcher
+    });
+    return dispatcher;
   }
 
   Object.defineProperty(dispatcher, 'plugin', {
     value: plugin
-  })
+  });
 
-  forEach(plugins, (fn, name) => plugin(name, fn))
+  forEach(plugins, (fn, name) => plugin(name, fn));
 
-  return dispatcher
+  return dispatcher;
 }
