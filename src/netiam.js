@@ -2,7 +2,6 @@ import dbg from 'debug'
 import isFunction from 'lodash/isFunction'
 import isObject from 'lodash/isObject'
 import forEach from 'lodash/forEach'
-import Promise from 'bluebird'
 
 const debug = dbg('netiam:dispatcher')
 
