@@ -1,5 +1,12 @@
 {
   "presets": [
-    "es2015-node5"
+    [
+      "env",
+      {
+        "targets": {
+          "node": "9.11"
+        }
+      }
+    ]
   ]
 }
