@@ -13,7 +13,8 @@
     "test:watch": "mocha --watch",
     "test:coverage": "istanbul cover _mocha --report lcovonly -- -R spec",
     "watch": "./bin/watch",
-    "semantic-release": "npx semantic-release"
+    "semantic-release": "semantic-release",
+    "travis-deploy-once": "travis-deploy-once"
   },
   "dependencies": {
     "debug": "^4.0.1",
@@ -29,7 +30,8 @@
     "mocha": "^5.0.0",
     "semantic-release": "^15.10.4",
     "should": "^13.0.0",
-    "supertest": "^3.3.0"
+    "supertest": "^3.3.0",
+    "travis-deploy-once": "^5.0.9"
   },
   "repository": {
     "type": "git",
@@ -56,5 +58,6 @@
   },
   "publishConfig": {
     "tag": "latest"
-  }
+  },
+  "version": "0.0.0-development"
 }

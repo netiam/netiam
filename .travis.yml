@@ -1,13 +1,13 @@
-sudo: false
 language: node_js
 cache:
   directories:
-  - node_modules
+    - ~/.npm
 notifications:
   email: false
-script:
-- npm run build
-- npm run test:coverage
+node_js:
+  - '10'
 after_success:
-- codeclimate-test-reporter < coverage/lcov.info
-- npm run semantic-release
+  - npm run travis-deploy-once "npm run semantic-release"
+branches:
+  except:
+    - /^v\d+\.\d+\.\d+$/
