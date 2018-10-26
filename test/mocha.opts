@@ -1,5 +1,5 @@
 --recursive
 --require should
+--require babel-core/register
 --reporter spec
 --ui bdd
---compilers js:babel-core/register
