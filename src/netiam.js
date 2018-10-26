@@ -1,11 +1,10 @@
 import dbg from 'debug';
 import isFunction from 'lodash/isFunction';
-import isObject from 'lodash/isObject';
-import forEach from 'lodash/forEach';
+import {isObject, forEach} from './utils';
 
 const debug = dbg('netiam:dispatcher');
 
-export default function({ config = {}, plugins = {} } = {}) {
+export default function ({config = {}, plugins = {}} = {}) {
   const stack = [];
 
   config = Object.assign(
