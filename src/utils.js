@@ -1,16 +1,14 @@
 export function isObject(o) {
-  var type = typeof value;
-  return value != null && (type == 'object' || type == 'function');
+  return typeof o === 'object';
 }
 
 export function forEach(o, cb) {
   if (Array.isArray(o)) {
     return o.forEach(cb);
   }
-
   Object.keys(o).forEach((key) => cb(o[key], key));
 }
 
 export function isFunction(o) {
-  return typeof o === 'function'
+  return typeof o === 'function';
 }
