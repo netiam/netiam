@@ -15,7 +15,6 @@ and you should be able to use it with any compatible infrastructure
 
 ## TOC
 
-* [Bootstrap](./docs/bootstrap.md)
 * [Objects](./docs/objects.md)
 * [ACL](./docs/acl.md)
 * [Dispatch Flow](./docs/flow.md)
@@ -26,7 +25,7 @@ and you should be able to use it with any compatible infrastructure
 ## Get it
 
 ```bash
-npm i -S netiam@7
+npm i -S netiam
 ```
 
 ## Plugins
@@ -42,9 +41,9 @@ npm i -S netiam@7
 ## What can it do for you
 
 * Authentication (with [passportjs](http://passportjs.org/) and [OAuth 2.0](https://github.com/netiam/oauth))
-* Authorization (with ACLs, inheritance support for roles, assertions and wildcards)
+* Authorization (through ACLs)
 * Relationships(on resource level)
-* Query language (effective and powerful filters with [OData](http://www.odata.org/))
+* Query language ([OData](http://www.odata.org/) filter expressions)
 * Completely stateless (except cookie based sessions for authentication in browser apps)
 * Support for the [JSONAPI](http://jsonapi.org/) specification
 * Auto response format detection
@@ -76,8 +75,7 @@ server.listen(3000)
 
 ## How it works
 
-The core idea of this library is to have a stack of plugins executed in an
-asynchronous way.
+The core idea is to have a stack of plugins executed in an asynchronous way.
 
 ```js
 const path = api()
@@ -114,8 +112,8 @@ app.get(
 ### Error handling
 
 You do not need to handle common API errors on your own. The library responds
-to the client at least with a proper HTTP status code
-(e.g. 404 for document not found) automatically.
+to the client at least with a proper HTTP status code (e.g. 404 for document
+not found) automatically.
 
 ## Tests
 

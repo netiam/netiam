@@ -2,8 +2,7 @@
 
 Everything this library can do is packed into modules. This modules are named
 plugins. Plugins are chained together and put onto a route stack. After a route
-has been dispatched the stack will be executed (based on plugin priority and
-chain order).
+has been dispatched the stack will be executed (based on chain order).
 
 ## Anatomy
 
